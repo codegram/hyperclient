@@ -1,6 +1,6 @@
 # HyperClient
 
-HyperClient is a Hypermedia API Client. Built on top of `net/http`.
+HyperClient is a Ruby Hypermedia API client.
 
 ## Usage
 
