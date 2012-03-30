@@ -2,7 +2,7 @@
 
 HyperClient is a Hypermedia API Client. Built on top of `net/http`.
 
-# Usage
+## Usage
 
 Example API client:
 
@@ -14,7 +14,7 @@ Example API client:
       authorization 'user', 'password', :digest 
     end
 
-# Connecting to your API
+## Connecting to your API
 
 Given a typical blog application with posts, comments and authors:
 
@@ -23,19 +23,19 @@ Given a typical blog application with posts, comments and authors:
     # => [#<Collection @name="posts">, #<Collection @name="comments">,
     #<Collection @name="authors">]
 
-# Collections
+## Collections
 
 Based on standard HTTP methods, you can interact with a collection in different
 ways:
 
-## List collection elements (GET)
+### List collection elements (GET)
 
     posts = api.resources.posts
 
     posts.list
     # => [#<Element @name='post'>, #<Element @name='post'>, #<Element @name='post'>]
 
-## Replace the entire list (PUT)
+### Replace the entire list (PUT)
 
 Given a `new_collection` array with two post elements:
 
@@ -44,7 +44,7 @@ Given a `new_collection` array with two post elements:
     posts.replace(new_collection)
     # => [#<Element @name='post'>, #<Element @name='post'>]
 
-## Create a new element (POST)
+### Create a new element (POST)
 
     posts = api.resources.posts
     posts = {title: 'Creating a post from the api', body: 'Lorem ipsum'}
@@ -54,16 +54,16 @@ Given a `new_collection` array with two post elements:
     API', body: 'Lorem ipsum'}>
 
 
-## Delete the entire collection (DELETE)
+### Delete the entire collection (DELETE)
 
     posts = api.resources.posts
 
     posts.delete
     # => nil
 
-# Elements
+## Elements
 
-## Retrieve a representation (GET)
+### Retrieve a representation (GET)
 
     posts = api.resources.first
 
@@ -71,7 +71,7 @@ Given a `new_collection` array with two post elements:
     # => #<Element @name='post', @data={:title => 'Creating a post from the
     API', body: 'Lorem ipsum'}, @uri='http://myblog.com/api/posts/1'>
 
-## Replace the element
+### Replace the element
 
     post = api.resources.posts.first
     data = {title: 'Modifying the post title'}
@@ -80,7 +80,7 @@ Given a `new_collection` array with two post elements:
     # => #<Element @name='post', @data={:title => 'Modifying the post title',
     body: 'Lorem ipsum'}>
 
-## Create a new element
+### Create a new element
 
     post = api.resources.posts.first
     new_post = {title: 'Creating a post from the api', body: 'Lorem ipsum'}
@@ -89,28 +89,28 @@ Given a `new_collection` array with two post elements:
     # => #<Element @name='post', @data={:title => 'Creating a post from the
     API', body: 'Lorem ipsum'}, @uri='http://myblog.com/api/posts/2'>
 
-## Delete the element
+### Delete the element
 
     post = api.resources.posts.first
 
     post.delete
     # => nil
 
-## Accessing element data
+### Accessing element data
 
     post = api.resources.posts.first
 
     post.data
     # => {:title => 'My Post', :body => 'This is a nice post'}
 
-## Acessing element resources
+### Accessing element resources
 
     post = api.resources.posts.first
 
     post.resources
     # => [#<Collection @name='comments'>, #<Element @name='author'>]
 
-# Resource discovery
+## Resource discovery
 
 * From headers
 * From JSON response with an element 'links'
