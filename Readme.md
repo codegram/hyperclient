@@ -111,3 +111,13 @@ Given a `new_collection` array with two post elements:
 * From JSON response with an element 'links'
 * From XML response with an element 'links'
 * Using a custom parser
+
+## Resource permissions
+
+Using the `Allow` header HyperClient should be able to restrict the allowed
+method on a given `Collection` or `Element`.
+
+## Embedded
+
+HyperClient should be able to fetch `Elements` either from a link fiven in a
+`Collection` or by getting the data when is embedded in a `Collection`.
