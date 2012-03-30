@@ -14,14 +14,9 @@ Example API client:
       authorization 'user', 'password', :digest 
     end
 
-## Connecting to your API
-
-Given a typical blog application with posts, comments and authors:
-
     api = MyAPIClient.new
     api.resources
-    # => [#<Collection @name="posts">, #<Collection @name="comments">,
-    #<Collection @name="authors">]
+    # => [#<Collection @name="posts">, #<Collection @name="authors">]
 
 ## Collections
 
