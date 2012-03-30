@@ -42,7 +42,7 @@ Given a `new_collection` array with two post elements:
 ### Create a new element (POST)
 
     posts = api.resources.posts
-    posts = {title: 'Creating a post from the api', body: 'Lorem ipsum'}
+    post = {title: 'Creating a post from the api', body: 'Lorem ipsum'}
 
     posts.create(post)
     # => #<Element @name='post', @data={:title => 'Creating a post from the
@@ -60,7 +60,7 @@ Given a `new_collection` array with two post elements:
 
 ### Retrieve a representation (GET)
 
-    posts = api.resources.first
+    post = api.resources.first
 
     post.retrieve
     # => #<Element @name='post', @data={:title => 'Creating a post from the
