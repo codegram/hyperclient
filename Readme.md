@@ -107,6 +107,7 @@ Given a `new_collection` array with two post elements:
 
 ## Resource discovery
 
+* From a HAL response (see http://stateless.co/hal_specification.html)
 * From headers
 * From JSON response with an element 'links'
 * From XML response with an element 'links'
@@ -119,5 +120,5 @@ method on a given `Collection` or `Element`.
 
 ## Embedded
 
-HyperClient should be able to fetch `Elements` either from a link fiven in a
+HyperClient should be able to fetch `Elements` either from a link given in a
 `Collection` or by getting the data when is embedded in a `Collection`.
