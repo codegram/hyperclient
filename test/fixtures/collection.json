@@ -1,0 +1,34 @@
+{
+  "_links": {
+    "self": { "href": "..." },
+    "filter": { "href": "...{?categories}" } // note: this is a URI template
+  },
+  "categories": ["Microsoft", "Ruby", "Javascript", "Mobile"],
+  "_embedded": {
+    "videos": [{
+      "_links": {
+        "self": { "href": "..." },
+        "episodes": { "href": "..." }
+      },
+      "title": "Real World ASP.NET MVC3",
+      "description": "In this advanced, somewhat-opinionated production you'll get your very own startup off the ground using ASP.NET MVC 3...",
+      "permitted": true
+    },{
+      "_links": {
+        "self": { "href": "..." },
+        "episodes": { "href": "..." }
+      },
+      "title": "Example Video 2",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit",
+      "permitted": false
+    },{
+      "_links": {
+        "self": { "href": "..." },
+        "episodes": { "href": "..." }
+      },
+      "title": "Example Video 3",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit",
+      "permitted": false
+    }]
+  }
+}

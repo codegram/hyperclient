@@ -1,0 +1,6 @@
+{
+  "_links": {
+    "self": { "href": "..." },
+    "productions": { "href": "..." }
+  }
+}

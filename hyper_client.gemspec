@@ -13,4 +13,8 @@ Gem::Specification.new do |gem|
   gem.name          = "hyper_client"
   gem.require_paths = ["lib"]
   gem.version       = HyperClient::VERSION
+
+  gem.add_development_dependency 'minitest'
+  gem.add_development_dependency 'turn'
+  gem.add_development_dependency 'webmock'
 end

@@ -16,9 +16,9 @@ Example API client:
 
     api = MyAPIClient.new
     api.resources
-    # => [#<Collection @name="posts">, #<Collection @name="authors">]
+    # => [#<Resource @name="posts">, #<Resource @name="authors">]
 
-## Collections
+## Resources
 
 Based on standard HTTP methods, you can interact with a collection in different
 ways:
@@ -28,7 +28,7 @@ ways:
     posts = api.resources.posts
 
     posts.list
-    # => [#<Element @name='post'>, #<Element @name='post'>, #<Element @name='post'>]
+    # => [#<Resource @name='post'>, #<Resource @name='post'>, #<Resource @name='post'>]
 
 ### Replace the entire list (PUT)
 
@@ -37,7 +37,7 @@ Given a `new_collection` array with two post elements:
     posts = api.resources.posts
 
     posts.replace(new_collection)
-    # => [#<Element @name='post'>, #<Element @name='post'>]
+    # => [#<Resource @name='post'>, #<Resource @name='post'>]
 
 ### Create a new element (POST)
 
@@ -45,7 +45,7 @@ Given a `new_collection` array with two post elements:
     post = {title: 'Creating a post from the api', body: 'Lorem ipsum'}
 
     posts.create(post)
-    # => #<Element @name='post', @data={:title => 'Creating a post from the
+    # => #<Resource @name='post', @data={:title => 'Creating a post from the
     API', body: 'Lorem ipsum'}>
 
 
@@ -56,14 +56,14 @@ Given a `new_collection` array with two post elements:
     posts.delete
     # => nil
 
-## Elements
+## Resources
 
 ### Retrieve a representation (GET)
 
     post = api.resources.first
 
     post.retrieve
-    # => #<Element @name='post', @data={:title => 'Creating a post from the
+    # => #<Resource @name='post', @data={:title => 'Creating a post from the
     API', body: 'Lorem ipsum'}, @uri='http://myblog.com/api/posts/1'>
 
 ### Replace the element
@@ -72,7 +72,7 @@ Given a `new_collection` array with two post elements:
     data = {title: 'Modifying the post title'}
 
     post.replace(data)
-    # => #<Element @name='post', @data={:title => 'Modifying the post title',
+    # => #<Resource @name='post', @data={:title => 'Modifying the post title',
     body: 'Lorem ipsum'}>
 
 ### Create a new element
@@ -81,7 +81,7 @@ Given a `new_collection` array with two post elements:
     new_post = {title: 'Creating a post from the api', body: 'Lorem ipsum'}
 
     post.create(new_post)
-    # => #<Element @name='post', @data={:title => 'Creating a post from the
+    # => #<Resource @name='post', @data={:title => 'Creating a post from the
     API', body: 'Lorem ipsum'}, @uri='http://myblog.com/api/posts/2'>
 
 ### Delete the element
@@ -103,7 +103,7 @@ Given a `new_collection` array with two post elements:
     post = api.resources.posts.first
 
     post.resources
-    # => [#<Collection @name='comments'>, #<Element @name='author'>]
+    # => [#<Resource @name='comments'>, #<Resource @name='author'>]
 
 ## Resource discovery
 
@@ -116,9 +116,9 @@ Given a `new_collection` array with two post elements:
 ## Resource permissions
 
 Using the `Allow` header HyperClient should be able to restrict the allowed
-method on a given `Collection` or `Element`.
+method on a given `Resource` or `Resource`.
 
 ## Embedded
 
-HyperClient should be able to fetch `Elements` either from a link given in a
-`Collection` or by getting the data when is embedded in a `Collection`.
+HyperClient should be able to fetch `Resources` either from a link given in a
+`Resource` or by getting the data when is embedded in a `Resource`.
