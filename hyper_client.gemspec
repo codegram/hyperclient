@@ -14,6 +14,8 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = HyperClient::VERSION
 
+  gem.add_dependency 'httparty'
+
   gem.add_development_dependency 'minitest'
   gem.add_development_dependency 'turn'
   gem.add_development_dependency 'webmock'

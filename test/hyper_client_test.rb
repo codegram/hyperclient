@@ -42,7 +42,14 @@ describe HyperClient do
     end
 
     let(:element) do
-      HyperClient::Resource.new('http://api.example.org/productions/1', response)
+      HyperClient::Resource.base_uri = 'http://api.example.org'
+      HyperClient::Resource.new(response)
+    end
+
+    describe 'base_uri' do
+      it 'sets the base uri for all the resources' do
+        element.base_uri.to_s.must_equal 'http://api.example.org'
+      end
     end
 
     it 'sets the resource url' do
@@ -94,10 +101,36 @@ describe HyperClient do
         stub_request(:get, 'api.example.org/productions/1').
           to_return(body: 'This is the element')
 
-        body = element.get
-
-        body.must_equal 'This is the element'
+        response = element.get
+        response.body.must_equal 'This is the element'
+        response.code.must_equal 200
       end
+    end
+
+    describe 'post' do
+      it 'sends a POST request to the resource link' do
+        stub_request(:post, 'api.example.org/productions/1').
+          to_return(body: 'Posting like a big boy huh?', status: 201)
+
+        response = element.post({})
+        response.code.must_equal 201
+      end
+    end
+
+    describe 'put' do
+      it 'sends a PUT request'
+    end
+
+    describe 'options' do
+      it 'sends a OPTION request'
+    end
+
+    describe 'head' do
+      it 'sends a HEAD request'
+    end
+
+    describe 'delete' do
+      it 'sends a DELETE request'
     end
   end
 end

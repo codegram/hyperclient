@@ -1,6 +1,7 @@
 require "hyper_client/version"
 require 'json'
 require 'forwardable'
+require 'httparty'
 
 module HyperClient
 
@@ -12,8 +13,9 @@ module HyperClient
     response = Net::HTTP.get(self.class.entry_point)
     json = JSON.parse(response)
 
-    @entry_resource = Resource.new(self.class.entry_point.to_s, json)
-    @entry_resource.resources
+    Resource.base_uri = self.class.entry_point
+    @api = Resource.new(json)
+    @api.resources
   end
 
   module ClassMethods
@@ -27,83 +29,112 @@ module HyperClient
     extend Forwardable
     def_delegators :@response, :data, :resources
 
-    attr_reader :url
-
-    def initialize(url, response = nil)
-      @url = URI(url)
-      @url.merge!(@response['_links']['self']['href']) if @response
-
-      @response = Response.new(response, @url)
-      create_resources_accessors
-    end
-
-    def get
-      Net::HTTP.get(@url)
-    end
-
-    private
-    def create_resources_accessors
-      @response.resources.each do |name, resource|
-        self.class.class_eval do
-          define_method "#{name}" do
-            @response.resources.fetch("#{name}")
-          end
-        end
+      def initialize(response)
+        @response = Response.new(response)
+        create_resources_accessors
       end
-    end
-  end
 
-  class Response
-    def initialize(response, url)
-      @response = response
-      @url = url
-      @resources = {}
-    end
+      def get
+        HTTParty.get(url.to_s)
+      end
 
-    def resources
-      @resources.merge(links_resources).merge(embedded_resources)
-    end
+      def post(params)
+        HTTParty.post(url.to_s, params)
+      end
 
-    def data
-      @response.delete_if {|key, value| key =~ /^_/}
-    end
+      def put(params)
+        HTTParty.put(url.to_s, params)
+      end
 
-    private
-    def links_resources
-      return {} if !@response || !@response.include?('_links')
+      def options
+        HTTParty.options(url.to_s)
+      end
 
-      @response['_links'].inject({}) do |resources, (name, link)|
-        unless name == 'self'
-          if link.is_a?(Array)
-            collection = link.map do |element_link|
-              url = @url.merge(element_link['href'])
-              Resource.new(url)
+      def head
+        HTTParty.head(url.to_s)
+      end
+
+      def delete
+        HTTParty.delete(url.to_s)
+      end
+
+      def base_uri
+        @@base_uri
+      end
+
+      def self.base_uri=(value)
+        @@base_uri = URI(value)
+      end
+
+      def url
+        base_uri.merge(@response.url)
+      end
+
+      private
+
+      def create_resources_accessors
+        @response.resources.each do |name, resource|
+          self.class.class_eval do
+            define_method "#{name}" do
+              @response.resources.fetch("#{name}")
             end
-            resources.update(name => collection)
-          else
-            url = @url.merge(link['href'])
-            resources.update(name => Resource.new(url))
           end
         end
-        resources
       end
     end
 
-    def embedded_resources
-      return {} if !@response || !@response.include?('_embedded')
+    class Response
+      def initialize(response)
+        @response = response
+      end
 
-      @response['_embedded'].inject({}) do |resources, (name, response)|
-        if response.is_a?(Array)
-          collection = response.map do |element_response|
-            Resource.new(@url, element_response)
-          end
-          resources.update(name => collection)
-        else
-          resources.update(name => Resource.new(@url, response))
+      def resources
+        unless defined?(@resources)
+          @resources = extract_resources_from('_links').merge(extract_resources_from('_embedded'))
         end
+        @resources
+      end
 
+      def data
+        @response.delete_if {|key, value| key =~ /^_/}
+      end
+
+      def url
+        @response['_links']['self']['href']
+      end
+
+      private
+      # Bonus points for refactoring this
+      def extract_resources_from(selector)
+        return {} if !@response || !@response.include?(selector)
+
+        @response[selector].inject({}) do |resources, (name, response)|
+
+          unless name == 'self'
+            resource = if response.is_a?(Array)
+                         response.map do |element|
+
+                           if element.include?('href')
+                             element = build_self_link_response(element['href'])
+                           end
+
+                           Resource.new(element)
+                         end
+                       else
+                         if response.include?('href')
+                           response = build_self_link_response(response['href'])
+                         end
+                         Resource.new(response)
+                       end
+
+            resources.update(name => resource)
+          end
         resources
+        end
+      end
+
+      def build_self_link_response(link)
+        {'_links' => {'self' => {'href' => link}} }
       end
     end
   end
-end
