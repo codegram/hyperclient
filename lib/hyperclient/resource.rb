@@ -1,4 +1,5 @@
 require 'hyperclient/response'
+require 'httparty'
 
 module Hyperclient
   class Resource
