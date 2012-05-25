@@ -1,1 +1,1 @@
-rvm use --create 1.9.3@hyper_client
+rvm use --create 1.9.3@hyperclient
