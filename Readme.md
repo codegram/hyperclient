@@ -2,6 +2,10 @@
 
 Hyperclient is a Ruby Hypermedia API client.
 
+## Documentation
+
+[http://codegram.github.com/hyperclient](http://codegram.github.com/hyperclient)
+
 ## Usage
 
 Example API client:
