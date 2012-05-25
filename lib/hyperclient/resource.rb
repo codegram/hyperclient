@@ -1,6 +1,6 @@
-require 'hyper_client/response'
+require 'hyperclient/response'
 
-module HyperClient
+module Hyperclient
   class Resource
     extend Forwardable
     def_delegators :@response, :data, :resources

@@ -1,10 +1,11 @@
 require_relative 'test_helper'
+require 'hyperclient'
 
-describe HyperClient do
+describe Hyperclient do
   let(:api) do
     @klass = Class.new
     @klass.instance_eval do 
-      include HyperClient
+      include Hyperclient
 
       entry_point 'http://api.example.org'
     end
@@ -15,7 +16,7 @@ describe HyperClient do
   describe 'entry point' do
     it 'allows to set an entry point for an API' do
       klass = Class.new do
-        include HyperClient
+        include Hyperclient
         entry_point 'http://api.example.org'
       end
 

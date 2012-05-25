@@ -1,9 +1,9 @@
-require "hyper_client/version"
+require "hyperclient/version"
 require 'json'
 require 'forwardable'
 require 'httparty'
 
-module HyperClient
+module Hyperclient
 
   def self.included(base)
     base.send :extend, ClassMethods
@@ -27,4 +27,4 @@ module HyperClient
 
 end
 
-require 'hyper_client/resource'
+require 'hyperclient/resource'

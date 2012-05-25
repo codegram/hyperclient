@@ -1,13 +1,14 @@
 require_relative '../test_helper'
+require 'hyperclient/resource'
 
-describe HyperClient::Resource do
+describe Hyperclient::Resource do
   let(:response) do
     JSON.parse(File.read('test/fixtures/element.json'))
   end
 
   let(:element) do
-    HyperClient::Resource.base_uri = 'http://api.example.org'
-    HyperClient::Resource.new(response)
+    Hyperclient::Resource.base_uri = 'http://api.example.org'
+    Hyperclient::Resource.new(response)
   end
 
   describe 'base_uri' do
@@ -34,7 +35,7 @@ describe HyperClient::Resource do
 
   it 'crates the resource accessors' do
     element.must_respond_to :filter
-    element.filter.must_be_kind_of HyperClient::Resource
+    element.filter.must_be_kind_of Hyperclient::Resource
   end
 
   it 'sets resource relations from links' do
@@ -43,17 +44,17 @@ describe HyperClient::Resource do
 
   it 'also sets relations from embedded resources' do
     element.resources.must_include 'author'
-    element.author.must_be_kind_of HyperClient::Resource
+    element.author.must_be_kind_of Hyperclient::Resource
   end
 
   it 'extracts collection resources from embedded resources' do
     element.episodes.length.must_equal 2
-    element.episodes.first.must_be_kind_of HyperClient::Resource
+    element.episodes.first.must_be_kind_of Hyperclient::Resource
   end
 
   it 'extracts collection resources from links resources' do
     element.episodes.first.media.length.must_equal 2
-    element.episodes.first.media.first.must_be_kind_of HyperClient::Resource
+    element.episodes.first.media.first.must_be_kind_of Hyperclient::Resource
   end
 
   it 'does not set self as a relation' do

@@ -1,4 +1,4 @@
-module HyperClient
+module Hyperclient
   class Response
     def initialize(response)
       @response = response

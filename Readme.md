@@ -1,13 +1,13 @@
-# HyperClient
+# Hyperclient
 
-HyperClient is a Ruby Hypermedia API client.
+Hyperclient is a Ruby Hypermedia API client.
 
 ## Usage
 
 Example API client:
 
     class MyAPIClient
-      include HyperClient
+      include Hyperclient
 
       entry_point 'http://myapp.com/api'
       content_type [:json, :xml]
@@ -115,10 +115,10 @@ Given a `new_collection` array with two post elements:
 
 ## Resource permissions
 
-Using the `Allow` header HyperClient should be able to restrict the allowed
+Using the `Allow` header Hyperclient should be able to restrict the allowed
 method on a given `Resource` or `Resource`.
 
 ## Embedded
 
-HyperClient should be able to fetch `Resources` either from a link given in a
+Hyperclient should be able to fetch `Resources` either from a link given in a
 `Resource` or by getting the data when is embedded in a `Resource`.
