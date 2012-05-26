@@ -47,7 +47,7 @@ module Hyperclient
     #
     # Returns nothing.
     def reload
-      @response = Response.new(@http.get)
+      @response = Response.new(get)
     end
 
     private
