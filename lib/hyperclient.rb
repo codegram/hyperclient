@@ -24,7 +24,7 @@ module Hyperclient
 
   # Private: Delegate the method to the API if it exists.
   #
-  # This way the we can call our API client with the resources name instead of
+  # This way we can call our API client with the resources name instead of
   # having to add the methods to it.
   def method_missing(method, *args, &block)
     if api.respond_to?(method)
