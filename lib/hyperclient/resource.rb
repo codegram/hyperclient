@@ -1,60 +1,90 @@
 require 'hyperclient/response'
-require 'httparty'
+require 'hyperclient/http'
 
 module Hyperclient
+  # Public: Represents a resource from your API. Its responsability is to
+  # perform HTTP requests against itself and ease the way you access the
+  # resource's data, links and embedded resources.
   class Resource
     extend Forwardable
-    def_delegators :@response, :data, :resources
+    # Public: Delegate data and resources to the response.
+    def_delegators :response, :data, :resources
 
-    def initialize(response)
-      @response = Response.new(response)
-      create_resources_accessors
+    # Public: Delegate all HTTP methods (get, post, put, delete, options and
+    # head) to @http.
+    def_delegators :@http, :get, :post, :put, :delete, :options, :head
+
+    # Internal: Initializes a Resource.
+    #
+    # url - A string with the url of the resource. Can be either absolute or
+    # relative.
+    #
+    # response - An optional Hash representation of the resource's HTTP 
+    # response.
+    def initialize(url, response = nil)
+      @url = url
+      @http = HTTP.new(self)
+      @response = Response.new(response) if response
     end
 
-    def get
-      HTTParty.get(url.to_s)
+    # Internal: Sets the entry point for all the resources in your API client.
+    #
+    # url - A String with the URL of your API entry point.
+    #
+    # Returns nothing.
+    def self.entry_point=(url)
+      @@entry_point = URI(url)
     end
 
-    def post(params)
-      HTTParty.post(url.to_s, params)
-    end
-
-    def put(params)
-      HTTParty.put(url.to_s, params)
-    end
-
-    def options
-      HTTParty.options(url.to_s)
-    end
-
-    def head
-      HTTParty.head(url.to_s)
-    end
-
-    def delete
-      HTTParty.delete(url.to_s)
-    end
-
-    def base_uri
-      @@base_uri
-    end
-
-    def self.base_uri=(value)
-      @@base_uri = URI(value)
-    end
-
+    # Internal: Returns the resource's absolute url.
+    #
+    # Returns nothing.
     def url
-      base_uri.merge(@response.url)
+      @@entry_point.merge(@url).to_s
+    end
+
+    # Public: Gets a fresh response from the resource representation.
+    #
+    # Returns nothing.
+    def reload
+      @response = Response.new(@http.get)
     end
 
     private
 
-    def create_resources_accessors
-      @response.resources.each do |name, resource|
-        self.class.class_eval do
-          define_method "#{name}" do
-            @response.resources.fetch("#{name}")
-          end
+    # Private: Returns the resource response.
+    def response
+      reload unless @response
+      @response
+    end
+
+    # Private: It defines an accessor for an existing resource inside the
+    # current resource.
+    #
+    # Examples
+    #
+    #   post = Resource.new('/posts/1')
+    #   post.author # Triggers method_missing defining a new author method.
+    #
+    # Returns nothing.
+    def method_missing(method, *args, &block)
+      if resources.include?(method.to_s)
+        define_resource_accessor(method)
+        send method, *args, &block
+      else
+        super
+      end
+    end
+
+    # Private: Defines a method that fetches a resoruce with the same name.
+    #
+    # name - A String or Symbol of the method (resource) name.
+    #
+    # Returns nothing.
+    def define_resource_accessor(name)
+      self.class.class_eval do
+        define_method "#{name}" do
+          resources.fetch("#{name}")
         end
       end
     end
