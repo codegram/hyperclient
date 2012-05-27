@@ -4,11 +4,11 @@ require 'hyperclient/http'
 module Hyperclient
   # Public: Represents a resource from your API. Its responsability is to
   # perform HTTP requests against itself and ease the way you access the
-  # resource's data, links and embedded resources.
+  # resource's attributes, links and embedded resources.
   class Resource
     extend Forwardable
-    # Public: Delegate data and resources to the response.
-    def_delegators :response, :data, :resources
+    # Public: Delegate attributes and resources to the response.
+    def_delegators :response, :attributes, :resources
 
     # Public: Delegate all HTTP methods (get, post, put, delete, options and
     # head) to @http.

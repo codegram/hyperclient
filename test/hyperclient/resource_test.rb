@@ -38,7 +38,7 @@ module Hyperclient
       it 'initializes the response when one is given' do
         resource = Resource.new('/', response)
 
-        resource.data.wont_be_empty
+        resource.attributes.wont_be_empty
       end
     end
 
