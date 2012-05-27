@@ -1,47 +1,45 @@
 module Hyperclient
+  # Internal: Discovers resources from an HTTP response.
   class Discoverer
+    # Public: Initializes a Discoverer.
+    #
+    # response - A Hash representing an HTTP response of a resource.
     def initialize(response)
       @response = response
     end
 
-    def resources
-      unless defined?(@resources)
-        @resources = extract_resources_from('_links').merge(extract_resources_from('_embedded'))
-      end
-      @resources
+    # Public: Returns a collection of Hyperclient::Resource extracted from the
+    # _links response.
+    def links
+      discover_resources_from(@response['_links'])
     end
 
-    # Bonus points for refactoring this
-    def extract_resources_from(selector)
-      return {} if !@response || !@response.include?(selector)
+    # Public: Returns a collection of Hyperclient::Resource extracted from the
+    # _embedded response.
+    def embedded
+      discover_resources_from(@response['_embedded'])
+    end
 
-      @response[selector].inject({}) do |resources, (name, response)|
+    private
 
-        unless name == 'self'
-          resource = if response.is_a?(Array)
-                       response.map do |element|
+    # Private: Returns a Hash with the names of the resources as keys and the
+    # resources as values.
+    def discover_resources_from(resources)
+      return {} unless resources.respond_to?(:inject)
 
-                         if element.include?('href')
-                           element = build_self_link_response(element['href'])
-                         end
-
-                         Resource.new(element)
-                       end
-                     else
-                       if response.include?('href')
-                         response = build_self_link_response(response['href'])
-                       end
-                       Resource.new(response)
-                     end
-
-          resources.update(name => resource)
-        end
-      resources
+      resources.inject({}) do |resources, (name, resource)|
+        next resources if name == 'self'
+        resources.update(name => build_resource(resource))
       end
     end
 
-    def build_self_link_response(link)
-      {'_links' => {'self' => {'href' => link}} }
+    # Private: Returns a Resource (or a collection of Resources).
+    def build_resource(resource)
+      return resource.map(&method(:build_resource)) if resource.is_a?(Array)
+
+      Resource.new(resource.delete('href'), resource)
     end
   end
 end
+
+require 'hyperclient/resource'
