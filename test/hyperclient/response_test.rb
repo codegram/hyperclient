@@ -16,7 +16,7 @@ module Hyperclient
         response.attributes.wont_include '_links'
       end
 
-      it 'does not inclide _embedded as attributes' do
+      it 'does not include _embedded as attributes' do
         response.attributes.wont_include '_embedded'
       end
     end
