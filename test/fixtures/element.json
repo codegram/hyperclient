@@ -4,7 +4,7 @@
             "href": "/productions/1"
         },
         "filter": {
-            "href": "?categories"
+            "href": "/productions/1?categories="
         }
     },
     "title": "Real World ASP.NET MVC3",
