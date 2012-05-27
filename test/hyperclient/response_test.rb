@@ -21,6 +21,16 @@ module Hyperclient
       end
     end
 
+    describe 'resources' do
+      it 'returns a Hash with linked resources' do
+        response.resources.keys.must_include 'filter'
+      end
+
+      it 'returns a Hash with embedded resources' do
+        response.resources.keys.must_include 'author', 'episodes'
+      end
+    end
+
     describe 'url' do
       it 'returns the url of the resource grabbed from the response' do
         response.url.must_equal '/productions/1'

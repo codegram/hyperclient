@@ -8,15 +8,22 @@ module Hyperclient
   class Response
     extend Forwardable
 
-    # Public: Delegate resources to the discoverer.
-    def_delegators :@discoverer, :resources
-
     # Public: Initializes a Response.
     #
     # response - A Hash representing the response from the API.
     def initialize(response)
       @response = response
       @discoverer = Discoverer.new(@response)
+    end
+
+    # Public: Returns a collection of resources, including the ones discovered
+    # at the _links section and the _embedded section.
+    def resources
+      unless defined?(@resources)
+        @resources = @discoverer.links.merge(@discoverer.embedded)
+      end
+
+      @resources
     end
 
     # Public: Returns a Hash with the attributes of the resource.
