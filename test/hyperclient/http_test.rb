@@ -19,6 +19,13 @@ module Hyperclient
 
         http.get.must_equal 'This is the resource'
       end
+
+      it 'returns the parsed response' do
+        stub_request(:get, 'api.example.org/productions/1').
+          to_return(body: '{"some_json": 12345 }', headers: {content_type: 'application/json'})
+
+        http.get.must_equal({'some_json' => 12345})
+      end
     end
 
     describe 'post' do

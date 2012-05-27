@@ -4,7 +4,11 @@ require 'hyperclient/resource'
 module Hyperclient
   describe Resource do
     let(:response) do
-      JSON.parse(File.read('test/fixtures/element.json'))
+      File.read('test/fixtures/element.json')
+    end
+
+    let(:parsed_response) do
+      JSON.parse(response)
     end
 
     before do
@@ -20,7 +24,7 @@ module Hyperclient
 
     describe 'method_missing' do
       let(:resource) do
-        Resource.new('/', response)
+        Resource.new('/', parsed_response)
       end
 
       it 'defines a method when the method is a resource' do
@@ -36,7 +40,7 @@ module Hyperclient
 
     describe 'initialize' do
       it 'initializes the response when one is given' do
-        resource = Resource.new('/', response)
+        resource = Resource.new('/', parsed_response)
 
         resource.attributes.wont_be_empty
       end
@@ -45,7 +49,7 @@ module Hyperclient
     describe 'reload' do
       before do
         stub_request(:get, "http://api.example.org/productions/1").
-          to_return(:status => 200, :body => response)
+          to_return(:status => 200, :body => response, headers: {content_type: 'application/json'})
       end
 
       it 'retrives itself from the API' do
