@@ -24,7 +24,7 @@ module Hyperclient
     def initialize(url, response = nil)
       @url = url
       @http = HTTP.new(self)
-      @response = Response.new(response) if response
+      initialize_response(response)
     end
 
     # Internal: Sets the entry point for all the resources in your API client.
@@ -47,10 +47,16 @@ module Hyperclient
     #
     # Returns nothing.
     def reload
-      @response = Response.new(get)
+      initialize_response(get)
     end
 
     private
+    def initialize_response(response)
+      if response && response.is_a?(Hash)
+        @response = Response.new(response)
+        @url = @response.url if @response.has_url?
+      end
+    end
 
     # Private: Returns the resource response.
     def response

@@ -44,6 +44,18 @@ module Hyperclient
 
         resource.attributes.wont_be_empty
       end
+
+      it 'updates the resource URL if the response has one' do
+        resource = Resource.new('/', parsed_response)
+
+        resource.url.must_include '/productions/1'
+      end
+
+      it 'does no update the resource URL if the response dos not have one' do
+        resource = Resource.new('/', {})
+
+        resource.url.wont_include '/productions/1'
+      end
     end
 
     describe 'reload' do
