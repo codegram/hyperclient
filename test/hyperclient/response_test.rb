@@ -35,17 +35,11 @@ module Hyperclient
       it 'returns the url of the resource grabbed from the response' do
         response.url.must_equal '/productions/1'
       end
-    end
 
-    describe 'has_url?' do
-      it 'returns true when the response has the url to the resource' do
-        response.has_url?.must_equal true
-      end
-
-      it 'returns false when the response does not include the resource url' do
+      it 'returns nil when the response does not include the resource url' do
         response = Response.new({_links: {media: {href: '/media/1'}}})
 
-        response.has_url?.must_equal false
+        response.url.must_equal nil
       end
     end
   end

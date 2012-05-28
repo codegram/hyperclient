@@ -54,7 +54,7 @@ module Hyperclient
     def initialize_response(response)
       if response && response.is_a?(Hash)
         @response = Response.new(response)
-        @url = @response.url if @response.has_url?
+        @url = @response.url if @response.url
       end
     end
 

@@ -33,14 +33,10 @@ module Hyperclient
 
     # Public: Returns a String with the resource URL.
     def url
-      @response['_links']['self']['href']
-    end
-
-    # Public: Returns a True or False wether the response includes a URL to the
-    # resource or not. Determines if the Resoruce should update its URL.
-    def has_url?
-      !!(@response && @response['_links'] && @response['_links']['self'] &&
-        @response['_links']['self']['href'])
+      if @response && @response['_links'] && @response['_links']['self'] &&
+          (url = @response['_links']['self']['href'])
+        return url
+      end
     end
   end
 end
