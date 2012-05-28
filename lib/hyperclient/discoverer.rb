@@ -11,13 +11,13 @@ module Hyperclient
     # Public: Returns a collection of Hyperclient::Resource extracted from the
     # _links response.
     def links
-      discover_resources_from(@response['_links'])
+      @links ||= discover_resources_from(@response['_links'])
     end
 
     # Public: Returns a collection of Hyperclient::Resource extracted from the
     # _embedded response.
     def embedded
-      discover_resources_from(@response['_embedded'])
+      @embedded ||= discover_resources_from(@response['_embedded'])
     end
 
     private
