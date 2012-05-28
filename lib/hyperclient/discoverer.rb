@@ -1,6 +1,9 @@
 module Hyperclient
   # Public: Discovers resources from an HTTP response.
   class Discoverer
+    # Include goodness of Enumerable.
+    include Enumerable
+
     # Public: Initializes a Discoverer.
     #
     # response - A Hash representing some resources.

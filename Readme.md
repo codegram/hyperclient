@@ -47,6 +47,8 @@ api.links.each do |link|
 end
 ````
 
+Actually, you can call any [Enumerable][enumerable] method :D
+
 If a Resource doesn't have friendly name you can always access it as a Hash:
 
 ````ruby
@@ -141,3 +143,4 @@ MIT License. Copyright 2012 [Codegram Technologies][codegram]
 [documentup]: http://codegram.github.com/hyperclient
 [httparty]: http://github.com/jnunemaker/httparty
 [examples]: http://github.com/codegram/hyperclient/tree/master/examples
+[enumerable][http://ruby-doc.org/core-1.9.3/Enumerable.html]
