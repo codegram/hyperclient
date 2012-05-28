@@ -4,3 +4,4 @@ gemspec
 
 gem 'guard'
 gem 'guard-minitest'
+gem 'pry'
