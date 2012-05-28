@@ -1,11 +1,18 @@
 require 'httparty'
 
+# Public: A parser for HTTParty that understand the mime application/hal+json.
+class JSONHalParser < HTTParty::Parser
+  SupportedFormats.merge!({'application/hal+json' => :json})
+end
+
 module Hyperclient
   # Internal: This class wrapps HTTParty and performs the HTTP requests for a
   # resource.
   class HTTP
     extend Forwardable
     include HTTParty
+
+    parser JSONHalParser
 
     # Private: Delegate the url to the resource.
     def_delegators :@resource, :url
