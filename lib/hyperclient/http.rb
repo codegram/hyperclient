@@ -1,4 +1,5 @@
 require 'httparty'
+require 'forwardable'
 
 # Public: A parser for HTTParty that understand the mime application/hal+json.
 class JSONHalParser < HTTParty::Parser
