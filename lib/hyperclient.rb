@@ -15,20 +15,18 @@ module Hyperclient
     base.send :extend, ClassMethods
   end
 
-  private
-  # Private: Initializes the API with the entry point.
-  def api
-    @api = Resource.new('/') unless @api
-    @api
+  # Public: Initializes the API with the entry point.
+  def entry
+    @entry ||= Resource.new('/', {name: 'Entry point'})
   end
 
-  # Private: Delegate the method to the API if it exists.
+  # Internal: Delegate the method to the API if it exists.
   #
   # This way we can call our API client with the resources name instead of
   # having to add the methods to it.
   def method_missing(method, *args, &block)
-    if api.respond_to?(method)
-      api.send(method, *args, &block)
+    if entry.respond_to?(method)
+      entry.send(method, *args, &block)
     else
       super
     end

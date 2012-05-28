@@ -16,6 +16,20 @@ describe Hyperclient do
     end
   end
 
+  describe 'entry' do
+    before do
+      api.entry_point 'http://my.api.org'
+    end
+
+    it 'initializes a Resource at the entry point' do
+      api.new.entry.url.must_equal 'http://my.api.org/'
+    end
+    
+    it 'sets the Resourse name' do
+      api.new.name.must_equal 'Entry point'
+    end
+  end
+
   describe 'method missing' do
     class Hyperclient::Resource
       def foo
