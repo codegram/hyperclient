@@ -21,6 +21,14 @@ module Hyperclient
       end
     end
 
+    describe '[]' do
+      it 'fetches a resource' do
+        discoverer = Discoverer.new(response['_links'])
+
+        discoverer['filter'].must_be_kind_of Resource
+      end
+    end
+
     describe 'resources' do
       it 'does not include self as a resource' do
         discoverer = Discoverer.new(response['_links'])

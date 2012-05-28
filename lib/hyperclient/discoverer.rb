@@ -8,6 +8,17 @@ module Hyperclient
       @response = response
     end
 
+    # Public: Fetch a Resource with the given name. It is useful when
+    # resources don't have a friendly name and you can't call a method on the
+    # Discoverer.
+    #
+    # name - A String representing the resource name.
+    #
+    # Returns a Resource
+    def [](name)
+      resources[name.to_s]
+    end
+
     # Public: Iterates over the discovered resources so one can navigate easily
     # between them.
     #

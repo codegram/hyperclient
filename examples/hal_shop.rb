@@ -40,7 +40,7 @@ puts
 puts "Let's see what stats we have:"
 print_attributes(api.resources.stats.attributes)
 
-products = api.links.send("http://hal-shop.heroku.com/rels/products").reload
+products = api.links["http://hal-shop.heroku.com/rels/products"].reload
 
 puts 
 puts "And what's the inventory of products?"
@@ -57,5 +57,3 @@ print_resources(products.links)
 puts
 puts 'Attributes of the first product?'
 print_attributes(products.resources.products.first.attributes)
-
-p products.products
