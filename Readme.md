@@ -10,72 +10,86 @@ Hyperclient is a Ruby Hypermedia API client.
 
 Example API client:
 
-    class MyAPIClient
-      include Hyperclient
+````ruby
+class MyAPIClient
+  include Hyperclient
 
-      entry_point 'http://myapp.com/api'
-      authorization 'user', 'password', :digest 
-    end
+  entry_point 'http://myapp.com/api'
+  authorization 'user', 'password', :digest 
+end
+````
 
 [More examples][examples]
 
 ## HAL
 
-Hyperclient only works with JSON HAL friendly APIs. 
-[Learn about JSON HAL][hal]
+Hyperclient only works with JSON HAL friendly APIs. [Learn about JSON HAL][hal].
 
 ## Resources
 
-Hyperclient will try to fetch and discover the resoruces from your API. You can
-access your entry point resources with.
+Hyperclient will try to fetch and discover the resources from your API. 
 
 ### Links
 
 Accessing the links for a given resource is quite straightforward:
 
-    api = MyAPIClient.new
-    api.links.posts_categories
-    # => #<Resource @name="posts_categories" ...>
+````ruby
+api = MyAPIClient.new
+api.links.posts_categories
+# => #<Resource @name="posts_categories" ...>
+````
 
 You can also iterate between all the links:
 
-    api.links.each do |link|
-      puts link.name, link.url
-    end
+````ruby
+api.links.each do |link|
+  puts link.name, link.url
+end
+````
 
 If a Resource doesn't have friendly name you can always access it as a Hash:
 
-    api = MyAPIClient.new
-    api.links['http://myapi.org/rels/post_categories']
+````ruby
+api = MyAPIClient.new
+api.links['http://myapi.org/rels/post_categories']
+````
 
 ### Embedded resources
 
 Accessing embedded resources is similar to accessing links:
 
-    api = MyAPIClient.new
-    api.resources.posts
-    # => #<Resource @name="posts" ...>
+````ruby
+api = MyAPIClient.new
+api.resources.posts
+# => #<Resource @name="posts" ...>
+````
 
 And you can also iterate between them:
 
-    api.resources.each do |resource|
-      puts resource.name, resource.url
-    end
+````ruby
+api.resources.each do |resource|
+  puts resource.name, resource.url
+end
+````
 
-You can even chain different calls:
+You can even chain different calls (this also applies for links):
 
-    api.resources.posts.first.links.author
-    # => #<Resource @name="author" ...>
+````ruby
+api.resources.posts.first.links.author
+# => #<Resource @name="author" ...>
+````
 
 ### Attributes
 
 Not only you might have links and embedded resources in a Resource, but also
 its attributes:
 
-    api.resources.posts.first.attributes
-    # => {title: 'Linting the hell out of your Ruby classes with Pelusa',
-          teaser: 'Gain new insights about your code thanks to static analysis',
-          body:   '...' }
+````ruby
+api.resources.posts.first.attributes
+# => {title: 'Linting the hell out of your Ruby classes with Pelusa',
+      teaser: 'Gain new insights about your code thanks to static analysis',
+      body:   '...' }
+````
 
 ### HTTP
 
@@ -85,15 +99,17 @@ with it, right?
 Hyperclient uses [HTTParty][httparty] under the hood to perform HTTP calls. You can
 call any valid HTTP method on any Resource:
 
-    post = api.resources.posts.first
-    post.get
-    post.head
-    post.put({title: 'New title'})
-    post.delete
-    post.options
+````ruby
+post = api.resources.posts.first
+post.get
+post.head
+post.put({title: 'New title'})
+post.delete
+post.options
 
-    posts = api.resources.posts
-    posts.post({title: "I'm a blogger!", body: 'Wohoo!!'})
+posts = api.resources.posts
+posts.post({title: "I'm a blogger!", body: 'Wohoo!!'})
+````
 
 ## TODO
 
