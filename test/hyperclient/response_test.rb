@@ -12,7 +12,7 @@ module Hyperclient
         response.attributes['title'].must_equal 'Real World ASP.NET MVC3'
       end
 
-      it 'dos not include _links as attributes' do
+      it 'does not include _links as attributes' do
         response.attributes.wont_include '_links'
       end
 
@@ -21,13 +21,17 @@ module Hyperclient
       end
     end
 
-    describe 'resources' do
-      it 'returns a Hash with linked resources' do
-        response.resources.keys.must_include 'filter'
+    describe 'links' do
+      it 'returns resources included in the _links section' do
+        response.links.filter.must_be_kind_of Resource
       end
+    end
 
-      it 'returns a Hash with embedded resources' do
-        response.resources.keys.must_include 'author', 'episodes'
+    describe 'resources' do
+      it 'returns resources included in the _embedded section' do
+        response.resources.author.must_be_kind_of Resource
+        response.resources.episodes.first.must_be_kind_of Resource
+        response.resources.episodes.last.must_be_kind_of Resource
       end
     end
 
