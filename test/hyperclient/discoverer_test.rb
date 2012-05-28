@@ -7,42 +7,61 @@ module Hyperclient
       Resource.entry_point = 'http://api.myexample.org/'
     end
 
-    let (:discoverer) do
-      Discoverer.new(JSON.parse(File.read('test/fixtures/element.json')))
+    let (:response) do
+      JSON.parse(File.read('test/fixtures/element.json'))
     end
 
-    describe 'links' do
-      it 'discovers resoures from _links' do
-        discoverer.links.must_include 'filter'
-      end
+    describe 'each' do
+      it 'iterates between resources' do
+        discoverer = Discoverer.new(response['_links'])
 
-      it 'initializes resources with its url' do
-        discoverer.links['filter'].url.must_include '/productions/1?categories'
-      end
-
-      it 'does not set self as a resource' do
-        discoverer.links.wont_include 'self'
+        discoverer.each do |resource|
+          resource.must_be_kind_of Resource
+        end
       end
     end
 
-    describe 'embedded' do
-      it 'discovers resoures from _embedded' do
-        discoverer.embedded.must_include 'episodes', 'author'
+    describe 'resources' do
+      it 'does not include self as a resource' do
+        discoverer = Discoverer.new(response['_links'])
+
+        lambda { discoverer.self }.must_raise NoMethodError
       end
 
-      it 'initializes resources with the embedded data' do
-        discoverer.embedded['author'].attributes.must_include 'name'
+      it 'builds single resources' do
+        discoverer = Discoverer.new(response['_links'])
+
+        discoverer.filter.must_be_kind_of Resource
       end
 
-      it 'also discovers collection resources' do
-        discoverer.embedded['episodes'].length.must_equal 2
+      it 'builds collection resources' do
+        discoverer = Discoverer.new(response['_embedded'])
+
+        discoverer.episodes.must_be_kind_of Array
       end
 
-      it 'initializes embedded collection resources' do
-        episode = discoverer.embedded['episodes'].first
+      it 'also builds elements in collection resources' do
+        discoverer = Discoverer.new(response['_embedded'])
 
-        episode.url.must_include '/episodes/1'
-        episode.attributes.must_include 'title'
+        discoverer.episodes.first.must_be_kind_of Resource
+      end
+
+      it 'initializes resources with its URL' do
+        discoverer = Discoverer.new(response['_links'])
+
+        discoverer.filter.url.wont_be_empty
+      end
+
+      it 'initializes resources with the response' do
+        discoverer = Discoverer.new(response['_embedded'])
+
+        discoverer.author.attributes.wont_be_empty
+      end
+
+      it 'initializes resources with its name' do
+        discoverer = Discoverer.new(response['_links'])
+
+        discoverer.filter.name.wont_be_empty
       end
     end
   end

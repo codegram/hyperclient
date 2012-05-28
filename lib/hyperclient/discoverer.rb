@@ -1,43 +1,47 @@
 module Hyperclient
-  # Internal: Discovers resources from an HTTP response.
+  # Public: Discovers resources from an HTTP response.
   class Discoverer
     # Public: Initializes a Discoverer.
     #
-    # response - A Hash representing an HTTP response of a resource.
+    # response - A Hash representing some resources.
     def initialize(response)
       @response = response
     end
 
-    # Public: Returns a collection of Hyperclient::Resource extracted from the
-    # _links response.
-    def links
-      @links ||= discover_resources_from(@response['_links'])
+    # Public: Iterates over the discovered resources so one can navigate easily
+    # between them.
+    #
+    # block - A block to pass to each.
+    # 
+    # Returns an Enumerable.
+    def each(&block)
+      resources.values.each(&block)
     end
 
-    # Public: Returns a collection of Hyperclient::Resource extracted from the
-    # _embedded response.
-    def embedded
-      @embedded ||= discover_resources_from(@response['_embedded'])
+    # Public: Returns a Resource with the name of the method when exists.
+    def method_missing(method, *args, &block)
+      resources.fetch(method.to_s) { super }
     end
 
     private
+    # Internal: Returns a Hash with the resources of the response.
+    def resources
+      return {} unless @response.respond_to?(:inject)
 
-    # Private: Returns a Hash with the names of the resources as keys and the
-    # resources as values.
-    def discover_resources_from(resources)
-      return {} unless resources.respond_to?(:inject)
-
-      resources.inject({}) do |resources, (name, resource)|
-        next resources if name == 'self'
-        resources.update(name => build_resource(resource))
+      @resources ||= @response.inject({}) do |memo, (name, response)|
+        next memo if name == 'self'
+        memo.update(name => build_resource(response, name))
       end
     end
 
-    # Private: Returns a Resource (or a collection of Resources).
-    def build_resource(resource)
-      return resource.map(&method(:build_resource)) if resource.is_a?(Array)
+    # Internal: Returns a Resource (or a collection of Resources).
+    #
+    # response - A Hash representing the resource response.
+    # name     - An optional String with the name of the resource.
+    def build_resource(response, name = nil)
+      return response.map(&method(:build_resource)) if response.is_a?(Array)
 
-      Resource.new(resource.delete('href'), resource)
+      Resource.new(response.delete('href'), {response: response, name: name})
     end
   end
 end
