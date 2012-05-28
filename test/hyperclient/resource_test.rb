@@ -20,41 +20,40 @@ module Hyperclient
         resource = Resource.new('/path/to/resource')
         resource.url.to_s.must_equal 'http://api.example.org/path/to/resource'
       end
-    end
 
-    describe 'method_missing' do
-      let(:resource) do
-        Resource.new('/', parsed_response)
-      end
-
-      it 'defines a method when the method is a resource' do
-        resource.filter.must_be_kind_of Resource
-      end
-
-      it 'raises when there is no resource with that method name' do
-        lambda {
-          resource.fake_resource
-        }.must_raise NoMethodError
+      it 'returns the given url if it cannot merge it' do
+        resource = Resource.new('/search={terms}')
+        resource.url.to_s.must_equal '/search={terms}'
       end
     end
 
     describe 'initialize' do
-      it 'initializes the response when one is given' do
-        resource = Resource.new('/', parsed_response)
+      before do
+        stub_request(:get, 'http://api.example.org')
+      end
 
-        resource.attributes.wont_be_empty
+      it 'initializes the response when one is given' do
+        resource = Resource.new('/', {response: JSON.parse(response)})
+
+        assert_not_requested(:get, 'http://api.example.org/')
       end
 
       it 'updates the resource URL if the response has one' do
-        resource = Resource.new('/', parsed_response)
+        resource = Resource.new('/', {response: JSON.parse(response)})
 
         resource.url.must_include '/productions/1'
       end
 
-      it 'does no update the resource URL if the response dos not have one' do
+      it 'does no update the resource URL if the response does not have one' do
         resource = Resource.new('/', {})
 
         resource.url.wont_include '/productions/1'
+      end
+
+      it 'sets the resource name' do
+        resource = Resource.new('/', {name: 'posts'})
+
+        resource.name.must_equal 'posts'
       end
     end
 
@@ -69,6 +68,12 @@ module Hyperclient
         resource.reload
 
         assert_requested(:get, 'http://api.example.org/productions/1', times: 1)
+      end
+
+      it 'returns itself' do
+        resource = Resource.new('/productions/1')
+
+        resource.reload.must_equal resource
       end
     end
   end
