@@ -1,62 +1,82 @@
 require 'hyperclient/response'
-require 'httparty'
+require 'hyperclient/http'
 
 module Hyperclient
+  # Public: Represents a resource from your API. Its responsability is to
+  # perform HTTP requests against itself and ease the way you access the
+  # resource's attributes, links and embedded resources.
   class Resource
     extend Forwardable
-    def_delegators :@response, :data, :resources
+    # Public: Delegate attributes and resources to the response.
+    def_delegators :response, :attributes, :resources, :links
 
-    def initialize(response)
-      @response = Response.new(response)
-      create_resources_accessors
+    # Public: Delegate all HTTP methods (get, post, put, delete, options and
+    # head) to Hyperclient::HTTP.
+    def_delegators :@http, :get, :post, :put, :delete, :options, :head
+
+    # Public: A String representing the Resource name.
+    attr_reader :name
+
+    # Public: Initializes a Resource.
+    #
+    # url - A String with the url of the resource. Can be either absolute or
+    # relative.
+    #
+    # options - An options Hash to initialize different values:
+    #           :name     - The String name of the resource.
+    #           :response - An optional Hash representation of the resource's 
+    #           HTTP response.
+    #           :http     - An optional Hash to pass to the HTTP class.
+    def initialize(url, options = {})
+      @url = url
+      @name = options[:name]
+      @http = HTTP.new(self, options[:http])
+      initialize_response(options[:response])
     end
 
-    def get
-      HTTParty.get(url.to_s)
+    # Public: Sets the entry point for all the resources in your API client.
+    #
+    # url - A String with the URL of your API entry point.
+    #
+    # Returns nothing.
+    def self.entry_point=(url)
+      @@entry_point = URI(url)
     end
 
-    def post(params)
-      HTTParty.post(url.to_s, params)
-    end
-
-    def put(params)
-      HTTParty.put(url.to_s, params)
-    end
-
-    def options
-      HTTParty.options(url.to_s)
-    end
-
-    def head
-      HTTParty.head(url.to_s)
-    end
-
-    def delete
-      HTTParty.delete(url.to_s)
-    end
-
-    def base_uri
-      @@base_uri
-    end
-
-    def self.base_uri=(value)
-      @@base_uri = URI(value)
-    end
-
+    # Public: Returns A String representing the resource url.
     def url
-      base_uri.merge(@response.url)
+      begin
+        @@entry_point.merge(@url).to_s
+      rescue URI::InvalidURIError
+        @url
+      end
+    end
+
+    # Public: Gets a fresh response from the resource representation.
+    #
+    # Returns itself (this way you can chain method calls).
+    def reload
+      initialize_response(get)
+      self
     end
 
     private
-
-    def create_resources_accessors
-      @response.resources.each do |name, resource|
-        self.class.class_eval do
-          define_method "#{name}" do
-            @response.resources.fetch("#{name}")
-          end
-        end
+    # Internal: Initializes a Response
+    #
+    # raw_response - A Hash representing the HTTP response for the resource.
+    #
+    # Return nothing.
+    def initialize_response(raw_response)
+      if raw_response && raw_response.is_a?(Hash) && !raw_response.empty?
+        @response = Response.new(raw_response)
+        @url = @response.url if @response.url
       end
+    end
+
+    # Internal: Returns the resource response.
+    def response
+      reload unless @response
+      @response
     end
   end
 end
