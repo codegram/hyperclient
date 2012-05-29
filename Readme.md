@@ -1,128 +1,146 @@
-# Hyperclient [![Build Status](https://secure.travis-ci.org/codegram/hyperclient.png)](http://travis-ci.org/codegram/hyperclient)
+# Hyperclient [![Build Status](https://secure.travis-ci.org/codegram/hyperclient.png)](http://travis-ci.org/codegram/hyperclient) [![Dependency Status](https://gemnasium.com/codegram/hyperclient.png)](http://gemnasium.com/codegram/hyperclient)
 
 Hyperclient is a Ruby Hypermedia API client.
 
 ## Documentation
 
-[Hyperclient on documentup](http://codegram.github.com/hyperclient)
+[Hyperclient on documentup][documentup]
 
 ## Usage
 
 Example API client:
 
-    class MyAPIClient
-      include Hyperclient
+````ruby
+class MyAPIClient
+  include Hyperclient
 
-      entry_point 'http://myapp.com/api'
-      content_type [:json, :xml]
-      authorization 'user', 'password', :digest 
-    end
+  entry_point 'http://myapp.com/api'
+  auth :digest, 'user', 'password'
+end
+````
 
-    api = MyAPIClient.new
-    api.resources
-    # => [#<Resource @name="posts">, #<Resource @name="authors">]
+[More examples][examples]
 
-## Resources
+## HAL
 
-Based on standard HTTP methods, you can interact with a collection in different
-ways:
-
-### List collection elements (GET)
-
-    posts = api.resources.posts
-
-    posts.list
-    # => [#<Resource @name='post'>, #<Resource @name='post'>, #<Resource @name='post'>]
-
-### Replace the entire list (PUT)
-
-Given a `new_collection` array with two post elements:
-
-    posts = api.resources.posts
-
-    posts.replace(new_collection)
-    # => [#<Resource @name='post'>, #<Resource @name='post'>]
-
-### Create a new element (POST)
-
-    posts = api.resources.posts
-    post = {title: 'Creating a post from the api', body: 'Lorem ipsum'}
-
-    posts.create(post)
-    # => #<Resource @name='post', @data={:title => 'Creating a post from the
-    API', body: 'Lorem ipsum'}>
-
-
-### Delete the entire collection (DELETE)
-
-    posts = api.resources.posts
-
-    posts.delete
-    # => nil
+Hyperclient only works with JSON HAL friendly APIs. [Learn about JSON HAL][hal].
 
 ## Resources
 
-### Retrieve a representation (GET)
+Hyperclient will try to fetch and discover the resources from your API. 
 
-    post = api.resources.first
+### Links
 
-    post.retrieve
-    # => #<Resource @name='post', @data={:title => 'Creating a post from the
-    API', body: 'Lorem ipsum'}, @uri='http://myblog.com/api/posts/1'>
+Accessing the links for a given resource is quite straightforward:
 
-### Replace the element
+````ruby
+api = MyAPIClient.new
+api.links.posts_categories
+# => #<Resource @name="posts_categories" ...>
+````
 
-    post = api.resources.posts.first
-    data = {title: 'Modifying the post title'}
+You can also iterate between all the links:
 
-    post.replace(data)
-    # => #<Resource @name='post', @data={:title => 'Modifying the post title',
-    body: 'Lorem ipsum'}>
+````ruby
+api.links.each do |link|
+  puts link.name, link.url
+end
+````
 
-### Create a new element
+Actually, you can call any [Enumerable][enumerable] method :D
 
-    post = api.resources.posts.first
-    new_post = {title: 'Creating a post from the api', body: 'Lorem ipsum'}
+If a Resource doesn't have friendly name you can always access it as a Hash:
 
-    post.create(new_post)
-    # => #<Resource @name='post', @data={:title => 'Creating a post from the
-    API', body: 'Lorem ipsum'}, @uri='http://myblog.com/api/posts/2'>
+````ruby
+api = MyAPIClient.new
+api.links['http://myapi.org/rels/post_categories']
+````
 
-### Delete the element
+### Embedded resources
 
-    post = api.resources.posts.first
+Accessing embedded resources is similar to accessing links:
 
-    post.delete
-    # => nil
+````ruby
+api = MyAPIClient.new
+api.resources.posts
+# => #<Resource @name="posts" ...>
+````
 
-### Accessing element data
+And you can also iterate between them:
 
-    post = api.resources.posts.first
+````ruby
+api.resources.each do |resource|
+  puts resource.name, resource.url
+end
+````
 
-    post.data
-    # => {:title => 'My Post', :body => 'This is a nice post'}
+You can even chain different calls (this also applies for links):
 
-### Accessing element resources
+````ruby
+api.resources.posts.first.links.author
+# => #<Resource @name="author" ...>
+````
 
-    post = api.resources.posts.first
+### Attributes
 
-    post.resources
-    # => [#<Resource @name='comments'>, #<Resource @name='author'>]
+Not only you might have links and embedded resources in a Resource, but also
+its attributes:
 
-## Resource discovery
+````ruby
+api.resources.posts.first.attributes
+# => {title: 'Linting the hell out of your Ruby classes with Pelusa',
+      teaser: 'Gain new insights about your code thanks to static analysis',
+      body:   '...' }
+````
 
-* From a HAL response (see http://stateless.co/hal_specification.html)
-* From headers
-* From JSON response with an element 'links'
-* From XML response with an element 'links'
-* Using a custom parser
+### HTTP
 
-## Resource permissions
+OK, navigating an API is really cool, but you may want to actually do something
+with it, right?
 
-Using the `Allow` header Hyperclient should be able to restrict the allowed
-method on a given `Resource` or `Resource`.
+Hyperclient uses [HTTParty][httparty] under the hood to perform HTTP calls. You can
+call any valid HTTP method on any Resource:
 
-## Embedded
+````ruby
+post = api.resources.posts.first
+post.get
+post.head
+post.put({title: 'New title'})
+post.delete
+post.options
 
-Hyperclient should be able to fetch `Resources` either from a link given in a
-`Resource` or by getting the data when is embedded in a `Resource`.
+posts = api.resources.posts
+posts.post({title: "I'm a blogger!", body: 'Wohoo!!'})
+````
+
+## TODO
+
+* Resource permissions: Using the `Allow` header Hyperclient should be able to
+  restrict the allowed method on a given `Resource` or `Resource`.
+* Authorization: use HTTP basic or Digest.
+
+
+## Contributing
+
+* [List of hyperclient contributors][contributors]
+
+* Fork the project.
+* Make your feature addition or bug fix.
+* Add specs for it. This is important so we don't break it in a future
+  version unintentionally.
+* Commit, do not mess with rakefile, version, or history.
+  If you want to have your own version, that is fine but bump version
+  in a commit by itself I can ignore when I pull.
+* Send me a pull request. Bonus points for topic branches.
+
+## License
+
+MIT License. Copyright 2012 [Codegram Technologies][codegram]
+
+[hal]: http://stateless.co/hal_specification.html
+[contributors]: https://github.com/codegram/hyperclient/contributors
+[codegram]: http://codegram.com
+[documentup]: http://codegram.github.com/hyperclient
+[httparty]: http://github.com/jnunemaker/httparty
+[examples]: http://github.com/codegram/hyperclient/tree/master/examples
+[enumerable][http://ruby-doc.org/core-1.9.3/Enumerable.html]
