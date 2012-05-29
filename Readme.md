@@ -4,7 +4,7 @@ Hyperclient is a Ruby Hypermedia API client.
 
 ## Documentation
 
-[Hyperclient on documentup][documentup]
+[Hyperclient on documentup][documentup] and [Hyperclient API documentation on rdoc.info][rdoc]
 
 ## Usage
 
@@ -143,3 +143,4 @@ MIT License. Copyright 2012 [Codegram Technologies][codegram]
 [httparty]: http://github.com/jnunemaker/httparty
 [examples]: http://github.com/codegram/hyperclient/tree/master/examples
 [enumerable]: http://ruby-doc.org/core-1.9.3/Enumerable.html
+[rdoc]: http://rubydoc.org/github/codegram/hyperclient/master/frames
