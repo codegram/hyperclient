@@ -40,7 +40,7 @@ module Hyperclient
     #
     # Returns: A HTTParty::Response
     def post(params)
-      self.class.post(url, params)
+      self.class.post(url, body: params)
     end
 
     # Public: Sends a PUT request the the resource url.
@@ -49,7 +49,7 @@ module Hyperclient
     #
     # Returns: A HTTParty::Response
     def put(params)
-      self.class.put(url, params)
+      self.class.put(url, body: params)
     end
 
     # Public: Sends an OPTIONS request the the resource url.

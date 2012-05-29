@@ -44,8 +44,10 @@ module Hyperclient
         stub_request(:post, 'api.example.org/productions/1').
           to_return(body: 'Posting like a big boy huh?', status: 201)
 
-        response = http.post({})
+        response = http.post({data: 'foo'})
         response.code.must_equal 201
+        assert_requested :post, 'http://api.example.org/productions/1',
+                         body: {data: 'foo'}
       end
     end
 
@@ -54,8 +56,10 @@ module Hyperclient
         stub_request(:put, 'api.example.org/productions/1').
           to_return(body: 'No changes were made', status: 204)
 
-        response = http.put({})
+        response = http.put({attribute: 'changed'})
         response.code.must_equal 204
+        assert_requested :put, 'http://api.example.org/productions/1',
+                         body: {attribute: 'changed'}
       end
     end
 
