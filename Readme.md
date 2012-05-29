@@ -116,8 +116,7 @@ posts.post({title: "I'm a blogger!", body: 'Wohoo!!'})
 ## TODO
 
 * Resource permissions: Using the `Allow` header Hyperclient should be able to
-  restrict the allowed method on a given `Resource` or `Resource`.
-* Authorization: use HTTP basic or Digest.
+  restrict the allowed method on a given `Resource`.
 
 
 ## Contributing
