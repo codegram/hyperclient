@@ -143,4 +143,4 @@ MIT License. Copyright 2012 [Codegram Technologies][codegram]
 [documentup]: http://codegram.github.com/hyperclient
 [httparty]: http://github.com/jnunemaker/httparty
 [examples]: http://github.com/codegram/hyperclient/tree/master/examples
-[enumerable][http://ruby-doc.org/core-1.9.3/Enumerable.html]
+[enumerable]: http://ruby-doc.org/core-1.9.3/Enumerable.html
