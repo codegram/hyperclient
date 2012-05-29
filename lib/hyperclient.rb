@@ -17,7 +17,7 @@ module Hyperclient
 
   # Public: Initializes the API with the entry point.
   def entry
-    @entry ||= Resource.new('/', {name: 'Entry point'})
+    @entry ||= Resource.new('/', resource_options)
   end
 
   # Internal: Delegate the method to the API if it exists.
@@ -39,6 +39,34 @@ module Hyperclient
     def entry_point(url)
       Resource.entry_point = url
     end
+
+    # Public: Sets the authentication options for your API client.
+    #
+    # type     - A String or Symbol with the authentication method. Can be either
+    #            :basic or :digest.
+    # user     - A String with the user.
+    # password - A String with the password.
+    #
+    # Returns nothing.
+    def auth(type, user, password)
+      http_options({auth: {type: type, credentials: [user, password]}})
+    end
+
+    # Public: Returns a Hash with the HTTP options that will be used to
+    # initialize Hyperclient::HTTP.
+    def http_options(options = {})
+      @@http_options ||= {}
+      @@http_options.merge!(options)
+
+      {http: @@http_options}
+    end
+  end
+
+  private
+  # Internal: Returns a Hash with the options to initialize the entry point
+  # Resource.
+  def resource_options
+    {name: 'Entry point'}.merge(self.class.http_options)
   end
 end
 

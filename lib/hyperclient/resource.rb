@@ -26,10 +26,11 @@ module Hyperclient
     #           :name     - The String name of the resource.
     #           :response - An optional Hash representation of the resource's 
     #           HTTP response.
+    #           :http     - An optional Hash to pass to the HTTP class.
     def initialize(url, options = {})
       @url = url
       @name = options[:name]
-      @http = HTTP.new(self)
+      @http = HTTP.new(self, options[:http])
       initialize_response(options[:response])
     end
 

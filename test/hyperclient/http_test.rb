@@ -9,7 +9,18 @@ module Hyperclient
     end
 
     let (:http) do
+      HTTP.instance_variable_set("@default_options", {})
       HTTP.new(resource)
+    end
+
+    describe 'authentication' do
+      it 'sets the authentication options' do
+        stub_request(:get, 'user:pass@api.example.org/productions/1').
+          to_return(body: 'This is the resource')
+
+        http = HTTP.new(resource, {auth: {type: :basic, credentials: ['user','pass']}})
+        http.get.must_equal 'This is the resource'
+      end
     end
 
     describe 'get' do

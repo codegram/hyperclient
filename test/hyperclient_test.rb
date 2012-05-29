@@ -24,9 +24,24 @@ describe Hyperclient do
     it 'initializes a Resource at the entry point' do
       api.new.entry.url.must_equal 'http://my.api.org/'
     end
-    
-    it 'sets the Resourse name' do
+
+    it 'sets the Resource name' do
       api.new.name.must_equal 'Entry point'
+    end
+  end
+
+  describe 'auth' do
+    it 'sets authentication type' do
+      api.auth(:digest, nil, nil)
+
+      api.http_options[:http][:auth][:type].must_equal :digest
+    end
+
+    it 'sets the authentication credentials' do
+      api.auth(:digest, 'user', 'secret')
+
+      api.http_options[:http][:auth][:credentials].must_include 'user'
+      api.http_options[:http][:auth][:credentials].must_include 'secret'
     end
   end
 

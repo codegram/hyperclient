@@ -22,8 +22,9 @@ module Hyperclient
     #
     # resource - A Resource instance. A Resource is given instead of the url
     # since the resource url could change during its live.
-    def initialize(resource)
+    def initialize(resource, options = {})
       @resource = resource
+      authenticate(options[:auth]) if options && options.include?(:auth)
     end
 
     # Public: Sends a GET request the the resource url.
@@ -70,6 +71,20 @@ module Hyperclient
     # Returns: A HTTParty::Response
     def delete
       self.class.delete(url)
+    end
+
+    private
+    # Internal: Sets the authenitcation method for HTTParty.
+    #
+    # options - An options Hash to set the authentication options.
+    #           :type        - A String or Symbol to set the authentication type.
+    #           Can be either :digest or :basic.
+    #           :credentials - An Array of Strings with the user and password.
+    #
+    # Returns nothing.
+    def authenticate(options)
+      auth_method = options[:type].to_s + '_auth'
+      self.class.send(auth_method, *options[:credentials])
     end
   end
 end

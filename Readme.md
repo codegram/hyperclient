@@ -15,7 +15,7 @@ class MyAPIClient
   include Hyperclient
 
   entry_point 'http://myapp.com/api'
-  authorization 'user', 'password', :digest 
+  auth :digest, 'user', 'password'
 end
 ````
 
