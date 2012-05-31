@@ -29,7 +29,7 @@ module Hyperclient
 
     # Public: Sends a GET request the the resource url.
     #
-    # Returns: The response parsed response.
+    # Returns: The parsed response.
     def get
       self.class.get(url).parsed_response
     end

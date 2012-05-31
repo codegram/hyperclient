@@ -3,12 +3,12 @@ require 'hyperclient/resource'
 
 module Hyperclient
   describe Resource do
-    let(:response) do
+    let(:representation) do
       File.read('test/fixtures/element.json')
     end
 
-    let(:parsed_response) do
-      JSON.parse(response)
+    let(:parsed_representation) do
+      JSON.parse(representation)
     end
 
     before do
@@ -32,19 +32,19 @@ module Hyperclient
         stub_request(:get, 'http://api.example.org')
       end
 
-      it 'initializes the response when one is given' do
-        resource = Resource.new('/', {response: JSON.parse(response)})
+      it 'initializes the representation when one is given' do
+        resource = Resource.new('/', {representation: JSON.parse(representation)})
 
         assert_not_requested(:get, 'http://api.example.org/')
       end
 
-      it 'updates the resource URL if the response has one' do
-        resource = Resource.new('/', {response: JSON.parse(response)})
+      it 'updates the resource URL if the representation has one' do
+        resource = Resource.new('/', {representation: JSON.parse(representation)})
 
         resource.url.must_include '/productions/1'
       end
 
-      it 'does no update the resource URL if the response does not have one' do
+      it 'does no update the resource URL if the representation does not have one' do
         resource = Resource.new('/', {})
 
         resource.url.wont_include '/productions/1'
@@ -60,7 +60,7 @@ module Hyperclient
     describe 'reload' do
       before do
         stub_request(:get, "http://api.example.org/productions/1").
-          to_return(:status => 200, :body => response, headers: {content_type: 'application/json'})
+          to_return(:status => 200, :body => representation, headers: {content_type: 'application/json'})
       end
 
       it 'retrives itself from the API' do

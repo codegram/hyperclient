@@ -1,14 +1,14 @@
 module Hyperclient
-  # Public: Discovers resources from an HTTP response.
+  # Public: Discovers resources from a Representation.
   class Discoverer
     # Include goodness of Enumerable.
     include Enumerable
 
     # Public: Initializes a Discoverer.
     #
-    # response - A Hash representing some resources.
-    def initialize(response)
-      @response = response
+    # representation - A Hash representing some resources.
+    def initialize(representation)
+      @representation = representation
     end
 
     # Public: Fetch a Resource with the given name. It is useful when
@@ -38,24 +38,24 @@ module Hyperclient
     end
 
     private
-    # Internal: Returns a Hash with the resources of the response.
+    # Internal: Returns a Hash with the resources of the representation.
     def resources
-      return {} unless @response.respond_to?(:inject)
+      return {} unless @representation.respond_to?(:inject)
 
-      @resources ||= @response.inject({}) do |memo, (name, response)|
+      @resources ||= @representation.inject({}) do |memo, (name, representation)|
         next memo if name == 'self'
-        memo.update(name => build_resource(response, name))
+        memo.update(name => build_resource(representation, name))
       end
     end
 
     # Internal: Returns a Resource (or a collection of Resources).
     #
-    # response - A Hash representing the resource response.
+    # representation - A Hash representing the resource representation.
     # name     - An optional String with the name of the resource.
-    def build_resource(response, name = nil)
-      return response.map(&method(:build_resource)) if response.is_a?(Array)
+    def build_resource(representation, name = nil)
+      return representation.map(&method(:build_resource)) if representation.is_a?(Array)
 
-      ResourceFactory.resource(response.delete('href'), {response: response, name: name})
+      ResourceFactory.resource(representation.delete('href'), {representation: representation, name: name})
     end
   end
 end
