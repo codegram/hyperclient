@@ -1,6 +1,6 @@
 # Hyperclient [![Build Status](https://secure.travis-ci.org/codegram/hyperclient.png)](http://travis-ci.org/codegram/hyperclient) [![Dependency Status](https://gemnasium.com/codegram/hyperclient.png)](http://gemnasium.com/codegram/hyperclient)
 
-Hyperclient is a Ruby Hypermedia API client.
+Hyperclient is a Ruby Hypermedia API client written in Ruby.
 
 ## Documentation
 
