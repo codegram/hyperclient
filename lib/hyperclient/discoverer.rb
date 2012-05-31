@@ -55,9 +55,9 @@ module Hyperclient
     def build_resource(response, name = nil)
       return response.map(&method(:build_resource)) if response.is_a?(Array)
 
-      Resource.new(response.delete('href'), {response: response, name: name})
+      ResourceFactory.resource(response.delete('href'), {response: response, name: name})
     end
   end
 end
 
-require 'hyperclient/resource'
+require 'hyperclient/resource_factory'
