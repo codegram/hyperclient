@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'rake'
+gem 'growl'
 gem 'guard'
 gem 'guard-minitest'
 gem 'pry'
