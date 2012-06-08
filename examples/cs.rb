@@ -1,6 +1,6 @@
 require 'hyperclient'
 
-class HalShop
+class CS
   include Hyperclient
 
   entry_point 'http://cs-api.heroku.com/api/'
@@ -23,7 +23,7 @@ def print_games(games)
 end
 
 
-api = HalShop.new
+api = CS.new
 
 puts "Let's inspect the API:"
 puts "\n"
