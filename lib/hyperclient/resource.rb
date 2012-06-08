@@ -67,7 +67,7 @@ module Hyperclient
     #
     # Return nothing.
     def initialize_representation(raw_representation)
-      if raw_representation && raw_representation.is_a?(Hash) && !raw_representation.empty?
+      if raw_representation && !raw_representation.empty?
         @representation = Representation.new(raw_representation)
         @url = @representation.url if @representation.url
       end

@@ -7,6 +7,20 @@ module Hyperclient
       Representation.new JSON.parse(File.read('test/fixtures/element.json'))
     end
 
+    describe 'intialize' do
+      it 'handles non-hash representations' do
+        representation = Representation.new '{"_links": {"self": {"href": "/productions/1"}}}'
+
+        representation.url.must_equal '/productions/1'
+      end
+
+      it 'does not raise when non-JSON response is given' do
+        representation = Representation.new 'This is not JSON'
+
+        representation.url.must_equal nil
+      end
+    end
+
     describe 'attributes' do
       it 'returns the resource attributes' do
         representation.attributes['title'].must_equal 'Real World ASP.NET MVC3'

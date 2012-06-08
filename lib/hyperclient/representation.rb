@@ -8,8 +8,16 @@ module Hyperclient
   class Representation
     # Public: Initializes a Representation.
     #
-    # representation - A Hash containing a representation from the API.
+    # representation - A Hash containing a representation from the API. If the
+    # representation is not a Hash it will try to parse it as JSON.
     def initialize(representation)
+      begin
+        representation = JSON.parse(representation) unless representation.is_a? Hash
+      rescue JSON::ParserError
+        warn 'WARNING Hyperclient::Representation: JSON representation was not valid:'
+        puts representation
+        representation = {}
+      end
       @representation = representation
     end
 
@@ -40,3 +48,5 @@ module Hyperclient
     end
   end
 end
+
+require 'json'
