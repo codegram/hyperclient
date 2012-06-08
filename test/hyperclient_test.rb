@@ -22,7 +22,12 @@ describe Hyperclient do
     end
 
     it 'initializes a Resource at the entry point' do
-      api.new.entry.url.must_equal 'http://my.api.org/'
+      api.new.entry.url.must_equal 'http://my.api.org'
+    end
+
+    it 'also works with entry points that are not in the root' do
+      api.entry_point 'http://my.api.org/api'
+      api.new.entry.url.must_equal 'http://my.api.org/api'
     end
 
     it 'sets the Resource name' do

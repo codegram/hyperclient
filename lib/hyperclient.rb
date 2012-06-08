@@ -17,7 +17,7 @@ module Hyperclient
 
   # Public: Initializes the API with the entry point.
   def entry
-    @entry ||= Resource.new('/', resource_options)
+    @entry ||= Resource.new('', resource_options)
   end
 
   # Internal: Delegate the method to the API if it exists.
