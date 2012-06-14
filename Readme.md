@@ -7,7 +7,7 @@ Hyperclient is a Ruby Hypermedia API client written in Ruby.
 
 ## Documentation
 
-[Hyperclient on documentup][documentup] and [Hyperclient API documentation on rdoc.info][rdoc]
+[Hyperclient API documentation on rdoc.info][rdoc]
 
 ## Usage
 
