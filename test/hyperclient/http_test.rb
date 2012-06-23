@@ -23,6 +23,18 @@ module Hyperclient
       end
     end
 
+    describe 'headers' do
+      it 'sets headers from the given option' do
+        http = HTTP.new(resource, {headers: {'accept-encoding' => 'deflate, gzip'}})
+
+        stub_request(:get, 'api.example.org/productions/1').
+          with(headers: {'Accept-Encoding' => 'deflate, gzip'}).
+          to_return(body: 'This is the resource')
+
+        http.get
+      end
+    end
+
     describe 'get' do
       it 'sends a GET request and returns the response body' do
         stub_request(:get, 'api.example.org/productions/1').
