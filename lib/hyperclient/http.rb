@@ -25,6 +25,7 @@ module Hyperclient
     def initialize(resource, options = {})
       @resource = resource
       authenticate(options[:auth]) if options && options.include?(:auth)
+      headers(options[:headers]) if options && options.include?(:headers)
     end
 
     # Public: Sends a GET request the the resource url.
@@ -74,7 +75,7 @@ module Hyperclient
     end
 
     private
-    # Internal: Sets the authenitcation method for HTTParty.
+    # Internal: Sets the authentication method for HTTParty.
     #
     # options - An options Hash to set the authentication options.
     #           :type        - A String or Symbol to set the authentication type.
@@ -85,6 +86,18 @@ module Hyperclient
     def authenticate(options)
       auth_method = options[:type].to_s + '_auth'
       self.class.send(auth_method, *options[:credentials])
+    end
+
+    # Internal: Adds default headers for all the requests.
+    #
+    # headers - A Hash with the header.
+    #
+    # Example:
+    #   headers({'accept-encoding' => 'deflate, gzip'})
+    #
+    # Returns nothing.
+    def headers(headers)
+      self.class.send(:headers, headers)
     end
   end
 end
