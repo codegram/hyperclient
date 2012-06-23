@@ -52,8 +52,16 @@ module Hyperclient
       http_options({auth: {type: type, credentials: [user, password]}})
     end
 
-    # Public: Returns a Hash with the HTTP options that will be used to
-    # initialize Hyperclient::HTTP.
+    # Public: Sets the HTTP options that will be used to initialize
+    # Hyperclient::HTTP.
+    #
+    # options - A Hash with options to pass to HTTP.
+    #
+    # Example:
+    #
+    #   http_options {headers: {'accept-encoding' => 'deflate, gzip'}}
+    #
+    # Returns a Hash.
     def http_options(options = {})
       @@http_options ||= {}
       @@http_options.merge!(options)
