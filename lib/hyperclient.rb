@@ -59,7 +59,7 @@ module Hyperclient
     #
     # Example:
     #
-    #   http_options {headers: {'accept-encoding' => 'deflate, gzip'}}
+    #   http_options headers: {'accept-encoding' => 'deflate, gzip'}
     #
     # Returns a Hash.
     def http_options(options = {})
