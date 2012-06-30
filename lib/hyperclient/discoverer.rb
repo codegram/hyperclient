@@ -55,7 +55,20 @@ module Hyperclient
     def build_resource(representation, name = nil)
       return representation.map(&method(:build_resource)) if representation.is_a?(Array)
 
-      ResourceFactory.resource(representation.delete('href'), {representation: representation, name: name})
+      url = extract_url(representation)
+      ResourceFactory.resource(url, {representation: representation, name: name})
+    end
+
+    # Internal: Returns a String with the resource URL
+    #
+    # representation - The JSON representation of the resource.
+    def extract_url(representation)
+      return representation['href'] if representation.include?('href')
+
+      if representation && representation['_links'] && representation['_links']['self'] &&
+          (url = representation['_links']['self']['href'])
+        return url
+      end
     end
   end
 end
