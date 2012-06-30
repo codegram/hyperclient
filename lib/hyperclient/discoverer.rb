@@ -44,7 +44,7 @@ module Hyperclient
 
       @resources ||= @representation.inject({}) do |memo, (name, representation)|
         next memo if name == 'self'
-        memo.update(name => build_resource(representation, name))
+      memo.update(name => build_resource(representation, name))
       end
     end
 
@@ -55,19 +55,27 @@ module Hyperclient
     def build_resource(representation, name = nil)
       return representation.map(&method(:build_resource)) if representation.is_a?(Array)
 
-      url = extract_url(representation)
+      url = URLExtractor.new(representation).url
       ResourceFactory.resource(url, {representation: representation, name: name})
     end
 
-    # Internal: Returns a String with the resource URL
-    #
-    # representation - The JSON representation of the resource.
-    def extract_url(representation)
-      return representation['href'] if representation.include?('href')
+    # Internal: Extract the url from a HAL representation.
+    class URLExtractor
+      # Public: Initializes a URLExtractor.
+      #
+      # representation - A Hash with the representation of a Resource.
+      def initialize(representation)
+        @representation = representation
+      end
 
-      if representation && representation['_links'] && representation['_links']['self'] &&
-          (url = representation['_links']['self']['href'])
-        return url
+      # Public: Returns a String with the resource URL
+      def url
+        return @representation.delete('href') if @representation.include?('href')
+
+        if @representation && @representation['_links'] && @representation['_links']['self'] &&
+          (url = @representation['_links']['self']['href'])
+          return url
+        end
       end
     end
   end

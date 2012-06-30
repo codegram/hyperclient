@@ -72,5 +72,30 @@ module Hyperclient
         discoverer.filter.name.wont_be_empty
       end
     end
+
+    describe Discoverer::URLExtractor do
+      describe 'url' do
+        it 'extracts the url from embedded resources' do
+          hal = {'_links' => {'self' => {'href' => '/path/to/resource'}}}
+          extractor = Discoverer::URLExtractor.new(hal)
+
+          extractor.url.must_equal '/path/to/resource'
+        end
+
+        it 'extracts the url from linked resources' do
+          hal = {'href' => '/path/to/resource'}
+          extractor = Discoverer::URLExtractor.new(hal)
+
+          extractor.url.must_equal '/path/to/resource'
+        end
+
+        it 'deletes the url from linked resources to prevent empty representations' do
+          hal = {'href' => '/path/to/resource'}
+          Discoverer::URLExtractor.new(hal).url
+
+          hal.include?('href').must_equal false
+        end
+      end
+    end
   end
 end
