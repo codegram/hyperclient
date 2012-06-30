@@ -1,5 +1,4 @@
 require_relative '../test_helper'
-require 'pry'
 require 'hyperclient/http'
 
 module Hyperclient
