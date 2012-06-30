@@ -9,15 +9,15 @@ module Hyperclient
 
     describe 'intialize' do
       it 'handles non-hash representations' do
-        representation = Representation.new '{"_links": {"self": {"href": "/productions/1"}}}'
+        representation = Representation.new '{"title": "Hello world"}'
 
-        representation.url.must_equal '/productions/1'
+        representation.attributes['title'].must_equal 'Hello world'
       end
 
       it 'does not raise when non-JSON response is given' do
         representation = Representation.new 'This is not JSON'
 
-        representation.url.must_equal nil
+        representation.attributes.must_equal({})
       end
     end
 
