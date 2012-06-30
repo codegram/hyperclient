@@ -4,6 +4,7 @@ class HalShop
   include Hyperclient
 
   entry_point 'http://hal-shop.heroku.com'
+  http_options debug: true
 end
 
 def print_resources(resources)

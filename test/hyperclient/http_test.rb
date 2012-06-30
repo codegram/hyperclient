@@ -1,4 +1,5 @@
 require_relative '../test_helper'
+require 'pry'
 require 'hyperclient/http'
 
 module Hyperclient
@@ -32,6 +33,21 @@ module Hyperclient
           to_return(body: 'This is the resource')
 
         http.get
+      end
+    end
+
+    describe 'debug' do
+      it 'enables debugging' do
+        http = HTTP.new(resource, {debug: true})
+
+        http.class.instance_variable_get(:@default_options)[:debug_output].must_equal $stderr
+      end
+
+      it 'uses a custom stream' do
+        stream = StringIO.new
+        http = HTTP.new(resource, {debug: stream})
+
+        http.class.instance_variable_get(:@default_options)[:debug_output].must_equal stream
       end
     end
 
