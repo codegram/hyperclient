@@ -19,7 +19,7 @@ class MyAPIClient
 
   entry_point 'http://myapp.com/api'
   auth :digest, 'user', 'password'
-  http_options headers: {'accept-encoding' => 'deflate, gzip'}
+  http_options headers: {'accept-encoding' => 'deflate, gzip'}, debug: true
 end
 ````
 
