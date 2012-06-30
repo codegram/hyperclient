@@ -9,15 +9,15 @@ module Hyperclient
 
     describe 'intialize' do
       it 'handles non-hash representations' do
-        representation = Representation.new '{"_links": {"self": {"href": "/productions/1"}}}'
+        representation = Representation.new '{"title": "Hello world"}'
 
-        representation.url.must_equal '/productions/1'
+        representation.attributes['title'].must_equal 'Hello world'
       end
 
       it 'does not raise when non-JSON response is given' do
         representation = Representation.new 'This is not JSON'
 
-        representation.url.must_equal nil
+        representation.attributes.must_equal({})
       end
     end
 
@@ -46,18 +46,6 @@ module Hyperclient
         representation.resources.author.must_be_kind_of Resource
         representation.resources.episodes.first.must_be_kind_of Resource
         representation.resources.episodes.last.must_be_kind_of Resource
-      end
-    end
-
-    describe 'url' do
-      it 'returns the url of the resource grabbed from the representation' do
-        representation.url.must_equal '/productions/1'
-      end
-
-      it 'returns nil when the representation does not include the resource url' do
-        representation = Representation.new({_links: {media: {href: '/media/1'}}})
-
-        representation.url.must_equal nil
       end
     end
   end

@@ -38,18 +38,6 @@ module Hyperclient
         assert_not_requested(:get, 'http://api.example.org/')
       end
 
-      it 'updates the resource URL if the representation has one' do
-        resource = Resource.new('/', {representation: JSON.parse(representation)})
-
-        resource.url.must_include '/productions/1'
-      end
-
-      it 'does no update the resource URL if the representation does not have one' do
-        resource = Resource.new('/', {})
-
-        resource.url.wont_include '/productions/1'
-      end
-
       it 'sets the resource name' do
         resource = Resource.new('/', {name: 'posts'})
 
