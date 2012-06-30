@@ -26,6 +26,7 @@ module Hyperclient
       @resource = resource
       authenticate(options[:auth]) if options && options.include?(:auth)
       headers(options[:headers]) if options && options.include?(:headers)
+      enable_debug(options[:debug]) if options && options.include?(:debug)
     end
 
     # Public: Sends a GET request the the resource url.
@@ -98,6 +99,20 @@ module Hyperclient
     # Returns nothing.
     def headers(headers)
       self.class.send(:headers, headers)
+    end
+
+    # Internal: Enables HTTP debugging.
+    #
+    # stream - An object to stream the HTTP out to or just a truthy value. If
+    #          it's truthy it will output to $stderr.
+    def enable_debug(stream)
+      return unless stream
+
+      if stream.respond_to?(:<<)
+        self.class.debug_output(stream)
+      else
+        self.class.debug_output
+      end
     end
   end
 end
