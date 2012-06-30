@@ -37,15 +37,6 @@ module Hyperclient
     def attributes
       @attributes ||= @representation.dup.delete_if {|key, value| key =~ /^_/}
     end
-
-    # Public: Returns a String with the resource URL or nil of it does not have
-    # one.
-    def url
-      if @representation && @representation['_links'] && @representation['_links']['self'] &&
-          (url = @representation['_links']['self']['href'])
-        return url
-      end
-    end
   end
 end
 
