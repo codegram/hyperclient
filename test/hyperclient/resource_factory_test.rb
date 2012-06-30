@@ -23,6 +23,10 @@ module Hyperclient
 
         new_resource.object_id.must_equal resource.object_id
       end
+
+      it 'raises if the given url is nil' do
+        proc { ResourceFactory.resource(nil) }.must_raise MissingURLException
+      end
     end
   end
 end

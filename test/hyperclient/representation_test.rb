@@ -48,17 +48,5 @@ module Hyperclient
         representation.resources.episodes.last.must_be_kind_of Resource
       end
     end
-
-    describe 'url' do
-      it 'returns the url of the resource grabbed from the representation' do
-        representation.url.must_equal '/productions/1'
-      end
-
-      it 'returns nil when the representation does not include the resource url' do
-        representation = Representation.new({_links: {media: {href: '/media/1'}}})
-
-        representation.url.must_equal nil
-      end
-    end
   end
 end
