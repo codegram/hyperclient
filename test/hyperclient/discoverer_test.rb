@@ -1,4 +1,5 @@
 require_relative '../test_helper'
+require 'pry'
 require 'hyperclient/representation'
 
 module Hyperclient
@@ -26,6 +27,16 @@ module Hyperclient
         discoverer = Discoverer.new(representation['_links'])
 
         discoverer['filter'].must_be_kind_of Resource
+      end
+    end
+
+    describe 'uri_templates' do
+      it 'expands uri templates with given args' do
+        discoverer = Discoverer.new(representation['_links'])
+
+        url = discoverer.filter({filter: 'some_category'}).url
+
+        url.must_match 'categories=some_category'
       end
     end
 
