@@ -46,10 +46,22 @@ module Hyperclient
     # Public: Returns A String representing the resource url.
     def url
       begin
-        @@entry_point.merge(@url).to_s
+        @@entry_point.merge(@url.to_s).to_s
       rescue URI::InvalidURIError
-        @url
+        @url.to_s
       end
+    end
+
+    def templated?
+      @url.is_a?(URITemplate)
+    end
+
+    def expand_uri(variables)
+      @url = @url.expand(variables)
+    end
+
+    def uri_variables
+      @url.variables
     end
 
     # Public: Gets a fresh representation from the resource representation.

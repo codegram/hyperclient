@@ -34,7 +34,14 @@ module Hyperclient
 
     # Public: Returns a Resource with the name of the method when exists.
     def method_missing(method, *args, &block)
-      resources.fetch(method.to_s) { super }
+      resource = resources.fetch(method.to_s) { super }
+
+      if resource.is_a?(Resource) && resource.templated?
+        raise MissingURITemplateVariablesException.new(resource.uri_variables)
+        resource.expand_uri(args.first) 
+      end
+
+      resource
     end
 
     private
@@ -59,6 +66,21 @@ module Hyperclient
       ResourceFactory.resource(url, {representation: representation, name: name})
     end
 
+    # Public: Exception that is raised when building a Resource without a URL.
+    class MissingURITemplateVariablesException < StandardError
+      # Public: Initializes a MissingURLException
+      #
+      # args - An Array of the args the were to be used to build the Resource.
+      def initialize(variables)
+        @variables = variables
+      end
+
+      # Public: Returns a String with the exception message.
+      def message
+        "The URL to this resource is templated, but no variables where given. The variables for the template are: #{@variables.join(', ').inspect}"
+      end
+    end
+
     # Internal: Extract the url from a HAL representation.
     class URLExtractor
       # Public: Initializes a URLExtractor.
@@ -68,8 +90,11 @@ module Hyperclient
         @representation = representation
       end
 
-      # Public: Returns a String with the resource URL
-      def url
+      def templated?
+        @representation.include?('templated') && @representation['templated']
+      end
+
+      def href
         return @representation.delete('href') if @representation.include?('href')
 
         if @representation && @representation['_links'] && @representation['_links']['self'] &&
@@ -77,8 +102,16 @@ module Hyperclient
           return url
         end
       end
+
+      # Public: Returns a String with the resource URL
+      def url
+        return href unless templated?
+
+        URITemplate.new(href)
+      end
     end
   end
 end
 
+require 'uri_template'
 require 'hyperclient/resource_factory'
