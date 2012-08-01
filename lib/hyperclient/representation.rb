@@ -29,7 +29,7 @@ module Hyperclient
 
     # Public: Returns a Discoverer for the _embedded section of the representation.
     # It can be used later to use the resources from this section.
-    def resources
+    def embedded
       @embedded ||= Discoverer.new(@representation['_embedded'])
     end
 

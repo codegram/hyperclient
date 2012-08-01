@@ -41,11 +41,11 @@ module Hyperclient
       end
     end
 
-    describe 'resources' do
+    describe 'embedded' do
       it 'returns resources included in the _embedded section' do
-        representation.resources.author.must_be_kind_of Resource
-        representation.resources.episodes.first.must_be_kind_of Resource
-        representation.resources.episodes.last.must_be_kind_of Resource
+        representation.embedded.author.must_be_kind_of Resource
+        representation.embedded.episodes.first.must_be_kind_of Resource
+        representation.embedded.episodes.last.must_be_kind_of Resource
       end
     end
   end

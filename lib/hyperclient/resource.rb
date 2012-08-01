@@ -8,7 +8,7 @@ module Hyperclient
   class Resource
     extend Forwardable
     # Public: Delegate attributes and resources to the representation.
-    def_delegators :representation, :attributes, :resources, :links
+    def_delegators :representation, :attributes, :embedded, :links
 
     # Public: Delegate all HTTP methods (get, post, put, delete, options and
     # head) to Hyperclient::HTTP.

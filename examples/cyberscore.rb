@@ -6,15 +6,15 @@ class Cyberscore
   entry_point 'http://cs-api.heroku.com/api/'
 
   def news
-    links.feeds.links.submissions.resources.news
+    links.feeds.links.submissions.embedded.news
   end
 
   def submissions
-    links.feeds.links.submissions.resources.submissions
+    links.feeds.links.submissions.embedded.submissions
   end
 
   def games
-    links.feeds.links.games.resources.games
+    links.feeds.links.games.embedded.games
   end
 
   def add_game(name)
