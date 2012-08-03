@@ -121,6 +121,8 @@ posts.post({title: "I'm a blogger!", body: 'Wohoo!!'})
 
 * Resource permissions: Using the `Allow` header Hyperclient should be able to
   restrict the allowed method on a given `Resource`.
+* Curie syntax support for links (see http://tools.ietf.org/html/draft-kelly-json-hal-03#section-8.2)
+* Profile support for links
 
 
 ## Contributing
