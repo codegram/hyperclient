@@ -35,21 +35,28 @@ module Hyperclient
   module ClassMethods
     # Public: Set the entry point of your API.
     #
+    # url - A block to pass the API url.
+    #
     # Returns nothing.
-    def entry_point(url)
-      Resource.entry_point = url
+    def entry_point(&url)
+      Resource.entry_point = url.call
     end
 
     # Public: Sets the authentication options for your API client.
     #
-    # type     - A String or Symbol with the authentication method. Can be either
-    #            :basic or :digest.
-    # user     - A String with the user.
-    # password - A String with the password.
+    # options - A block used to pass authentication options. Needed data is:
+    #   type     - A String or Symbol with the authentication method. Can be 
+    #             either :basic or :digest.
+    #   user     - A String with the user.
+    #   password - A String with the password.
+    #
+    #   Example: 
+    #     auth{ {type: :digest, user: 'user', password: 'secret'} }
     #
     # Returns nothing.
-    def auth(type, user, password)
-      http_options({auth: {type: type, credentials: [user, password]}})
+    def auth(&options)
+      options = options.call
+      http_options({auth: {type: options[:type], credentials: [options[:user], options[:password]]}})
     end
 
     # Public: Sets the HTTP options that will be used to initialize

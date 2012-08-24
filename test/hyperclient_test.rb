@@ -10,7 +10,7 @@ describe Hyperclient do
 
   describe 'entry point' do
     it 'sets the entry point for Hyperclient::Resource' do
-      api.entry_point 'http://my.api.org'
+      api.entry_point {'http://my.api.org'}
 
       Hyperclient::Resource.new('/').url.must_include 'http://my.api.org'
     end
@@ -18,7 +18,7 @@ describe Hyperclient do
 
   describe 'entry' do
     before do
-      api.entry_point 'http://my.api.org'
+      api.entry_point {'http://my.api.org'}
     end
 
     it 'initializes a Resource at the entry point' do
@@ -26,7 +26,7 @@ describe Hyperclient do
     end
 
     it 'also works with entry points that are not in the root' do
-      api.entry_point 'http://my.api.org/api'
+      api.entry_point {'http://my.api.org/api'}
       api.new.entry.url.must_equal 'http://my.api.org/api'
     end
 
@@ -37,13 +37,13 @@ describe Hyperclient do
 
   describe 'auth' do
     it 'sets authentication type' do
-      api.auth(:digest, nil, nil)
+      api.auth{ {type: :digest, user: nil, password: nil} }
 
       api.http_options[:http][:auth][:type].must_equal :digest
     end
 
     it 'sets the authentication credentials' do
-      api.auth(:digest, 'user', 'secret')
+      api.auth{ {type: :digest, user: 'user', password: 'secret'} }
 
       api.http_options[:http][:auth][:credentials].must_include 'user'
       api.http_options[:http][:auth][:credentials].must_include 'secret'
