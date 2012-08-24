@@ -17,8 +17,8 @@ Example API client:
 class MyAPIClient
   include Hyperclient
 
-  entry_point 'http://myapp.com/api'
-  auth :digest, 'user', 'password'
+  entry_point{'http://myapp.com/api'}
+  auth{ {type: :digest, user: 'user', password: 'secret'} }
   http_options headers: {'accept-encoding' => 'deflate, gzip'}, debug: true
 end
 ````
