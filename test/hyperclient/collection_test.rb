@@ -1,0 +1,39 @@
+require_relative '../test_helper'
+require 'hyperclient/resource'
+
+module Hyperclient
+  describe Collection do
+    let(:representation) do
+      JSON.parse( File.read('test/fixtures/element.json'))
+    end
+
+    let(:collection) do
+      Collection.new(representation)
+    end
+
+    it 'exposes the collection as methods' do
+      collection.title.must_equal 'Real World ASP.NET MVC3'
+      collection.description.must_match(/production/)
+      collection.permitted.must_equal true
+    end
+
+    it 'exposes collection as a hash' do
+      collection['title'].must_equal 'Real World ASP.NET MVC3'
+      collection['description'].must_match(/production/)
+      collection['permitted'].must_equal true
+    end
+
+    it 'correctly responds to methods' do
+      collection.must_respond_to :title
+    end
+
+    it 'acts as enumerable' do
+      names = collection.map do |name, value|
+        name
+      end
+
+      names.must_equal ['_links', 'title', 'description', 'permitted', '_embedded']
+    end
+  end
+end
+

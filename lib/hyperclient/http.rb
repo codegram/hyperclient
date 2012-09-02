@@ -15,15 +15,14 @@ module Hyperclient
 
     parser JSONHalParser
 
-    # Private: Delegate the url to the resource.
-    def_delegators :@resource, :url
+    attr_reader :url
 
     # Public: Initializes a HTTP agent.
     #
     # resource - A Resource instance. A Resource is given instead of the url
     # since the resource url could change during its live.
-    def initialize(resource, options = {})
-      @resource = resource
+    def initialize(url, options = {})
+      @url = url
       authenticate(options[:auth]) if options && options.include?(:auth)
       headers(options[:headers]) if options && options.include?(:headers)
       enable_debug(options[:debug]) if options && options.include?(:debug)
