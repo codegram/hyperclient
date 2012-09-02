@@ -52,6 +52,18 @@ module Hyperclient
       end
     end
 
+    def templated?
+      @url.is_a?(URITemplate)
+    end
+
+    def expand_uri(variables)
+      @url = @url.expand(variables)
+    end
+
+    def uri_variables
+      @url.variables
+    end
+
     # Public: Gets a fresh representation from the resource representation.
     #
     # Returns itself (this way you can chain method calls).
