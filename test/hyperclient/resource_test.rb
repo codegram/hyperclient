@@ -33,7 +33,7 @@ module Hyperclient
       end
 
       it 'initializes the representation when one is given' do
-        resource = Resource.new('/', {representation: JSON.parse(representation)})
+        Resource.new('/', {representation: JSON.parse(representation)})
 
         assert_not_requested(:get, 'http://api.example.org/')
       end
@@ -62,6 +62,17 @@ module Hyperclient
         resource = Resource.new('/productions/1')
 
         resource.reload.must_equal resource
+      end
+    end
+
+    describe 'representation' do
+      it 'returns the representation when present' do
+        json = JSON.parse(representation)
+        resource = Resource.new('/', {representation: json})
+
+        resource.stubs(:reload).returns 'foo'
+
+        resource.representation.wont_equal 'foo'
       end
     end
   end

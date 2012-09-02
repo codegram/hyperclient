@@ -31,7 +31,7 @@ module Hyperclient
       @url = url
       @name = options[:name]
       @http = HTTP.new(self, options[:http])
-      initialize_representation(options[:representation])
+      self.representation = options[:representation]
     end
 
     # Public: Sets the entry point for all the resources in your API client.
@@ -52,24 +52,18 @@ module Hyperclient
       end
     end
 
-    def templated?
-      @url.is_a?(URITemplate)
-    end
-
-    def expand_uri(variables)
-      @url = @url.expand(variables)
-    end
-
-    def uri_variables
-      @url.variables
-    end
-
     # Public: Gets a fresh representation from the resource representation.
     #
     # Returns itself (this way you can chain method calls).
     def reload
-      initialize_representation(get)
+      self.representation = get
       self
+    end
+
+    # Public: Returns the resource representation.
+    def representation
+      reload unless @representation
+      @representation
     end
 
     private
@@ -78,16 +72,10 @@ module Hyperclient
     # raw_representation - A Hash representing the HTTP representation for the resource.
     #
     # Return nothing.
-    def initialize_representation(raw_representation)
+    def representation=(raw_representation)
       if raw_representation && !raw_representation.empty?
         @representation = Representation.new(raw_representation)
       end
-    end
-
-    # Internal: Returns the resource representation.
-    def representation
-      reload unless @representation
-      @representation
     end
   end
 end
