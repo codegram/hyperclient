@@ -3,14 +3,13 @@ require 'hyperclient/http'
 
 module Hyperclient
   describe HTTP do
-    let (:resource) do
-      resource = MiniTest::Mock.new
-      resource.expect(:url, 'http://api.example.org/productions/1')
+    let(:url) do
+      'http://api.example.org/productions/1'
     end
 
-    let (:http) do
+    let(:http) do
       HTTP.instance_variable_set("@default_options", {})
-      HTTP.new(resource)
+      HTTP.new(url)
     end
 
     describe 'authentication' do
@@ -18,14 +17,14 @@ module Hyperclient
         stub_request(:get, 'user:pass@api.example.org/productions/1').
           to_return(body: 'This is the resource')
 
-        http = HTTP.new(resource, {auth: {type: :basic, credentials: ['user','pass']}})
+        http = HTTP.new(url, {auth: {type: :basic, credentials: ['user','pass']}})
         http.get.must_equal 'This is the resource'
       end
     end
 
     describe 'headers' do
       it 'sets headers from the given option' do
-        http = HTTP.new(resource, {headers: {'accept-encoding' => 'deflate, gzip'}})
+        http = HTTP.new(url, {headers: {'accept-encoding' => 'deflate, gzip'}})
 
         stub_request(:get, 'api.example.org/productions/1').
           with(headers: {'Accept-Encoding' => 'deflate, gzip'}).
@@ -37,14 +36,14 @@ module Hyperclient
 
     describe 'debug' do
       it 'enables debugging' do
-        http = HTTP.new(resource, {debug: true})
+        http = HTTP.new(url, {debug: true})
 
         http.class.instance_variable_get(:@default_options)[:debug_output].must_equal $stderr
       end
 
       it 'uses a custom stream' do
         stream = StringIO.new
-        http = HTTP.new(resource, {debug: stream})
+        http = HTTP.new(url, {debug: stream})
 
         http.class.instance_variable_get(:@default_options)[:debug_output].must_equal stream
       end

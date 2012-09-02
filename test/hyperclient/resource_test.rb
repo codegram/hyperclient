@@ -3,33 +3,29 @@ require 'hyperclient/resource'
 
 module Hyperclient
   describe Resource do
-    let(:representation) do
-      JSON.parse( File.read('test/fixtures/element.json'))
-    end
-
     describe 'initialize' do
       it 'initializes its links' do
-        LinkCollection.expects(:new).with(representation)
+        LinkCollection.expects(:new).with({"self" => { "href" => "/orders/523" }})
 
-        Resource.new(representation)
+        Resource.new({'_links' => {"self" => { "href" => "/orders/523" } }})
       end
 
       it 'initializes its attributes' do
-        Attributes.expects(:new).with(representation)
+        Attributes.expects(:new).with({foo: :bar})
 
-        Resource.new(representation)
+        Resource.new({foo: :bar})
       end
 
       it 'initializes links' do
-        ResourceCollection.expects(:new).with(representation)
+        ResourceCollection.expects(:new).with({"orders" => []})
 
-        Resource.new(representation)
+        Resource.new({'_embedded' => {"orders" => [] }})
       end
     end
 
     describe 'accessors' do
       let(:resource) do
-        Resource.new(representation)
+        Resource.new({})
       end
 
       describe 'links' do
