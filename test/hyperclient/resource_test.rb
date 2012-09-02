@@ -4,76 +4,54 @@ require 'hyperclient/resource'
 module Hyperclient
   describe Resource do
     let(:representation) do
-      File.read('test/fixtures/element.json')
-    end
-
-    let(:parsed_representation) do
-      JSON.parse(representation)
-    end
-
-    before do
-      Resource.entry_point = 'http://api.example.org'
-    end
-
-    describe 'url' do
-      it 'merges the resource url with the entry point' do
-        resource = Resource.new('/path/to/resource')
-        resource.url.to_s.must_equal 'http://api.example.org/path/to/resource'
-      end
-
-      it 'returns the given url if it cannot merge it' do
-        resource = Resource.new('/search={terms}')
-        resource.url.to_s.must_equal '/search={terms}'
-      end
+      JSON.parse( File.read('test/fixtures/element.json'))
     end
 
     describe 'initialize' do
-      before do
-        stub_request(:get, 'http://api.example.org')
+      it 'initializes its links' do
+        LinkCollection.expects(:new).with(representation)
+
+        Resource.new(representation)
       end
 
-      it 'initializes the representation when one is given' do
-        Resource.new('/', {representation: JSON.parse(representation)})
+      it 'initializes its attributes' do
+        Attributes.expects(:new).with(representation)
 
-        assert_not_requested(:get, 'http://api.example.org/')
+        Resource.new(representation)
       end
 
-      it 'sets the resource name' do
-        resource = Resource.new('/', {name: 'posts'})
+      it 'initializes links' do
+        ResourceCollection.expects(:new).with(representation)
 
-        resource.name.must_equal 'posts'
+        Resource.new(representation)
+      end
+    end
+
+    describe 'accessors' do
+      let(:resource) do
+        Resource.new(representation)
+      end
+
+      describe 'links' do
+        it 'returns a LinkCollection' do
+          resource.links.must_be_kind_of LinkCollection
+        end
+      end
+
+      describe 'attributes' do
+        it 'returns a Attributes' do
+          resource.attributes.must_be_kind_of Attributes
+        end
+      end
+
+      describe 'embedded' do
+        it 'returns a ResourceCollection' do
+          resource.embedded.must_be_kind_of ResourceCollection
+        end
       end
     end
 
     describe 'reload' do
-      before do
-        stub_request(:get, "http://api.example.org/productions/1").
-          to_return(:status => 200, :body => representation, headers: {content_type: 'application/json'})
-      end
-
-      it 'retrives itself from the API' do
-        resource = Resource.new('/productions/1')
-        resource.reload
-
-        assert_requested(:get, 'http://api.example.org/productions/1', times: 1)
-      end
-
-      it 'returns itself' do
-        resource = Resource.new('/productions/1')
-
-        resource.reload.must_equal resource
-      end
-    end
-
-    describe 'representation' do
-      it 'returns the representation when present' do
-        json = JSON.parse(representation)
-        resource = Resource.new('/', {representation: json})
-
-        resource.stubs(:reload).returns 'foo'
-
-        resource.representation.wont_equal 'foo'
-      end
     end
   end
 end
