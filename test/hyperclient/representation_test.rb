@@ -36,8 +36,20 @@ module Hyperclient
     end
 
     describe 'links' do
-      it 'returns resources included in the _links section' do
-        representation.links.filter.must_be_kind_of Resource
+      it 'returns a collection of links' do
+        representation.links.to_a.length.must_equal 2
+      end
+
+      it 'exposes links as methods' do
+        representation.links.respond_to?(:filter).must_equal true
+      end
+
+      it 'makes links also accessible by key' do
+        representation.links['self'].wont_be_nil
+      end
+
+      it 'sets links as templated' do
+        representation.links.filter.templated?.must_equal true
       end
     end
 
