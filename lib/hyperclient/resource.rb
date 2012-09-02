@@ -15,9 +15,9 @@ module Hyperclient
     def_delegators :self_link, :get, :post, :put, :delete, :options, :head
 
     def initialize(representation)
-      @links      = LinkCollection.new(representation)
+      @links      = LinkCollection.new(representation['_links'])
+      @embedded   = ResourceCollection.new(representation['_embedded'])
       @attributes = Attributes.new(representation)
-      @embedded   = ResourceCollection.new(representation)
     end
 
     private

@@ -10,40 +10,26 @@
 #   end
 #
 module Hyperclient
-  # Internal: Extend the parent class with our class methods.
-  def self.included(base)
-    base.send :extend, ClassMethods
-  end
-
-  # Public: Initializes the API with the entry point.
-  def entry
-    @entry ||= Resource.new('', resource_options)
-  end
-
-  # Internal: Delegate the method to the API if it exists.
-  #
-  # This way we can call our API client with the resources name instead of
-  # having to add the methods to it.
-  def method_missing(method, *args, &block)
-    if entry.respond_to?(method)
-      entry.send(method, *args, &block)
-    else
-      super
+  class EntryPoint
+    def initialize(entry_point, http_options = {})
+      @entry = Resource.new({'_links' => {'self' => {'href' => entry_point}}})
+      @http_options = http_options
     end
-  end
 
-  def respond_to_missing?(method, include_private = false)
-    entry.respond_to?(method.to_s)
-  end
+    # Internal: Delegate the method to the API if it exists.
+    #
+    # This way we can call our API client with the resources name instead of
+    # having to add the methods to it.
+    def method_missing(method, *args, &block)
+      if @entry.respond_to?(method)
+        @entry.send(method, *args, &block)
+      else
+        super
+      end
+    end
 
-  module ClassMethods
-    # Public: Set the entry point of your API.
-    #
-    # url - A block to pass the API url.
-    #
-    # Returns nothing.
-    def entry_point(&url)
-      Resource.entry_point = url.call
+    def respond_to_missing?(method, include_private = false)
+      @entry.respond_to?(method.to_s)
     end
 
     # Public: Sets the authentication options for your API client.
@@ -58,9 +44,8 @@ module Hyperclient
     #     auth{ {type: :digest, user: 'user', password: 'secret'} }
     #
     # Returns nothing.
-    def auth(&options)
-      options = options.call
-      http_options({auth: {type: options[:type], credentials: [options[:user], options[:password]]}})
+    def auth(type, user, password)
+      self.http_options({auth: {type: type, credentials: [user, password]}})
     end
 
     # Public: Sets the HTTP options that will be used to initialize
@@ -74,18 +59,8 @@ module Hyperclient
     #
     # Returns a Hash.
     def http_options(options = {})
-      @@http_options ||= {}
-      @@http_options.merge!(options)
-
-      {http: @@http_options}
+      @http_options.merge!(options)
     end
-  end
-
-  private
-  # Internal: Returns a Hash with the options to initialize the entry point
-  # Resource.
-  def resource_options
-    {name: 'Entry point'}.merge(self.class.http_options)
   end
 end
 
