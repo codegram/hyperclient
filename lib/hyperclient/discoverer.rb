@@ -44,6 +44,10 @@ module Hyperclient
       resource
     end
 
+    def respond_to_missing?(method, include_private = false)
+      resources.include?(method.to_s)
+    end
+
     private
     # Internal: Returns a Hash with the resources of the representation.
     def resources

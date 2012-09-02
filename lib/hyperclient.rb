@@ -32,6 +32,10 @@ module Hyperclient
     end
   end
 
+  def respond_to_missing?(method, include_private = false)
+    entry.respond_to?(method.to_s)
+  end
+
   module ClassMethods
     # Public: Set the entry point of your API.
     #
