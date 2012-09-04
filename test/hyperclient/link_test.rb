@@ -26,24 +26,32 @@ module Hyperclient
 
         Link.new({}).resource
       end
+    end
 
-      describe 'when the link is templated' do
+    describe 'templated' do
+      it 'buils a resource with the templated URI representation' do
+        link = Link.new({'href' => '/orders{?id}', 'templated' => true})
 
-        it 'buils a resource with the templated URI representation' do
-          HTTP.expects(:new).with('/orders?id=1').returns(http)
-          Resource.expects(:new).with({})
-
-          link = Link.new({'href' => '/orders{?id}', 'templated' => true})
-
-          link.resource(id: '1')
-        end
-
-        it 'raises if no uri variables are given' do
-          link = Link.new({'href' => '/orders{?id}', 'templated' => true})
-
-          proc { link.resource }.must_raise MissingURITemplateVariablesException
-        end
+        templated_link = link.templated(id: '1')
+        templated_link.url.must_equal '/orders?id=1'
       end
+
+      it 'raises if no uri variables are given' do
+        link = Link.new({'href' => '/orders{?id}', 'templated' => true})
+
+        proc { link.resource }.must_raise MissingURITemplateVariablesException
+      end
+    end
+
+    it 'delegates unkown methods to the resource' do
+      link = Link.new({'href' => 'http://myapi.org/orders'})
+      stub_request(:get, "http://myapi.org/orders")
+      resource = mock('Resource')
+
+      Resource.expects(:new).returns(resource).at_least_once
+      resource.expects(:embedded)
+
+      link.embedded
     end
   end
 end

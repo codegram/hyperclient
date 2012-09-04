@@ -3,34 +3,40 @@ require 'hyperclient/resource'
 require 'uri_template'
 
 module Hyperclient
+  #
+  # api.links.posts.resource(q: 'hola')
+  #
+  # api.links.posts.templated?
+  #
+  # api.links.posts.templated(uri_variables).post(params)
   class Link
     extend Forwardable
-
-    attr_reader :href, :templated, :type, :name, :profile, :title, :hreflang
-    attr_accessor :uri_variables
-
     # Public: Delegate all HTTP methods (get, post, put, delete, options and
     # head) to Hyperclient::HTTP.
     def_delegators :http, :get, :post, :put, :delete, :options, :head
 
-    def initialize(link)
-      @href      = link['href']
-      @templated = link['templated']
-      @type      = link['type']
-      @name      = link['name']
-      @profile   = link['profile']
-      @title     = link['title']
-      @hreflang  = link['hreflang']
+    def initialize(link, uri_variables = nil)
+      @link          = link
+      @uri_variables = uri_variables
     end
 
-    def resource(uri_variables = nil)
-      @uri_variables = uri_variables
-
+    def resource
       Resource.new http.get
     end
 
     def templated?
-      !!@templated
+      !!@link['templated']
+    end
+
+    def templated(uri_variables)
+      self.class.new(@link, uri_variables)
+    end
+
+    def url
+      return @link['href'] unless templated?
+      raise MissingURITemplateVariablesException if @uri_variables == nil
+
+      @url ||= URITemplate.new(@link['href']).expand(@uri_variables)
     end
 
     private
@@ -38,11 +44,20 @@ module Hyperclient
       @http ||= HTTP.new url
     end
 
-    def url
-      return @href unless templated?
-      raise MissingURITemplateVariablesException unless @uri_variables
+    # Internal: Delegate the method to the API if it exists.
+    #
+    # This allows `api.links.posts.embedded` instead of
+    # `api.links.posts.resource.embedded`
+    def method_missing(method, *args, &block)
+      if resource.respond_to?(method)
+        resource.send(method, *args, &block)
+      else
+        super
+      end
+    end
 
-      @url ||= URITemplate.new(@href).expand(@uri_variables)
+    def respond_to_missing?(method, include_private = false)
+      resource.respond_to?(method.to_s)
     end
   end
 
