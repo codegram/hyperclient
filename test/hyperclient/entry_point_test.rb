@@ -1,5 +1,5 @@
-require_relative 'test_helper'
-require 'hyperclient'
+require_relative '../test_helper'
+require 'hyperclient/entry_point'
 
 module Hyperclient
   describe EntryPoint do
