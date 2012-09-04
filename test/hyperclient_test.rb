@@ -7,9 +7,14 @@ module Hyperclient
       EntryPoint.new 'http://my.api.org'
     end
 
+    before do
+      stub_request(:get, "http://my.api.org/").
+          to_return(body: '{"_links": {"self": {"href": "http://my.api.org"}}}', headers: {content_type: 'application/json'})
+    end
+
     describe 'entry' do
       it 'initializes a Resource at the entry point' do
-        api.links['self'].href.must_equal 'http://my.api.org'
+        api.links['self'].url.must_equal 'http://my.api.org'
       end
     end
 
@@ -40,7 +45,7 @@ module Hyperclient
       end
 
       it 'raises an error when the method does not exist in the API' do
-        lambda { api.new.this_method_does_not_exist }.must_raise(NoMethodError)
+        lambda { api.this_method_does_not_exist }.must_raise(NoMethodError)
       end
     end
   end
