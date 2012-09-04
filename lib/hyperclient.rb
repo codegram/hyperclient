@@ -8,7 +8,7 @@
 module Hyperclient
   class EntryPoint
     def initialize(entry_point, http_options = {})
-      @entry = Resource.new({'_links' => {'self' => {'href' => entry_point}}})
+      @entry = Link.new({'href' => entry_point}).resource
       @http_options = http_options
     end
 
