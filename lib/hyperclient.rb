@@ -3,11 +3,7 @@
 #
 # Examples
 #
-#   class MyAPI
-#     extend Hyperclient
-#
-#     entry_point 'http://api.myapp.com'
-#   end
+#  Hyperclient::EntryPoint.new('http://my.api.org', options)
 #
 module Hyperclient
   class EntryPoint
