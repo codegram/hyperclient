@@ -4,7 +4,7 @@ require 'hyperclient/http'
 module Hyperclient
   describe HTTP do
     let(:url) do
-      'http://api.example.org/productions/1'
+      '/productions/1'
     end
 
     let(:http) do
@@ -12,21 +12,27 @@ module Hyperclient
       HTTP.new(url)
     end
 
+    before do
+      Hyperclient.config({})
+      Hyperclient.config[:base_uri] = 'http://api.example.org'
+    end
+
     describe 'authentication' do
       it 'sets the authentication options' do
-        stub_request(:get, 'user:pass@api.example.org/productions/1').
+        stub_request(:get, 'http://user:pass@api.example.org/productions/1').
           to_return(body: 'This is the resource')
 
-        http = HTTP.new(url, {auth: {type: :basic, credentials: ['user','pass']}})
+        Hyperclient.config[:auth] = {type: :basic, credentials: ['user','pass']}
+
         http.get.must_equal 'This is the resource'
       end
     end
 
     describe 'headers' do
       it 'sets headers from the given option' do
-        http = HTTP.new(url, {headers: {'accept-encoding' => 'deflate, gzip'}})
+        Hyperclient.config[:headers] = {'accept-encoding' => 'deflate, gzip'}
 
-        stub_request(:get, 'api.example.org/productions/1').
+        stub_request(:get, 'http://api.example.org/productions/1').
           with(headers: {'Accept-Encoding' => 'deflate, gzip'}).
           to_return(body: 'This is the resource')
 
@@ -36,14 +42,14 @@ module Hyperclient
 
     describe 'debug' do
       it 'enables debugging' do
-        http = HTTP.new(url, {debug: true})
+        Hyperclient.config[:debug] = true
 
         http.class.instance_variable_get(:@default_options)[:debug_output].must_equal $stderr
       end
 
       it 'uses a custom stream' do
         stream = StringIO.new
-        http = HTTP.new(url, {debug: stream})
+        Hyperclient.config[:debug] = stream
 
         http.class.instance_variable_get(:@default_options)[:debug_output].must_equal stream
       end
@@ -51,14 +57,14 @@ module Hyperclient
 
     describe 'get' do
       it 'sends a GET request and returns the response body' do
-        stub_request(:get, 'api.example.org/productions/1').
+        stub_request(:get, 'http://api.example.org/productions/1').
           to_return(body: 'This is the resource')
 
         http.get.must_equal 'This is the resource'
       end
 
       it 'returns the parsed response' do
-        stub_request(:get, 'api.example.org/productions/1').
+        stub_request(:get, 'http://api.example.org/productions/1').
           to_return(body: '{"some_json": 12345 }', headers: {content_type: 'application/json'})
 
         http.get.must_equal({'some_json' => 12345})
@@ -67,7 +73,7 @@ module Hyperclient
 
     describe 'post' do
       it 'sends a POST request' do
-        stub_request(:post, 'api.example.org/productions/1').
+        stub_request(:post, 'http://api.example.org/productions/1').
           to_return(body: 'Posting like a big boy huh?', status: 201)
 
         response = http.post({data: 'foo'})
@@ -79,7 +85,7 @@ module Hyperclient
 
     describe 'put' do
       it 'sends a PUT request' do
-        stub_request(:put, 'api.example.org/productions/1').
+        stub_request(:put, 'http://api.example.org/productions/1').
           to_return(body: 'No changes were made', status: 204)
 
         response = http.put({attribute: 'changed'})
@@ -91,7 +97,7 @@ module Hyperclient
 
     describe 'options' do
       it 'sends a OPTIONS request' do
-        stub_request(:options, 'api.example.org/productions/1').
+        stub_request(:options, 'http://api.example.org/productions/1').
           to_return(status: 200, headers: {allow: 'GET, POST'})
 
         response = http.options
@@ -101,7 +107,7 @@ module Hyperclient
 
     describe 'head' do
       it 'sends a HEAD request' do
-        stub_request(:head, 'api.example.org/productions/1').
+        stub_request(:head, 'http://api.example.org/productions/1').
           to_return(status: 200, headers: {content_type: 'application/json'})
 
         response = http.head
@@ -111,7 +117,7 @@ module Hyperclient
 
     describe 'delete' do
       it 'sends a DELETE request' do
-        stub_request(:delete, 'api.example.org/productions/1').
+        stub_request(:delete, 'http://api.example.org/productions/1').
           to_return(body: 'Resource deleted', status: 200)
 
         response = http.delete
