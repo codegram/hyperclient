@@ -8,5 +8,9 @@ module Hyperclient
         hash.update(name => Link.new(link))
       end
     end
+
+    # def each(&block)
+    #   @collection.values.each(&block)
+    # end
   end
 end
