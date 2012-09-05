@@ -14,9 +14,11 @@ require 'hyperclient/link'
 #
 module Hyperclient
   class EntryPoint
-    def initialize(entry_point, http_options = {})
-      HTTP.setup(http_options.update(base_uri: entry_point))
-      @entry = Link.new({'href' => entry_point}).resource
+    attr_accessor :config
+
+    def initialize(entry_point, config = {})
+      @config = config.update(base_uri: entry_point)
+      @entry  = Link.new({'href' => entry_point}, self).resource
     end
 
     # Internal: Delegate the method to the API if it exists.

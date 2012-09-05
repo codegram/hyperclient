@@ -1,5 +1,4 @@
 require 'httparty'
-require 'pp'
 
 # Public: A parser for HTTParty that understand the mime application/hal+json.
 class JSONHalParser < HTTParty::Parser
@@ -20,24 +19,20 @@ module Hyperclient
     #
     # resource - A Resource instance. A Resource is given instead of the url
     # since the resource url could change during its live.
-    def initialize(url, options = {})
-      @url = url
-    end
+    def initialize(url, config)
+      @url, @config = url, config
 
-    def self.setup(options)
-      base_uri = options[:base_uri]
-      authenticate(options[:auth]) if options.include?(:auth)
-      headers(options[:headers]) if options.include?(:headers)
-      enable_debug(options[:debug]) if options[:debug]
+      authenticate!
+      toggle_debug!
+
+      self.class.base_uri(@config.fetch(:base_uri))
+      self.class.headers(@config[:headers]) if @config.include?(:headers)
     end
 
     # Public: Sends a GET request the the resource url.
     #
     # Returns: The parsed response.
     def get
-      pp '------------------'
-      pp self.class.base_uri
-      pp '------------------'
       self.class.get(url).parsed_response
     end
 
@@ -89,19 +84,23 @@ module Hyperclient
     #           :credentials - An Array of Strings with the user and password.
     #
     # Returns nothing.
-    def self.authenticate(options)
-      auth_method = options[:type].to_s + '_auth'
-      send(auth_method, *options[:credentials])
+    def authenticate!
+      if options = @config[:auth]
+        auth_method = options[:type].to_s + '_auth'
+        self.class.send(auth_method, *options[:credentials])
+      end
     end
 
     # Internal: Enables HTTP debugging.
     #
     # stream - An object to stream the HTTP out to or just a truthy value. 
-    def self.enable_debug(stream = nil)
+    def toggle_debug!
+      stream = @config[:debug]
+
       if stream.respond_to?(:<<)
-        debug_output(stream)
+        self.class.debug_output(stream)
       else
-        debug_output
+        self.class.debug_output
       end
     end
   end

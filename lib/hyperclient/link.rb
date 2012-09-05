@@ -15,13 +15,14 @@ module Hyperclient
     # head) to Hyperclient::HTTP.
     def_delegators :http, :get, :post, :put, :delete, :options, :head
 
-    def initialize(link, uri_variables = nil)
+    def initialize(link, entry_point, uri_variables = nil)
       @link          = link
+      @entry_point   = entry_point
       @uri_variables = uri_variables
     end
 
     def resource
-      Resource.new http.get
+      Resource.new http.get, @entry_point
     end
 
     def templated?
@@ -41,7 +42,7 @@ module Hyperclient
 
     private
     def http
-      @http ||= HTTP.new url
+      @http ||= HTTP.new url, @entry_point
     end
 
     # Internal: Delegate the method to the API if it exists.

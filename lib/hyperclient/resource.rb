@@ -14,10 +14,11 @@ module Hyperclient
     # head) to Hyperclient::HTTP.
     def_delegators :self_link, :get, :post, :put, :delete, :options, :head
 
-    def initialize(representation)
-      @links      = LinkCollection.new(representation['_links'])
-      @embedded   = ResourceCollection.new(representation['_embedded'])
-      @attributes = Attributes.new(representation)
+    def initialize(representation, entry_point)
+      @links       = LinkCollection.new(representation['_links'], entry_point)
+      @embedded    = ResourceCollection.new(representation['_embedded'], entry_point)
+      @attributes  = Attributes.new(representation)
+      @entry_point = entry_point
     end
 
     private
