@@ -1,18 +1,15 @@
 require 'hyperclient'
 
-class HalShop
-  include Hyperclient
-
-  entry_point 'http://hal-shop.heroku.com'
-  http_options debug: true
-end
-
 def print_resources(resources)
-  resources.each do |resource|
-    if resource.is_a?(Array)
-      print_resources(resource)
-    else
-      puts %{Found "#{resource.name}" at "#{resource.url}" }
+  resources.each do |name, resource|
+    begin
+    # if resource.is_a?(Array)
+    #   print_resources(resource)
+    # else
+      puts %{Found #{name} at #{resource.url}}
+    # end
+    rescue
+      puts %{Found #{name}}
     end
   end
 end
@@ -24,7 +21,7 @@ def print_attributes(attributes)
   end
 end
 
-api = HalShop.new
+api = Hyperclient::EntryPoint.new 'http://hal-shop.heroku.com', {debug: true}
 
 puts "Let's inspect the API:"
 puts "\n"
@@ -41,7 +38,7 @@ puts
 puts "Let's see what stats we have:"
 print_attributes(api.embedded.stats.attributes)
 
-products = api.links["http://hal-shop.heroku.com/rels/products"].reload
+products = api.links["http://hal-shop.heroku.com/rels/products"].resource
 
 puts 
 puts "And what's the inventory of products?"

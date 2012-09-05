@@ -12,35 +12,29 @@ module Hyperclient
           to_return(body: '{"_links": {"self": {"href": "http://my.api.org"}}}', headers: {content_type: 'application/json'})
     end
 
-    describe 'entry' do
+    describe 'initialize' do
       it 'initializes a Resource at the entry point' do
         api.links['self'].url.must_equal 'http://my.api.org'
       end
-    end
 
-    describe 'auth' do
-      it 'sets authentication type' do
-        api.auth(:digest, nil, nil)
+      it 'setups the HTTP config' do
+        options = {:headers => {'accept-encoding' => 'deflate, gzip'}}
 
-        api.http_options[:auth][:type].must_equal :digest
+        HTTP.expects(:setup).with(options)
+
+        EntryPoint.new('http://my.api.org', options)
       end
 
-      it 'sets the authentication credentials' do
-        api.auth(:digest, 'user', 'secret')
+      it 'sets the base_uri for HTTP' do
+        HTTP.expects(:setup).with({base_uri: 'http://my.api.org'})
 
-        api.http_options[:auth][:credentials].must_include 'user'
-        api.http_options[:auth][:credentials].must_include 'secret'
+        EntryPoint.new('http://my.api.org')
       end
     end
 
     describe 'method missing' do
-      class Hyperclient::Resource
-        def foo
-          'foo'
-        end
-      end
-
       it 'delegates undefined methods to the API when they exist' do
+        Resource.any_instance.expects(:foo).returns 'foo'
         api.foo.must_equal 'foo'
       end
 

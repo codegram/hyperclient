@@ -1,4 +1,5 @@
 require 'httparty'
+require 'pp'
 
 # Public: A parser for HTTParty that understand the mime application/hal+json.
 class JSONHalParser < HTTParty::Parser
@@ -21,15 +22,22 @@ module Hyperclient
     # since the resource url could change during its live.
     def initialize(url, options = {})
       @url = url
-      authenticate(options[:auth]) if options && options.include?(:auth)
-      headers(options[:headers]) if options && options.include?(:headers)
-      enable_debug(options[:debug]) if options && options.include?(:debug)
+    end
+
+    def self.setup(options)
+      base_uri = options[:base_uri]
+      authenticate(options[:auth]) if options.include?(:auth)
+      headers(options[:headers]) if options.include?(:headers)
+      enable_debug(options[:debug]) if options[:debug]
     end
 
     # Public: Sends a GET request the the resource url.
     #
     # Returns: The parsed response.
     def get
+      pp '------------------'
+      pp self.class.base_uri
+      pp '------------------'
       self.class.get(url).parsed_response
     end
 
@@ -81,34 +89,19 @@ module Hyperclient
     #           :credentials - An Array of Strings with the user and password.
     #
     # Returns nothing.
-    def authenticate(options)
+    def self.authenticate(options)
       auth_method = options[:type].to_s + '_auth'
-      self.class.send(auth_method, *options[:credentials])
-    end
-
-    # Internal: Adds default headers for all the requests.
-    #
-    # headers - A Hash with the header.
-    #
-    # Example:
-    #   headers({'accept-encoding' => 'deflate, gzip'})
-    #
-    # Returns nothing.
-    def headers(headers)
-      self.class.send(:headers, headers)
+      send(auth_method, *options[:credentials])
     end
 
     # Internal: Enables HTTP debugging.
     #
-    # stream - An object to stream the HTTP out to or just a truthy value. If
-    #          it's truthy it will output to $stderr.
-    def enable_debug(stream)
-      return unless stream
-
+    # stream - An object to stream the HTTP out to or just a truthy value. 
+    def self.enable_debug(stream = nil)
       if stream.respond_to?(:<<)
-        self.class.debug_output(stream)
+        debug_output(stream)
       else
-        self.class.debug_output
+        debug_output
       end
     end
   end
