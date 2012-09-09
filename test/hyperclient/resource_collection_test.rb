@@ -6,9 +6,10 @@ module Hyperclient
     let(:representation) do
       JSON.parse( File.read('test/fixtures/element.json'))
     end
+    let(:entry_point) { stub('entry point') }
 
     let(:resources) do
-      ResourceCollection.new(representation['_embedded'])
+      ResourceCollection.new(representation['_embedded'], entry_point)
     end
 
     it 'is a collection' do
