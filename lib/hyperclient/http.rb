@@ -85,7 +85,7 @@ module Hyperclient
     #
     # Returns nothing.
     def authenticate!
-      if options = @config[:auth]
+      if (options = @config[:auth])
         auth_method = options[:type].to_s + '_auth'
         self.class.send(auth_method, *options[:credentials])
       end

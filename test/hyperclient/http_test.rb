@@ -7,14 +7,11 @@ module Hyperclient
       '/productions/1'
     end
 
+    let(:config) { {base_uri: 'http://api.example.org'} }
+
     let(:http) do
       HTTP.instance_variable_set("@default_options", {})
-      HTTP.new(url)
-    end
-
-    before do
-      Hyperclient.config({})
-      Hyperclient.config[:base_uri] = 'http://api.example.org'
+      HTTP.new(url, config)
     end
 
     describe 'authentication' do
@@ -22,7 +19,7 @@ module Hyperclient
         stub_request(:get, 'http://user:pass@api.example.org/productions/1').
           to_return(body: 'This is the resource')
 
-        Hyperclient.config[:auth] = {type: :basic, credentials: ['user','pass']}
+        config.update({auth: {type: :basic, credentials: ['user','pass']}})
 
         http.get.must_equal 'This is the resource'
       end
@@ -30,7 +27,7 @@ module Hyperclient
 
     describe 'headers' do
       it 'sets headers from the given option' do
-        Hyperclient.config[:headers] = {'accept-encoding' => 'deflate, gzip'}
+        config.update({headers: {'accept-encoding' => 'deflate, gzip'}})
 
         stub_request(:get, 'http://api.example.org/productions/1').
           with(headers: {'Accept-Encoding' => 'deflate, gzip'}).
@@ -42,14 +39,14 @@ module Hyperclient
 
     describe 'debug' do
       it 'enables debugging' do
-        Hyperclient.config[:debug] = true
+        config.update({debug: true})
 
         http.class.instance_variable_get(:@default_options)[:debug_output].must_equal $stderr
       end
 
       it 'uses a custom stream' do
         stream = StringIO.new
-        Hyperclient.config[:debug] = stream
+        config.update({debug: stream})
 
         http.class.instance_variable_get(:@default_options)[:debug_output].must_equal stream
       end

@@ -22,7 +22,7 @@ module Hyperclient
     end
 
     def resource
-      Resource.new http.get, @entry_point
+      Resource.new(http.get, @entry_point)
     end
 
     def templated?
@@ -30,7 +30,7 @@ module Hyperclient
     end
 
     def templated(uri_variables)
-      self.class.new(@link, uri_variables)
+      self.class.new(@link, @entry_point, uri_variables)
     end
 
     def url
@@ -42,7 +42,7 @@ module Hyperclient
 
     private
     def http
-      @http ||= HTTP.new url, @entry_point
+      @http ||= HTTP.new(url, @entry_point.config)
     end
 
     # Internal: Delegate the method to the API if it exists.

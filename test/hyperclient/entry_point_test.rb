@@ -8,7 +8,6 @@ module Hyperclient
     end
 
     before do
-      Hyperclient.config({})
       stub_request(:get, "http://my.api.org/").
           to_return(body: '{"_links": {"self": {"href": "http://my.api.org"}}}', headers: {content_type: 'application/json'})
     end
@@ -21,15 +20,15 @@ module Hyperclient
       it 'setups the HTTP config' do
         options = {:headers => {'accept-encoding' => 'deflate, gzip'}}
 
-        EntryPoint.new('http://my.api.org', options)
+        api = EntryPoint.new('http://my.api.org', options)
 
-        Hyperclient.config[:headers].must_include 'accept-encoding'
+        api.config[:headers].must_include 'accept-encoding'
       end
 
       it 'sets the base_uri for HTTP' do
-        EntryPoint.new('http://my.api.org')
+        api = EntryPoint.new('http://my.api.org')
 
-        Hyperclient.config[:base_uri].must_equal 'http://my.api.org'
+        api.config[:base_uri].must_equal 'http://my.api.org'
       end
     end
 

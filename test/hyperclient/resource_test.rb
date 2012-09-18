@@ -3,29 +3,31 @@ require 'hyperclient/resource'
 
 module Hyperclient
   describe Resource do
+    let(:entry_point) { mock('Entry point') }
+
     describe 'initialize' do
       it 'initializes its links' do
-        LinkCollection.expects(:new).with({"self" => { "href" => "/orders/523" }})
+        LinkCollection.expects(:new).with({"self" => { "href" => "/orders/523" }}, entry_point)
 
-        Resource.new({'_links' => {"self" => { "href" => "/orders/523" } }})
+        Resource.new({'_links' => {"self" => { "href" => "/orders/523" } }}, entry_point)
       end
 
       it 'initializes its attributes' do
         Attributes.expects(:new).with({foo: :bar})
 
-        Resource.new({foo: :bar})
+        Resource.new({foo: :bar}, entry_point)
       end
 
       it 'initializes links' do
-        ResourceCollection.expects(:new).with({"orders" => []})
+        ResourceCollection.expects(:new).with({"orders" => []}, entry_point)
 
-        Resource.new({'_embedded' => {"orders" => [] }})
+        Resource.new({'_embedded' => {"orders" => [] }}, entry_point)
       end
     end
 
     describe 'accessors' do
       let(:resource) do
-        Resource.new({})
+        Resource.new({}, entry_point)
       end
 
       describe 'links' do
@@ -45,9 +47,6 @@ module Hyperclient
           resource.embedded.must_be_kind_of ResourceCollection
         end
       end
-    end
-
-    describe 'reload' do
     end
   end
 end

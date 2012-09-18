@@ -3,12 +3,14 @@ require 'hyperclient/link_collection'
 
 module Hyperclient
   describe LinkCollection do
+    let(:entry_point) { stub('Entry point', config: {base_uri: '/'}) }
+
     let(:representation) do
       JSON.parse( File.read('test/fixtures/element.json'))
     end
 
     let(:links) do
-      LinkCollection.new(representation['_links'])
+      LinkCollection.new(representation['_links'], entry_point)
     end
 
     it 'is a collection' do
