@@ -14,14 +14,26 @@ module Hyperclient
       HTTP.new(url, config)
     end
 
+    describe 'url' do
+      it 'merges the resource url with the base uri' do
+        http.url.to_s.must_equal 'http://api.example.org/productions/1'
+      end
+
+      it 'returns the given url if it cannot merge it' do
+        config = {base_uri: nil}
+        http = HTTP.new(url, config)
+        http.url.to_s.must_equal '/productions/1'
+      end
+    end
+
     describe 'authentication' do
       it 'sets the authentication options' do
         stub_request(:get, 'http://user:pass@api.example.org/productions/1').
-          to_return(body: 'This is the resource')
+          to_return(body: '{"resource": "This is the resource"}')
 
         config.update({auth: {type: :basic, user: 'user', password: 'pass'}})
 
-        http.get.must_equal 'This is the resource'
+        http.get.must_equal({'resource' => 'This is the resource'})
       end
     end
 
@@ -31,7 +43,7 @@ module Hyperclient
 
         stub_request(:get, 'http://api.example.org/productions/1').
           with(headers: {'Accept-Encoding' => 'deflate, gzip'}).
-          to_return(body: 'This is the resource')
+          to_return(body: '{"resource": "This is the resource"}')
 
         http.get
       end
@@ -55,9 +67,9 @@ module Hyperclient
     describe 'get' do
       it 'sends a GET request and returns the response body' do
         stub_request(:get, 'http://api.example.org/productions/1').
-          to_return(body: 'This is the resource')
+          to_return(body: '{"resource": "This is the resource"}')
 
-        http.get.must_equal 'This is the resource'
+        http.get.must_equal({'resource' => 'This is the resource'})
       end
 
       it 'returns the parsed response' do

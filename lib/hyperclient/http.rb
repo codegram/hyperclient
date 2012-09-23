@@ -1,4 +1,5 @@
 require 'httparty'
+require 'json'
 
 # Public: A parser for HTTParty that understand the mime application/hal+json.
 class JSONHalParser < HTTParty::Parser
@@ -10,10 +11,7 @@ module Hyperclient
   # resource.
   class HTTP
     include HTTParty
-
     parser JSONHalParser
-
-    attr_reader :url
 
     # Public: Initializes the HTTP agent.
     #
@@ -28,20 +26,29 @@ module Hyperclient
     #          :debug   - The flag (true/false) to debug the HTTP connections.
     #
     def initialize(url, config)
-      @url, @config = url, config
+      @url      = url
+      @config   = config
+      @base_uri = config.fetch(:base_uri)
 
       authenticate!
-      toggle_debug!
+      toggle_debug! if @config[:debug]
 
-      self.class.base_uri(@config.fetch(:base_uri))
       self.class.headers(@config[:headers]) if @config.include?(:headers)
+    end
+
+    def url
+      begin
+        URI.parse(@base_uri).merge(@url).to_s
+      rescue URI::InvalidURIError
+        @url
+      end
     end
 
     # Public: Sends a GET request the the resource url.
     #
     # Returns: The parsed response.
     def get
-      self.class.get(url).parsed_response
+      JSON.parse(self.class.get(url).response.body)
     end
 
     # Public: Sends a POST request the the resource url.
