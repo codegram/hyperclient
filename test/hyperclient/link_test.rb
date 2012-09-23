@@ -66,7 +66,8 @@ module Hyperclient
 
     describe 'method_missing' do
       before do
-        stub_request(:get, "http://myapi.org/orders")
+        stub_request(:get, "http://myapi.org/orders").
+          to_return(body: '{"resource": "This is the resource"}')
         Resource.expects(:new).returns(resource).at_least_once
       end
 
