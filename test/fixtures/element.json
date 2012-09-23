@@ -4,7 +4,8 @@
             "href": "/productions/1"
         },
         "filter": {
-            "href": "/productions/1?categories="
+            "href": "/productions/1?categories={filter}",
+            "templated": true
         }
     },
     "title": "Real World ASP.NET MVC3",
@@ -25,16 +26,10 @@
                     "self": {
                         "href": "/episodes/1"
                     },
-                    "media": [
-                        {
+                    "media": {
                             "type": "video/webm; codecs='vp8.0, vorbis'",
                             "href": "/media/1"
-                        },
-                        {
-                            "type": "video/ogg; codecs='theora, vorbis'",
-                            "href": "/media/2"
                         }
-                    ]
                 },
                 "title": "Foundations",
                 "description": "In this episode we talk about what it is we're doing: building our startup and getting ourselves off the ground. We take..",
@@ -45,16 +40,10 @@
                     "self": {
                         "href": "/episodes/2"
                     },
-                    "media": [
-                        {
-                            "type": "video/webm; codecs='vp8.0, vorbis'",
-                            "href": "/media/3"
-                        },
-                        {
+                    "media": {
                             "type": "video/ogg; codecs='theora, vorbis'",
                             "href": "/media/4"
                         }
-                    ]
                 },
                 "title": "Membership",
                 "description": "In this episode Rob hooks up testing in an effort to deal with ASP.NET Membership. The team has decided..",

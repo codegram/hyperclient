@@ -1,18 +1,12 @@
 require 'hyperclient'
-
-class HalShop
-  include Hyperclient
-
-  entry_point 'http://hal-shop.heroku.com'
-  http_options debug: true
-end
+require 'pp'
 
 def print_resources(resources)
-  resources.each do |resource|
-    if resource.is_a?(Array)
-      print_resources(resource)
-    else
-      puts %{Found "#{resource.name}" at "#{resource.url}" }
+  resources.each do |name, resource|
+    begin
+      puts %{Found #{name} at #{resource.url}}
+    rescue
+      puts %{Found #{name}}
     end
   end
 end
@@ -24,7 +18,7 @@ def print_attributes(attributes)
   end
 end
 
-api = HalShop.new
+api = Hyperclient::EntryPoint.new 'http://hal-shop.heroku.com'
 
 puts "Let's inspect the API:"
 puts "\n"
@@ -34,24 +28,23 @@ puts 'Links from the entry point:'
 print_resources(api.links)
 
 puts
-puts 'Resources at the entry point:'
-print_resources(api.embedded)
-
-puts
 puts "Let's see what stats we have:"
 print_attributes(api.embedded.stats.attributes)
 
-products = api.links["http://hal-shop.heroku.com/rels/products"].reload
+products = api.links["http://hal-shop.heroku.com/rels/products"].resource
 
 puts 
 puts "And what's the inventory of products?"
 puts products.attributes['inventory_size']
 
-puts 
-puts 'What resources does products have?'
-print_resources(products.embedded.products)
-
 puts
+puts 'What embedded resources does products have?'
+products.embedded.products.each do |product|
+  puts 'Product:'
+  print_attributes(product.attributes)
+  puts
+end
+
 puts 'And links?'
 print_resources(products.links)
 

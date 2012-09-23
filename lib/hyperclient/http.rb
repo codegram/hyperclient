@@ -1,5 +1,5 @@
 require 'httparty'
-require 'forwardable'
+require 'json'
 
 # Public: A parser for HTTParty that understand the mime application/hal+json.
 class JSONHalParser < HTTParty::Parser
@@ -10,30 +10,45 @@ module Hyperclient
   # Internal: This class wrapps HTTParty and performs the HTTP requests for a
   # resource.
   class HTTP
-    extend Forwardable
     include HTTParty
-
     parser JSONHalParser
 
-    # Private: Delegate the url to the resource.
-    def_delegators :@resource, :url
-
-    # Public: Initializes a HTTP agent.
+    # Public: Initializes the HTTP agent.
     #
-    # resource - A Resource instance. A Resource is given instead of the url
-    # since the resource url could change during its live.
-    def initialize(resource, options = {})
-      @resource = resource
-      authenticate(options[:auth]) if options && options.include?(:auth)
-      headers(options[:headers]) if options && options.include?(:headers)
-      enable_debug(options[:debug]) if options && options.include?(:debug)
+    # url    - A String to send the HTTP requests.
+    # config - A Hash with the configuration of the HTTP connection.
+    #          :headers - The Hash with the headers of the connection.
+    #          :auth    - The Hash with the authentication options:
+    #            :type     - A String or Symbol to set the authentication type.
+    #                        Allowed values are :digest or :basic.
+    #            :user     - A String with the user.
+    #            :password - A String with the user.
+    #          :debug   - The flag (true/false) to debug the HTTP connections.
+    #
+    def initialize(url, config)
+      @url      = url
+      @config   = config
+      @base_uri = config.fetch(:base_uri)
+
+      authenticate!
+      toggle_debug! if @config[:debug]
+
+      self.class.headers(@config[:headers]) if @config.include?(:headers)
+    end
+
+    def url
+      begin
+        URI.parse(@base_uri).merge(@url).to_s
+      rescue URI::InvalidURIError
+        @url
+      end
     end
 
     # Public: Sends a GET request the the resource url.
     #
     # Returns: The parsed response.
     def get
-      self.class.get(url).parsed_response
+      JSON.parse(self.class.get(url).response.body)
     end
 
     # Public: Sends a POST request the the resource url.
@@ -79,34 +94,20 @@ module Hyperclient
     # Internal: Sets the authentication method for HTTParty.
     #
     # options - An options Hash to set the authentication options.
-    #           :type        - A String or Symbol to set the authentication type.
-    #           Can be either :digest or :basic.
-    #           :credentials - An Array of Strings with the user and password.
     #
     # Returns nothing.
-    def authenticate(options)
-      auth_method = options[:type].to_s + '_auth'
-      self.class.send(auth_method, *options[:credentials])
-    end
-
-    # Internal: Adds default headers for all the requests.
-    #
-    # headers - A Hash with the header.
-    #
-    # Example:
-    #   headers({'accept-encoding' => 'deflate, gzip'})
-    #
-    # Returns nothing.
-    def headers(headers)
-      self.class.send(:headers, headers)
+    def authenticate!
+      if (options = @config[:auth])
+        auth_method = options.delete(:type).to_s + '_auth'
+        self.class.send(auth_method, options[:user], options[:password])
+      end
     end
 
     # Internal: Enables HTTP debugging.
     #
-    # stream - An object to stream the HTTP out to or just a truthy value. If
-    #          it's truthy it will output to $stderr.
-    def enable_debug(stream)
-      return unless stream
+    # stream - An object to stream the HTTP out to or just a truthy value. 
+    def toggle_debug!
+      stream = @config[:debug]
 
       if stream.respond_to?(:<<)
         self.class.debug_output(stream)

@@ -15,8 +15,10 @@ Gem::Specification.new do |gem|
   gem.version       = Hyperclient::VERSION
 
   gem.add_dependency 'httparty'
+  gem.add_dependency 'uri_template'
 
   gem.add_development_dependency 'minitest'
   gem.add_development_dependency 'turn'
   gem.add_development_dependency 'webmock'
+  gem.add_development_dependency 'mocha'
 end
