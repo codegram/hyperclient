@@ -17,7 +17,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'httparty'
   gem.add_dependency 'uri_template'
 
-  gem.add_development_dependency 'minitest'
+  gem.add_development_dependency 'minitest', '~> 3.4.0'
   gem.add_development_dependency 'turn'
   gem.add_development_dependency 'webmock'
   gem.add_development_dependency 'mocha'
