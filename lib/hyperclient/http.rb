@@ -15,10 +15,18 @@ module Hyperclient
 
     attr_reader :url
 
-    # Public: Initializes a HTTP agent.
+    # Public: Initializes the HTTP agent.
     #
-    # resource - A Resource instance. A Resource is given instead of the url
-    # since the resource url could change during its live.
+    # url    - A String to send the HTTP requests.
+    # config - A Hash with the configuration of the HTTP connection.
+    #          :headers - The Hash with the headers of the connection.
+    #          :auth    - The Hash with the authentication options:
+    #            :type     - A String or Symbol to set the authentication type.
+    #                        Allowed values are :digest or :basic.
+    #            :user     - A String with the user.
+    #            :password - A String with the user.
+    #          :debug   - The flag (true/false) to debug the HTTP connections.
+    #
     def initialize(url, config)
       @url, @config = url, config
 
@@ -79,15 +87,12 @@ module Hyperclient
     # Internal: Sets the authentication method for HTTParty.
     #
     # options - An options Hash to set the authentication options.
-    #           :type        - A String or Symbol to set the authentication type.
-    #           Can be either :digest or :basic.
-    #           :credentials - An Array of Strings with the user and password.
     #
     # Returns nothing.
     def authenticate!
       if (options = @config[:auth])
-        auth_method = options[:type].to_s + '_auth'
-        self.class.send(auth_method, *options[:credentials])
+        auth_method = options.delete(:type).to_s + '_auth'
+        self.class.send(auth_method, options[:user], options[:password])
       end
     end
 

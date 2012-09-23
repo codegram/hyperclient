@@ -48,5 +48,15 @@ module Hyperclient
         end
       end
     end
+
+    it 'uses its self Link to handle HTTP connections' do
+      self_link = mock('Self Link')
+      self_link.expects(:get)
+
+      LinkCollection.expects(:new).returns({'self' => self_link})
+      resource = Resource.new({}, entry_point)
+
+      resource.get
+    end
   end
 end

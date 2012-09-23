@@ -30,12 +30,12 @@ module Hyperclient
       end
     end
 
-    describe 'templated' do
-      it 'buils a resource with the templated URI representation' do
+    describe 'expand' do
+      it 'buils a Link with the templated URI representation' do
         link = Link.new({'href' => '/orders{?id}', 'templated' => true}, entry_point)
 
         Link.expects(:new).with(anything, entry_point, {id: '1'})
-        link.templated(id: '1')
+        link.expand(id: '1')
       end
 
       it 'raises if no uri variables are given' do
@@ -64,15 +64,29 @@ module Hyperclient
       end
     end
 
-    it 'delegates unkown methods to the resource' do
-      link = Link.new({'href' => 'http://myapi.org/orders'}, entry_point)
-      stub_request(:get, "http://myapi.org/orders")
-      resource = mock('Resource')
+    describe 'method_missing' do
+      before do
+        stub_request(:get, "http://myapi.org/orders")
+        Resource.expects(:new).returns(resource).at_least_once
+      end
 
-      Resource.expects(:new).returns(resource).at_least_once
-      resource.expects(:embedded)
+      let(:link) { Link.new({'href' => 'http://myapi.org/orders'}, entry_point) }
+      let(:resource) { mock('Resource') }
 
-      link.embedded
+      it 'delegates unkown methods to the resource' do
+        resource.expects(:embedded)
+
+        link.embedded
+      end
+
+      it 'raises an error when the method does not exist in the resource' do
+        lambda { link.this_method_does_not_exist }.must_raise(NoMethodError)
+      end
+
+      it 'responds to missing methods' do
+        resource.expects(:respond_to?).with('embedded').returns(true)
+        link.respond_to?(:embedded).must_equal true
+      end
     end
   end
 end

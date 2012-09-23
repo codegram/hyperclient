@@ -38,6 +38,11 @@ module Hyperclient
         api.foo.must_equal 'foo'
       end
 
+      it 'responds to missing methods' do
+        Resource.any_instance.expects(:respond_to?).with('foo').returns(true)
+        api.respond_to?(:foo).must_equal true
+      end
+
       it 'raises an error when the method does not exist in the API' do
         lambda { api.this_method_does_not_exist }.must_raise(NoMethodError)
       end

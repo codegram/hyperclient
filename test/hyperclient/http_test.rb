@@ -19,7 +19,7 @@ module Hyperclient
         stub_request(:get, 'http://user:pass@api.example.org/productions/1').
           to_return(body: 'This is the resource')
 
-        config.update({auth: {type: :basic, credentials: ['user','pass']}})
+        config.update({auth: {type: :basic, user: 'user', password: 'pass'}})
 
         http.get.must_equal 'This is the resource'
       end
