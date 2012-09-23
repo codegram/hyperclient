@@ -3,66 +3,60 @@ require 'hyperclient/resource'
 
 module Hyperclient
   describe Resource do
-    let(:representation) do
-      File.read('test/fixtures/element.json')
-    end
-
-    let(:parsed_representation) do
-      JSON.parse(representation)
-    end
-
-    before do
-      Resource.entry_point = 'http://api.example.org'
-    end
-
-    describe 'url' do
-      it 'merges the resource url with the entry point' do
-        resource = Resource.new('/path/to/resource')
-        resource.url.to_s.must_equal 'http://api.example.org/path/to/resource'
-      end
-
-      it 'returns the given url if it cannot merge it' do
-        resource = Resource.new('/search={terms}')
-        resource.url.to_s.must_equal '/search={terms}'
-      end
-    end
+    let(:entry_point) { mock('Entry point') }
 
     describe 'initialize' do
-      before do
-        stub_request(:get, 'http://api.example.org')
+      it 'initializes its links' do
+        LinkCollection.expects(:new).with({"self" => { "href" => "/orders/523" }}, entry_point)
+
+        Resource.new({'_links' => {"self" => { "href" => "/orders/523" } }}, entry_point)
       end
 
-      it 'initializes the representation when one is given' do
-        resource = Resource.new('/', {representation: JSON.parse(representation)})
+      it 'initializes its attributes' do
+        Attributes.expects(:new).with({foo: :bar})
 
-        assert_not_requested(:get, 'http://api.example.org/')
+        Resource.new({foo: :bar}, entry_point)
       end
 
-      it 'sets the resource name' do
-        resource = Resource.new('/', {name: 'posts'})
+      it 'initializes links' do
+        ResourceCollection.expects(:new).with({"orders" => []}, entry_point)
 
-        resource.name.must_equal 'posts'
+        Resource.new({'_embedded' => {"orders" => [] }}, entry_point)
       end
     end
 
-    describe 'reload' do
-      before do
-        stub_request(:get, "http://api.example.org/productions/1").
-          to_return(:status => 200, :body => representation, headers: {content_type: 'application/json'})
+    describe 'accessors' do
+      let(:resource) do
+        Resource.new({}, entry_point)
       end
 
-      it 'retrives itself from the API' do
-        resource = Resource.new('/productions/1')
-        resource.reload
-
-        assert_requested(:get, 'http://api.example.org/productions/1', times: 1)
+      describe 'links' do
+        it 'returns a LinkCollection' do
+          resource.links.must_be_kind_of LinkCollection
+        end
       end
 
-      it 'returns itself' do
-        resource = Resource.new('/productions/1')
-
-        resource.reload.must_equal resource
+      describe 'attributes' do
+        it 'returns a Attributes' do
+          resource.attributes.must_be_kind_of Attributes
+        end
       end
+
+      describe 'embedded' do
+        it 'returns a ResourceCollection' do
+          resource.embedded.must_be_kind_of ResourceCollection
+        end
+      end
+    end
+
+    it 'uses its self Link to handle HTTP connections' do
+      self_link = mock('Self Link')
+      self_link.expects(:get)
+
+      LinkCollection.expects(:new).returns({'self' => self_link})
+      resource = Resource.new({}, entry_point)
+
+      resource.get
     end
   end
 end
