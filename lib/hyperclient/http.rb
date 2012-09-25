@@ -5,25 +5,6 @@ module Hyperclient
   # Internal: This class wrapps HTTParty and performs the HTTP requests for a
   # resource.
   class HTTP
-    class ResponseWrapper
-      attr_reader :faraday_response
-
-      def initialize(faraday_response)
-        @faraday_response = faraday_response
-      end
-
-      def code
-        faraday_response.status
-      end
-
-      def body
-        faraday_response.body
-      end
-
-      def headers
-        faraday_response.headers
-      end
-    end
     # Public: Initializes the HTTP agent.
     #
     # url    - A String to send the HTTP requests.
@@ -109,7 +90,10 @@ module Hyperclient
     end
 
     def wrap_response(faraday_response)
-      ResponseWrapper.new faraday_response
+      def faraday_response.code
+        status
+      end
+      faraday_response
     end
 
     # Internal: Sets the authentication method for HTTParty.
