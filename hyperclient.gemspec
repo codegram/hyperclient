@@ -14,7 +14,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = Hyperclient::VERSION
 
-  gem.add_dependency 'httparty'
+  gem.add_dependency 'faraday'
   gem.add_dependency 'uri_template'
 
   gem.add_development_dependency 'minitest', '~> 3.4.0'

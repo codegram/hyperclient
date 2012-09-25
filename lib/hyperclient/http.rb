@@ -1,18 +1,29 @@
-require 'httparty'
+require 'faraday'
 require 'json'
-
-# Public: A parser for HTTParty that understand the mime application/hal+json.
-class JSONHalParser < HTTParty::Parser
-  SupportedFormats.merge!({'application/hal+json' => :json})
-end
 
 module Hyperclient
   # Internal: This class wrapps HTTParty and performs the HTTP requests for a
   # resource.
   class HTTP
-    include HTTParty
-    parser JSONHalParser
+    class ResponseWrapper
+      attr_reader :faraday_response
 
+      def initialize(faraday_response)
+        @faraday_response = faraday_response
+      end
+
+      def code
+        faraday_response.status
+      end
+
+      def body
+        faraday_response.body
+      end
+
+      def headers
+        faraday_response.headers
+      end
+    end
     # Public: Initializes the HTTP agent.
     #
     # url    - A String to send the HTTP requests.
@@ -32,8 +43,6 @@ module Hyperclient
 
       authenticate!
       toggle_debug! if @config[:debug]
-
-      self.class.headers(@config[:headers]) if @config.include?(:headers)
     end
 
     def url
@@ -48,7 +57,7 @@ module Hyperclient
     #
     # Returns: The parsed response.
     def get
-      JSON.parse(self.class.get(url).response.body)
+      JSON.parse(faraday.get(url).body)
     end
 
     # Public: Sends a POST request the the resource url.
@@ -57,7 +66,7 @@ module Hyperclient
     #
     # Returns: A HTTParty::Response
     def post(params)
-      self.class.post(url, body: params)
+      wrap_response faraday.post(url, params)
     end
 
     # Public: Sends a PUT request the the resource url.
@@ -66,31 +75,43 @@ module Hyperclient
     #
     # Returns: A HTTParty::Response
     def put(params)
-      self.class.put(url, body: params)
+      wrap_response faraday.put(url, params)
     end
 
     # Public: Sends an OPTIONS request the the resource url.
     #
     # Returns: A HTTParty::Response
     def options
-      self.class.options(url)
+      wrap_response faraday.run_request(:options, url, nil, faraday.headers)
     end
 
     # Public: Sends a HEAD request the the resource url.
     #
     # Returns: A HTTParty::Response
     def head
-      self.class.head(url)
+      wrap_response faraday.head(url)
     end
 
     # Public: Sends a DELETE request the the resource url.
     #
     # Returns: A HTTParty::Response
     def delete
-      self.class.delete(url)
+      wrap_response faraday.delete(url)
     end
 
     private
+
+    def faraday
+      @faraday ||= Faraday.new(:url => @url, :headers => @config[:headers] || {}) do |faraday|
+        faraday.request  :url_encoded
+        faraday.adapter :net_http
+      end
+    end
+
+    def wrap_response(faraday_response)
+      ResponseWrapper.new faraday_response
+    end
+
     # Internal: Sets the authentication method for HTTParty.
     #
     # options - An options Hash to set the authentication options.
@@ -99,20 +120,21 @@ module Hyperclient
     def authenticate!
       if (options = @config[:auth])
         auth_method = options.fetch(:type).to_s + '_auth'
-        self.class.send(auth_method, options[:user], options[:password])
+        faraday.send(auth_method, options[:user], options[:password])
       end
     end
 
     # Internal: Enables HTTP debugging.
     #
-    # stream - An object to stream the HTTP out to or just a truthy value. 
+    # stream - An object to stream the HTTP out to or just a truthy value.
     def toggle_debug!
       stream = @config[:debug]
+      require 'logger'
 
       if stream.respond_to?(:<<)
-        self.class.debug_output(stream)
+        faraday.response :logger, ::Logger.new(stream)
       else
-        self.class.debug_output
+        faraday.response :logger, ::Logger.new($stderr)
       end
     end
   end

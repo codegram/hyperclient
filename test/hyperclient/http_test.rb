@@ -50,17 +50,32 @@ module Hyperclient
     end
 
     describe 'debug' do
+      before(:each) do
+        @stderr = $stderr
+        stub_request(:get, 'http://api.example.org/productions/1').
+          to_return(body: '{"resource": "This is the resource"}')
+      end
+
+      after(:each) do
+        $stderr = @stderr
+      end
+
       it 'enables debugging' do
+        $stderr = StringIO.new
         config.update({debug: true})
 
-        http.class.instance_variable_get(:@default_options)[:debug_output].must_equal $stderr
+        http.get
+
+        $stderr.string.must_include('get http://api.example.org/productions/1')
       end
 
       it 'uses a custom stream' do
         stream = StringIO.new
         config.update({debug: stream})
 
-        http.class.instance_variable_get(:@default_options)[:debug_output].must_equal stream
+        http.get
+
+        stream.string.must_include('get http://api.example.org/productions/1')
       end
     end
 
