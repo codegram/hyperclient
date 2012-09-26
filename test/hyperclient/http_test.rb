@@ -14,6 +14,26 @@ module Hyperclient
       HTTP.new(url, config)
     end
 
+    describe 'initialize' do
+      it 'passes options to faraday' do
+        Faraday.expects(:new).with(:headers => {}, :url => config[:base_uri],
+          :x => :y).returns(stub('faraday', :get => stub(:body => '{}')))
+
+        HTTP.new(url, config.merge(:faraday_options => {:x => :y})).get
+      end
+
+      it 'passes a block to faraday' do
+        app = stub('app')
+        http = HTTP.new(url, config) do |f|
+          f.adapter :rack, app
+        end
+
+        app.expects(:call).returns([200, {}, '{}'] )
+
+        http.get
+      end
+    end
+
     describe 'url' do
       it 'merges the resource url with the base uri' do
         http.url.to_s.must_equal 'http://api.example.org/productions/1'

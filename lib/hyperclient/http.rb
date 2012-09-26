@@ -5,6 +5,7 @@ module Hyperclient
   # Internal: This class wrapps HTTParty and performs the HTTP requests for a
   # resource.
   class HTTP
+    attr_writer :faraday
     # Public: Initializes the HTTP agent.
     #
     # url    - A String to send the HTTP requests.
@@ -16,11 +17,15 @@ module Hyperclient
     #            :user     - A String with the user.
     #            :password - A String with the user.
     #          :debug   - The flag (true/false) to debug the HTTP connections.
+    #          :faraday_options - A Hash that will be passed to Faraday.new (optional)
+    # faraday_block - a block that will be passed to Faraday.new (optional)
     #
-    def initialize(url, config)
+    def initialize(url, config, &faraday_block)
       @url      = url
       @config   = config
       @base_uri = config.fetch(:base_uri)
+      @faraday_options = config.delete(:faraday_options) || {}
+      @faraday_block = faraday_block
 
       authenticate!
       toggle_debug! if @config[:debug]
@@ -83,10 +88,12 @@ module Hyperclient
     private
 
     def faraday
-      @faraday ||= Faraday.new(:url => @url, :headers => @config[:headers] || {}) do |faraday|
-        faraday.request  :url_encoded
-        faraday.adapter :net_http
+      default_block = lambda do |faraday|
+          faraday.request  :url_encoded
+          faraday.adapter :net_http
       end
+      @faraday ||= Faraday.new({:url => @base_uri, :headers => @config[:headers] || {}
+        }.merge(@faraday_options), &(@faraday_block || default_block))
     end
 
     def wrap_response(faraday_response)
