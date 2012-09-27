@@ -1,5 +1,5 @@
-# Hyperclient 
-[![Build Status](https://secure.travis-ci.org/codegram/hyperclient.png)](http://travis-ci.org/codegram/hyperclient) 
+# Hyperclient
+[![Build Status](https://secure.travis-ci.org/codegram/hyperclient.png)](http://travis-ci.org/codegram/hyperclient)
 [![Dependency Status](https://gemnasium.com/codegram/hyperclient.png)](http://gemnasium.com/codegram/hyperclient)
 [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/codegram/hyperclient)
 
@@ -30,7 +30,7 @@ Hyperclient only works with JSON HAL friendly APIs. [Learn about JSON HAL][hal].
 
 ## Resources
 
-Hyperclient will try to fetch and discover the resources from your API. 
+Hyperclient will try to fetch and discover the resources from your API.
 
 ### Links
 
@@ -109,6 +109,13 @@ post.options
 
 posts = api.links.posts
 posts.post({title: "I'm a blogger!", body: 'Wohoo!!'})
+````
+
+If you have a templated link you can expand it like so:
+
+````ruby
+api.links.post.expand(:id => 3).first
+# => #<Resource ...>
 ````
 
 ## TODO
