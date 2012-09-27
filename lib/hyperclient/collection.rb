@@ -34,6 +34,13 @@ module Hyperclient
       @collection[name.to_s]
     end
 
+    # Public: Returns the wrapped collection as a hash.
+    #
+    # Returns a Hash.
+    def to_hash
+      @collection.to_hash
+    end
+
     # Public: Provides method access to the collection values.
     #
     # It allows accessing a value as `collection.name` instead of
