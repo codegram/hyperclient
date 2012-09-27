@@ -22,6 +22,14 @@ module Hyperclient
         HTTP.new(url, config.merge(:faraday_options => {:x => :y})).get
       end
 
+      it 'passes the options to faraday again when initializing it again' do
+        Faraday.expects(:new).with(:headers => {}, :url => config[:base_uri],
+          :x => :y).returns(stub('faraday', :get => stub(:body => '{}'))).times(2)
+
+        full_config = config.merge(:faraday_options => {:x => :y})
+        2.times { HTTP.new(url, full_config).get }
+      end
+
       it 'passes a block to faraday' do
         app = stub('app')
         http = HTTP.new(url, config.merge(
@@ -30,6 +38,19 @@ module Hyperclient
         app.expects(:call).returns([200, {}, '{}'] )
 
         http.get
+      end
+
+      it 'passes a block to faraday again when initializing again' do
+        app = stub('app')
+
+        app.expects(:call).returns([200, {}, '{}'] ).times(2)
+
+        full_config = config.merge(:faraday_options => {:block => lambda{|f|
+          f.adapter :rack, app}})
+        2.times {
+          http = HTTP.new(url, full_config)
+          http.get
+        }
       end
     end
 

@@ -25,7 +25,7 @@ module Hyperclient
       @url      = url
       @config   = config
       @base_uri = config.fetch(:base_uri)
-      @faraday_options = config.delete(:faraday_options) || {}
+      @faraday_options = (config[:faraday_options] || {}).dup
       @faraday_block = @faraday_options.delete(:block)
 
       authenticate!
