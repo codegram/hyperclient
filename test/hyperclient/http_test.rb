@@ -24,9 +24,8 @@ module Hyperclient
 
       it 'passes a block to faraday' do
         app = stub('app')
-        http = HTTP.new(url, config) do |f|
-          f.adapter :rack, app
-        end
+        http = HTTP.new(url, config.merge(
+          :faraday_options => {:block => lambda{|f| f.adapter :rack, app}}))
 
         app.expects(:call).returns([200, {}, '{}'] )
 

@@ -17,15 +17,16 @@ module Hyperclient
     #            :user     - A String with the user.
     #            :password - A String with the user.
     #          :debug   - The flag (true/false) to debug the HTTP connections.
-    #          :faraday_options - A Hash that will be passed to Faraday.new (optional)
-    # faraday_block - a block that will be passed to Faraday.new (optional)
+    #          :faraday_options - A Hash that will be passed to Faraday.new (optional).
+    #                             Can additionally include a :block => <Proc> that is also
+    #                             passed to Faraday.
     #
-    def initialize(url, config, &faraday_block)
+    def initialize(url, config)
       @url      = url
       @config   = config
       @base_uri = config.fetch(:base_uri)
       @faraday_options = config.delete(:faraday_options) || {}
-      @faraday_block = faraday_block
+      @faraday_block = @faraday_options.delete(:block)
 
       authenticate!
       toggle_debug! if @config[:debug]
