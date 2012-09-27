@@ -34,6 +34,12 @@ module Hyperclient
 
       names.must_equal ['_links', 'title', 'description', 'permitted', '_embedded']
     end
+
+    describe '#to_hash' do
+      it 'returns the wrapped collection as a hash' do
+        collection.to_hash.must_be_kind_of Hash
+      end
+    end
   end
 end
 
