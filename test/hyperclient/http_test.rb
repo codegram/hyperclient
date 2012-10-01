@@ -133,6 +133,13 @@ module Hyperclient
 
         http.get.must_equal({'some_json' => 12345})
       end
+
+      it 'returns nil if the response body is nil' do
+        stub_request(:get, 'http://api.example.org/productions/1').
+          to_return(body: nil)
+
+        http.get.must_equal(nil)
+      end
     end
 
     describe 'post' do

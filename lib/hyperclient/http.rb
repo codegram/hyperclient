@@ -44,7 +44,8 @@ module Hyperclient
     #
     # Returns: The parsed response.
     def get
-      JSON.parse(faraday.get(url).body)
+      body = faraday.get(url).body
+      JSON.parse(body) if body
     end
 
     # Public: Sends a POST request the the resource url.
