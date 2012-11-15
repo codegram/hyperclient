@@ -118,6 +118,10 @@ api.links.post.expand(:id => 3).first
 # => #<Resource ...>
 ````
 
+## Other
+
+There's also a PHP library named [HyperClient](https://github.com/FoxyCart/HyperClient), if that's what you were looking for :)
+
 ## TODO
 
 * Resource permissions: Using the `Allow` header Hyperclient should be able to
