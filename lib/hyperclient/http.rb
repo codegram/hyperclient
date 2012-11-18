@@ -1,5 +1,6 @@
 require 'faraday'
 require 'json'
+require 'net/http/digest_auth'
 
 module Hyperclient
   # Internal: This class wrapps HTTParty and performs the HTTP requests for a
@@ -44,8 +45,11 @@ module Hyperclient
     #
     # Returns: The parsed response.
     def get
-      body = faraday.get(url).body
-      JSON.parse(body) if body
+      response = process_request :get
+
+      if body = response.body
+        JSON.parse(body)
+      end
     end
 
     # Public: Sends a POST request the the resource url.
@@ -54,7 +58,7 @@ module Hyperclient
     #
     # Returns: A HTTParty::Response
     def post(params)
-      wrap_response faraday.post(url, params)
+      wrap_response process_request(:post, params)
     end
 
     # Public: Sends a PUT request the the resource url.
@@ -63,28 +67,28 @@ module Hyperclient
     #
     # Returns: A HTTParty::Response
     def put(params)
-      wrap_response faraday.put(url, params)
+      wrap_response process_request(:put, params)
     end
 
     # Public: Sends an OPTIONS request the the resource url.
     #
     # Returns: A HTTParty::Response
     def options
-      wrap_response faraday.run_request(:options, url, nil, faraday.headers)
+      wrap_response process_request(:options)
     end
 
     # Public: Sends a HEAD request the the resource url.
     #
     # Returns: A HTTParty::Response
     def head
-      wrap_response faraday.head(url)
+      wrap_response process_request(:head)
     end
 
     # Public: Sends a DELETE request the the resource url.
     #
     # Returns: A HTTParty::Response
     def delete
-      wrap_response faraday.delete(url)
+      wrap_response process_request(:delete)
     end
 
     private
@@ -105,6 +109,17 @@ module Hyperclient
       faraday_response
     end
 
+    def process_request(method, params = nil)
+      response = faraday.run_request method, url, params, faraday.headers
+      if response.status == 401 && @digest_auth
+        response = faraday.run_request method, url, nil, faraday.headers do |request|
+          request.headers['Authorization'] = digest_auth_header(
+            url,  response.headers['www-authenticate'], method)
+        end
+      end
+      response
+    end
+
     # Internal: Sets the authentication method for HTTParty.
     #
     # options - An options Hash to set the authentication options.
@@ -113,8 +128,24 @@ module Hyperclient
     def authenticate!
       if (options = @config[:auth])
         auth_method = options.fetch(:type).to_s + '_auth'
-        faraday.send(auth_method, options[:user], options[:password])
+        send auth_method, options
       end
+    end
+
+    def basic_auth(options)
+      faraday.basic_auth options[:user], options[:password]
+    end
+
+    def digest_auth(options)
+      @digest_auth = options
+    end
+
+    def digest_auth_header(url, realm, method)
+      uri = URI.parse(url)
+      uri.user = @digest_auth[:user]
+      uri.password = @digest_auth[:password]
+      digest_auth = Net::HTTP::DigestAuth.new
+      digest_auth.auth_header uri, realm, method.upcase
     end
 
     # Internal: Enables HTTP debugging.

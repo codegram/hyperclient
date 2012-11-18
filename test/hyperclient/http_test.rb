@@ -17,14 +17,16 @@ module Hyperclient
     describe 'initialize' do
       it 'passes options to faraday' do
         Faraday.expects(:new).with(:headers => {}, :url => config[:base_uri],
-          :x => :y).returns(stub('faraday', :get => stub(:body => '{}')))
+          :x => :y).returns(stub('faraday', :headers => {},
+            :run_request => stub(:body => '{}', :status => 200)))
 
         HTTP.new(url, config.merge(:faraday_options => {:x => :y})).get
       end
 
       it 'passes the options to faraday again when initializing it again' do
         Faraday.expects(:new).with(:headers => {}, :url => config[:base_uri],
-          :x => :y).returns(stub('faraday', :get => stub(:body => '{}'))).times(2)
+          :x => :y).returns(stub('faraday', :headers => {},
+            :run_request => stub(:body => '{}', :status => 200))).times(2)
 
         full_config = config.merge(:faraday_options => {:x => :y})
         2.times { HTTP.new(url, full_config).get }
@@ -67,11 +69,24 @@ module Hyperclient
     end
 
     describe 'authentication' do
-      it 'sets the authentication options' do
+      it 'sets the basic authentication options' do
         stub_request(:get, 'http://user:pass@api.example.org/productions/1').
           to_return(body: '{"resource": "This is the resource"}')
 
         config.update({auth: {type: :basic, user: 'user', password: 'pass'}})
+
+        http.get.must_equal({'resource' => 'This is the resource'})
+      end
+
+      it 'sets the digest authentication options' do
+        stub_request(:get, 'http://api.example.org/productions/1').
+          to_return(status: 401, headers: {'www-authenticate' => 'private area'})
+        stub_request(:get, 'http://api.example.org/productions/1').
+          with(headers: {'Authorization' =>
+            %r{Digest username="user", realm="", algorithm=MD5, uri="/productions/1"}}).
+          to_return(body: '{"resource": "This is the resource"}')
+
+        config.update({auth: {type: :digest, user: 'user', password: 'pass'}})
 
         http.get.must_equal({'resource' => 'This is the resource'})
       end
