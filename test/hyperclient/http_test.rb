@@ -14,6 +14,48 @@ module Hyperclient
       HTTP.new(url, config)
     end
 
+    describe 'initialize' do
+      it 'passes options to faraday' do
+        Faraday.expects(:new).with(:headers => {}, :url => config[:base_uri],
+          :x => :y).returns(stub('faraday', :headers => {},
+            :run_request => stub(:body => '{}', :status => 200)))
+
+        HTTP.new(url, config.merge(:faraday_options => {:x => :y})).get
+      end
+
+      it 'passes the options to faraday again when initializing it again' do
+        Faraday.expects(:new).with(:headers => {}, :url => config[:base_uri],
+          :x => :y).returns(stub('faraday', :headers => {},
+            :run_request => stub(:body => '{}', :status => 200))).times(2)
+
+        full_config = config.merge(:faraday_options => {:x => :y})
+        2.times { HTTP.new(url, full_config).get }
+      end
+
+      it 'passes a block to faraday' do
+        app = stub('app')
+        http = HTTP.new(url, config.merge(
+          :faraday_options => {:block => lambda{|f| f.adapter :rack, app}}))
+
+        app.expects(:call).returns([200, {}, '{}'] )
+
+        http.get
+      end
+
+      it 'passes a block to faraday again when initializing again' do
+        app = stub('app')
+
+        app.expects(:call).returns([200, {}, '{}'] ).times(2)
+
+        full_config = config.merge(:faraday_options => {:block => lambda{|f|
+          f.adapter :rack, app}})
+        2.times {
+          http = HTTP.new(url, full_config)
+          http.get
+        }
+      end
+    end
+
     describe 'url' do
       it 'merges the resource url with the base uri' do
         http.url.to_s.must_equal 'http://api.example.org/productions/1'
@@ -27,11 +69,24 @@ module Hyperclient
     end
 
     describe 'authentication' do
-      it 'sets the authentication options' do
+      it 'sets the basic authentication options' do
         stub_request(:get, 'http://user:pass@api.example.org/productions/1').
           to_return(body: '{"resource": "This is the resource"}')
 
         config.update({auth: {type: :basic, user: 'user', password: 'pass'}})
+
+        http.get.must_equal({'resource' => 'This is the resource'})
+      end
+
+      it 'sets the digest authentication options' do
+        stub_request(:get, 'http://api.example.org/productions/1').
+          to_return(status: 401, headers: {'www-authenticate' => 'private area'})
+        stub_request(:get, 'http://api.example.org/productions/1').
+          with(headers: {'Authorization' =>
+            %r{Digest username="user", realm="", algorithm=MD5, uri="/productions/1"}}).
+          to_return(body: '{"resource": "This is the resource"}')
+
+        config.update({auth: {type: :digest, user: 'user', password: 'pass'}})
 
         http.get.must_equal({'resource' => 'This is the resource'})
       end
@@ -50,17 +105,32 @@ module Hyperclient
     end
 
     describe 'debug' do
+      before(:each) do
+        @stderr = $stderr
+        stub_request(:get, 'http://api.example.org/productions/1').
+          to_return(body: '{"resource": "This is the resource"}')
+      end
+
+      after(:each) do
+        $stderr = @stderr
+      end
+
       it 'enables debugging' do
+        $stderr = StringIO.new
         config.update({debug: true})
 
-        http.class.instance_variable_get(:@default_options)[:debug_output].must_equal $stderr
+        http.get
+
+        $stderr.string.must_include('get http://api.example.org/productions/1')
       end
 
       it 'uses a custom stream' do
         stream = StringIO.new
         config.update({debug: stream})
 
-        http.class.instance_variable_get(:@default_options)[:debug_output].must_equal stream
+        http.get
+
+        stream.string.must_include('get http://api.example.org/productions/1')
       end
     end
 
@@ -77,6 +147,13 @@ module Hyperclient
           to_return(body: '{"some_json": 12345 }', headers: {content_type: 'application/json'})
 
         http.get.must_equal({'some_json' => 12345})
+      end
+
+      it 'returns nil if the response body is nil' do
+        stub_request(:get, 'http://api.example.org/productions/1').
+          to_return(body: nil)
+
+        http.get.must_equal(nil)
       end
     end
 
