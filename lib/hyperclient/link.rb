@@ -25,7 +25,7 @@ module Hyperclient
 
     # Public: Returns the Resource which the Link is pointing to.
     def resource
-      @resource ||=Resource.new(http.get, @entry_point)
+      @resource ||=Resource.new(http.get.body, @entry_point)
     end
 
     # Public: Indicates if the link is an URITemplate or a regular URI.

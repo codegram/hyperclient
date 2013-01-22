@@ -16,7 +16,7 @@ module Hyperclient
 
     describe 'initialize' do
       it 'passes options to faraday' do
-        Faraday.expects(:new).with(:headers => {}, :url => config[:base_uri],
+        Faraday.expects(:new).with(:headers => {'Content-Type' => 'application/json'}, :url => config[:base_uri],
           :x => :y).returns(stub('faraday', :headers => {},
             :run_request => stub(:body => '{}', :status => 200)))
 
@@ -24,7 +24,7 @@ module Hyperclient
       end
 
       it 'passes the options to faraday again when initializing it again' do
-        Faraday.expects(:new).with(:headers => {}, :url => config[:base_uri],
+        Faraday.expects(:new).with(:headers => {'Content-Type' => 'application/json'}, :url => config[:base_uri],
           :x => :y).returns(stub('faraday', :headers => {},
             :run_request => stub(:body => '{}', :status => 200))).times(2)
 
@@ -71,11 +71,12 @@ module Hyperclient
     describe 'authentication' do
       it 'sets the basic authentication options' do
         stub_request(:get, 'http://user:pass@api.example.org/productions/1').
-          to_return(body: '{"resource": "This is the resource"}')
+          to_return(body: '{"resource": "This is the resource"}',
+           headers: {content_type: 'application/json'})
 
         config.update({auth: {type: :basic, user: 'user', password: 'pass'}})
 
-        http.get.must_equal({'resource' => 'This is the resource'})
+        http.get.body.must_equal({'resource' => 'This is the resource'})
       end
 
       it 'sets the digest authentication options' do
@@ -84,11 +85,12 @@ module Hyperclient
         stub_request(:get, 'http://api.example.org/productions/1').
           with(headers: {'Authorization' =>
             %r{Digest username="user", realm="", algorithm=MD5, uri="/productions/1"}}).
-          to_return(body: '{"resource": "This is the resource"}')
+          to_return(body: '{"resource": "This is the resource"}',
+           headers: {content_type: 'application/json'})
 
         config.update({auth: {type: :digest, user: 'user', password: 'pass'}})
 
-        http.get.must_equal({'resource' => 'This is the resource'})
+        http.get.body.must_equal({'resource' => 'This is the resource'})
       end
     end
 
@@ -134,26 +136,22 @@ module Hyperclient
       end
     end
 
-    describe 'get' do
-      it 'sends a GET request and returns the response body' do
-        stub_request(:get, 'http://api.example.org/productions/1').
-          to_return(body: '{"resource": "This is the resource"}')
-
-        http.get.must_equal({'resource' => 'This is the resource'})
-      end
-
-      it 'returns the parsed response' do
+    describe 'faraday' do
+      it 'parses JSON responses automatically' do
         stub_request(:get, 'http://api.example.org/productions/1').
           to_return(body: '{"some_json": 12345 }', headers: {content_type: 'application/json'})
 
-        http.get.must_equal({'some_json' => 12345})
+        response = http.get
+        response.body.must_equal({'some_json' => 12345})
       end
+    end
 
-      it 'returns nil if the response body is nil' do
-        stub_request(:get, 'http://api.example.org/productions/1').
-          to_return(body: nil)
+    describe 'get' do
+      it 'sends a GET request' do
+        stub_request(:get, 'http://api.example.org/productions/1')
 
-        http.get.must_equal(nil)
+        http.get
+        assert_requested :get, 'http://api.example.org/productions/1'
       end
     end
 
@@ -163,7 +161,7 @@ module Hyperclient
           to_return(body: 'Posting like a big boy huh?', status: 201)
 
         response = http.post({data: 'foo'})
-        response.code.must_equal 201
+        response.status.must_equal 201
         assert_requested :post, 'http://api.example.org/productions/1',
                          body: {data: 'foo'}
       end
@@ -175,7 +173,7 @@ module Hyperclient
           to_return(body: 'No changes were made', status: 204)
 
         response = http.put({attribute: 'changed'})
-        response.code.must_equal 204
+        response.status.must_equal 204
         assert_requested :put, 'http://api.example.org/productions/1',
                          body: {attribute: 'changed'}
       end
@@ -207,7 +205,7 @@ module Hyperclient
           to_return(body: 'Resource deleted', status: 200)
 
         response = http.delete
-        response.code.must_equal 200
+        response.status.must_equal 200
       end
     end
   end

@@ -1,4 +1,5 @@
 require 'faraday'
+require 'faraday_middleware'
 require 'json'
 require 'net/http/digest_auth'
 
@@ -45,11 +46,7 @@ module Hyperclient
     #
     # Returns: The parsed response.
     def get
-      response = process_request :get
-
-      if body = response.body
-        JSON.parse(body)
-      end
+      process_request :get
     end
 
     # Public: Sends a POST request the the resource url.
@@ -58,7 +55,7 @@ module Hyperclient
     #
     # Returns: A HTTParty::Response
     def post(params)
-      wrap_response process_request(:post, params)
+      process_request(:post, params)
     end
 
     # Public: Sends a PUT request the the resource url.
@@ -67,56 +64,67 @@ module Hyperclient
     #
     # Returns: A HTTParty::Response
     def put(params)
-      wrap_response process_request(:put, params)
+      process_request(:put, params)
     end
 
     # Public: Sends an OPTIONS request the the resource url.
     #
     # Returns: A HTTParty::Response
     def options
-      wrap_response process_request(:options)
+      process_request(:options)
     end
 
     # Public: Sends a HEAD request the the resource url.
     #
     # Returns: A HTTParty::Response
     def head
-      wrap_response process_request(:head)
+      process_request(:head)
     end
 
     # Public: Sends a DELETE request the the resource url.
     #
     # Returns: A HTTParty::Response
     def delete
-      wrap_response process_request(:delete)
+      process_request(:delete)
     end
 
-    private
 
     def faraday
-      default_block = lambda do |faraday|
-          faraday.request  :url_encoded
-          faraday.adapter :net_http
-      end
-      @faraday ||= Faraday.new({:url => @base_uri, :headers => @config[:headers] || {}
-        }.merge(@faraday_options), &(@faraday_block || default_block))
+      @faraday ||= Faraday.new(faraday_options, &faraday_block)
     end
 
-    def wrap_response(faraday_response)
-      def faraday_response.code
-        status
+    def faraday_options
+      default_options = {url: @base_uri, headers: (headers) }
+      default_options.merge(@faraday_options)
+    end
+
+    def headers
+      {'Content-Type' => 'application/json'}.merge(@config[:headers] || {})
+    end
+
+    def faraday_block
+      return @faraday_block unless @faraday_block.nil?
+
+      lambda do |faraday|
+        faraday.request  :json
+        faraday.request  :url_encoded
+
+        faraday.response :json, content_type: /\bjson$/
+
+        faraday.adapter :net_http
       end
-      faraday_response
     end
 
     def process_request(method, params = nil)
-      response = faraday.run_request method, url, params, faraday.headers
+      response = faraday.run_request(method, url, params, faraday.headers)
+
       if response.status == 401 && @digest_auth
-        response = faraday.run_request method, url, nil, faraday.headers do |request|
+        response = faraday.run_request(method, url, nil, faraday.headers) do |request|
           request.headers['Authorization'] = digest_auth_header(
             url,  response.headers['www-authenticate'], method)
         end
       end
+
       response
     end
 

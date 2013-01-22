@@ -20,7 +20,12 @@ module Hyperclient
     end
 
     describe 'resource' do
-      let(:http) { mock('HTTP', get: {}) }
+      let(:http) do
+        response = mock('Response')
+        response.expects(:body).returns({})
+
+        mock('HTTP', get: response)
+      end
 
       it 'builds a resource with the hyperlink representation' do
         HTTP.expects(:new).returns(http, {})
