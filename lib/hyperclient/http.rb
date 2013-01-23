@@ -25,8 +25,10 @@ module Hyperclient
     #
     def initialize(url, config)
       @url      = url
+
       @config   = config
       @base_uri = config.fetch(:base_uri)
+
       @faraday_options = (config[:faraday_options] || {}).dup
       @faraday_block = @faraday_options.delete(:block)
 
@@ -88,6 +90,9 @@ module Hyperclient
       process_request(:delete)
     end
 
+    def process_request(method, params = nil)
+      faraday.run_request(method, url, params, faraday.headers)
+    end
 
     def faraday
       @faraday ||= Faraday.new(faraday_options, &faraday_block)
@@ -107,25 +112,9 @@ module Hyperclient
 
       lambda do |faraday|
         faraday.request  :json
-        faraday.request  :url_encoded
-
         faraday.response :json, content_type: /\bjson$/
-
         faraday.adapter :net_http
       end
-    end
-
-    def process_request(method, params = nil)
-      response = faraday.run_request(method, url, params, faraday.headers)
-
-      if response.status == 401 && @digest_auth
-        response = faraday.run_request(method, url, nil, faraday.headers) do |request|
-          request.headers['Authorization'] = digest_auth_header(
-            url,  response.headers['www-authenticate'], method)
-        end
-      end
-
-      response
     end
 
     # Internal: Sets the authentication method for HTTParty.
@@ -145,15 +134,7 @@ module Hyperclient
     end
 
     def digest_auth(options)
-      @digest_auth = options
-    end
-
-    def digest_auth_header(url, realm, method)
-      uri = URI.parse(url)
-      uri.user = @digest_auth[:user]
-      uri.password = @digest_auth[:password]
-      digest_auth = Net::HTTP::DigestAuth.new
-      digest_auth.auth_header uri, realm, method.upcase
+      faraday.builder.insert(0, Faraday::Request::DigestAuth, options.fetch(:user), options.fetch(:password))
     end
 
     # Internal: Enables HTTP debugging.
@@ -168,6 +149,39 @@ module Hyperclient
       else
         faraday.response :logger, ::Logger.new($stderr)
       end
+    end
+  end
+end
+
+module Faraday
+  class Request::DigestAuth < Faraday::Middleware
+    def initialize(app, user, password)
+      super(app)
+      @user, @password = user, password
+    end
+
+    def call(env)
+      handshake(env)
+      @app.call(env)
+    end
+
+    def handshake(env)
+      return if env[:request_headers].include?('Authorization')
+
+      env_without_body = env.dup
+      env_without_body.delete(:body)
+      response = @app.call(env_without_body)
+
+      env[:request_headers]['Authorization'] = digest_auth_header(response)
+    end
+
+    def digest_auth_header(response)
+      uri = response.env[:url]
+      uri.user = @user
+      uri.password = @password
+      realm = response.headers['www-authenticate']
+      digest_auth = Net::HTTP::DigestAuth.new
+      digest_auth.auth_header(uri, realm, response.env[:method].to_s.upcase)
     end
   end
 end
