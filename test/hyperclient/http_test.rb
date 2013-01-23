@@ -80,17 +80,20 @@ module Hyperclient
       end
 
       it 'sets the digest authentication options' do
-        stub_request(:get, 'http://api.example.org/productions/1').
+        stub_request(:post, 'http://api.example.org/productions/1').
+          with(body: nil).
           to_return(status: 401, headers: {'www-authenticate' => 'private area'})
-        stub_request(:get, 'http://api.example.org/productions/1').
-          with(headers: {'Authorization' =>
+
+        stub_request(:post, 'http://api.example.org/productions/1').
+          with(body: "{\"foo\":1}",
+               headers: {'Authorization' =>
             %r{Digest username="user", realm="", algorithm=MD5, uri="/productions/1"}}).
           to_return(body: '{"resource": "This is the resource"}',
            headers: {content_type: 'application/json'})
 
         config.update({auth: {type: :digest, user: 'user', password: 'pass'}})
 
-        http.get.body.must_equal({'resource' => 'This is the resource'})
+        http.post({foo: 1}).body.must_equal({'resource' => 'This is the resource'})
       end
     end
 
