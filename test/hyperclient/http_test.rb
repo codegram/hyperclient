@@ -10,49 +10,25 @@ module Hyperclient
     let(:config) { {base_uri: 'http://api.example.org'} }
 
     let(:http) do
-      HTTP.instance_variable_set("@default_options", {})
       HTTP.new(url, config)
     end
 
     describe 'initialize' do
-      it 'passes options to faraday' do
-        Faraday.expects(:new).with(:headers => {'Content-Type' => 'application/json'}, :url => config[:base_uri],
-          :x => :y).returns(stub('faraday', :headers => {},
-            :run_request => stub(:body => '{}', :status => 200)))
-
-        HTTP.new(url, config.merge(:faraday_options => {:x => :y})).get
+      it 'warns when invalid options given' do
+        proc do
+          HTTP.new(url, nil)
+        end.must_raise RuntimeError
       end
 
-      it 'passes the options to faraday again when initializing it again' do
-        Faraday.expects(:new).with(:headers => {'Content-Type' => 'application/json'}, :url => config[:base_uri],
-          :x => :y).returns(stub('faraday', :headers => {},
-            :run_request => stub(:body => '{}', :status => 200))).times(2)
-
-        full_config = config.merge(:faraday_options => {:x => :y})
-        2.times { HTTP.new(url, full_config).get }
+      it 'sets the default headers' do
+        http.headers.wont_be_nil
       end
 
-      it 'passes a block to faraday' do
-        app = stub('app')
-        http = HTTP.new(url, config.merge(
-          :faraday_options => {:block => lambda{|f| f.adapter :rack, app}}))
+      it 'sets authentication options' do
+        auth_config = config.merge({auth: {type: :basic, user: 'foo', password: 'baz'}})
 
-        app.expects(:call).returns([200, {}, '{}'] )
-
-        http.get
-      end
-
-      it 'passes a block to faraday again when initializing again' do
-        app = stub('app')
-
-        app.expects(:call).returns([200, {}, '{}'] ).times(2)
-
-        full_config = config.merge(:faraday_options => {:block => lambda{|f|
-          f.adapter :rack, app}})
-        2.times {
-          http = HTTP.new(url, full_config)
-          http.get
-        }
+        http = HTTP.new(url, auth_config)
+        http.connection.headers['Authorization'].wont_be_empty
       end
     end
 
@@ -68,17 +44,18 @@ module Hyperclient
       end
     end
 
-    describe 'authentication' do
+    describe 'basic_auth' do
       it 'sets the basic authentication options' do
         stub_request(:get, 'http://user:pass@api.example.org/productions/1').
           to_return(body: '{"resource": "This is the resource"}',
            headers: {content_type: 'application/json'})
 
-        config.update({auth: {type: :basic, user: 'user', password: 'pass'}})
-
+        http.basic_auth('user', 'pass')
         http.get.body.must_equal({'resource' => 'This is the resource'})
       end
+    end
 
+    describe 'digest_auth' do
       it 'sets the digest authentication options' do
         stub_request(:post, 'http://api.example.org/productions/1').
           with(body: nil).
@@ -91,61 +68,61 @@ module Hyperclient
           to_return(body: '{"resource": "This is the resource"}',
            headers: {content_type: 'application/json'})
 
-        config.update({auth: {type: :digest, user: 'user', password: 'pass'}})
-
+        http.digest_auth('user', 'pass')
         http.post({foo: 1}).body.must_equal({'resource' => 'This is the resource'})
       end
     end
 
     describe 'headers' do
       it 'sets headers from the given option' do
-        config.update({headers: {'accept-encoding' => 'deflate, gzip'}})
 
         stub_request(:get, 'http://api.example.org/productions/1').
           with(headers: {'Accept-Encoding' => 'deflate, gzip'}).
           to_return(body: '{"resource": "This is the resource"}')
 
+        http.headers = {'accept-encoding' => 'deflate, gzip'}
         http.get
       end
     end
 
-    describe 'debug' do
+    describe 'log!' do
       before(:each) do
-        @stderr = $stderr
         stub_request(:get, 'http://api.example.org/productions/1').
           to_return(body: '{"resource": "This is the resource"}')
       end
 
-      after(:each) do
-        $stderr = @stderr
-      end
+      it 'adds a logger to the connection' do
+        output = StringIO.new
+        logger = Logger.new(output)
 
-      it 'enables debugging' do
-        $stderr = StringIO.new
-        config.update({debug: true})
-
+        http.log!(logger)
         http.get
 
-        $stderr.string.must_include('get http://api.example.org/productions/1')
-      end
-
-      it 'uses a custom stream' do
-        stream = StringIO.new
-        config.update({debug: stream})
-
-        http.get
-
-        stream.string.must_include('get http://api.example.org/productions/1')
+        output.string.must_include('get http://api.example.org/productions/1')
       end
     end
 
     describe 'faraday' do
-      it 'parses JSON responses automatically' do
-        stub_request(:get, 'http://api.example.org/productions/1').
-          to_return(body: '{"some_json": 12345 }', headers: {content_type: 'application/json'})
+      describe 'faraday_options' do
+        it 'merges with the default options'
+      end
 
-        response = http.get
-        response.body.must_equal({'some_json' => 12345})
+      describe 'faraday_block' do
+        it 'uses the given faraday block'
+        it 'fallbacks to the default block'
+
+        describe 'default block' do
+          it 'parses JSON' do
+            stub_request(:get, 'http://api.example.org/productions/1').
+              to_return(body: '{"some_json": 12345 }', headers: {content_type: 'application/json'})
+
+            response = http.get
+            response.body.must_equal({'some_json' => 12345})
+          end
+
+          it 'encodes JSON'
+          it 'uses Net::HTTP'
+        end
       end
     end
 

@@ -1,39 +1,41 @@
 require 'faraday'
 require 'faraday_middleware'
 require 'json'
+require 'logger'
 require 'net/http/digest_auth'
 
 module Hyperclient
   # Internal: This class wrapps HTTParty and performs the HTTP requests for a
   # resource.
   class HTTP
-    attr_writer :faraday
+    attr_reader :options
+    attr_writer :connection, :faraday_options, :faraday_block
+    attr_accessor :faraday_block, :headers
+
     # Public: Initializes the HTTP agent.
     #
-    # url    - A String to send the HTTP requests.
-    # config - A Hash with the configuration of the HTTP connection.
+    # url     - A String to send the HTTP requests.
+    # options - A Hash with the configuration of the HTTP connection.
     #          :headers - The Hash with the headers of the connection.
     #          :auth    - The Hash with the authentication options:
     #            :type     - A String or Symbol to set the authentication type.
     #                        Allowed values are :digest or :basic.
     #            :user     - A String with the user.
     #            :password - A String with the user.
-    #          :debug   - The flag (true/false) to debug the HTTP connections.
     #          :faraday_options - A Hash that will be passed to Faraday.new (optional).
     #                             Can additionally include a :block => <Proc> that is also
     #                             passed to Faraday.
     #
-    def initialize(url, config)
+    def initialize(url, options)
+      raise "Invalid options for HTTP" unless valid_options?(options)
+
       @url      = url
+      @options  = options
 
-      @config   = config
-      @base_uri = config.fetch(:base_uri)
+      @headers = default_headers.merge(@options.fetch(:headers, {}))
+      extract_authentication_from_options(@options.fetch(:auth, {}))
 
-      @faraday_options = (config[:faraday_options] || {}).dup
-      @faraday_block = @faraday_options.delete(:block)
-
-      authenticate!
-      toggle_debug! if @config[:debug]
+      @base_uri = @options.fetch(:base_uri)
     end
 
     def url
@@ -90,26 +92,40 @@ module Hyperclient
       process_request(:delete)
     end
 
-    def process_request(method, params = nil)
-      faraday.run_request(method, url, params, faraday.headers)
+    def connection
+      @connection ||= Faraday.new(faraday_options, &faraday_block)
     end
 
-    def faraday
-      @faraday ||= Faraday.new(faraday_options, &faraday_block)
+    def basic_auth(user, password)
+      connection.basic_auth(user, password)
+    end
+
+    def digest_auth(user, password)
+      connection.builder.insert(0, Faraday::Request::DigestAuth, user, password)
     end
 
     def faraday_options
-      default_options = {url: @base_uri, headers: (headers) }
-      default_options.merge(@faraday_options)
-    end
-
-    def headers
-      {'Content-Type' => 'application/json'}.merge(@config[:headers] || {})
+      @faraday_options ||= default_faraday_options.merge(@options.fetch(:faraday_options, {}))
     end
 
     def faraday_block
-      return @faraday_block unless @faraday_block.nil?
+      @faraday_block ||= faraday_options.delete(:block) || default_faraday_block
+    end
 
+    def log!(logger = Logger.new)
+      connection.response :logger, logger
+    end
+
+    private
+    def process_request(method, params = nil)
+      connection.run_request(method, url, params, headers)
+    end
+
+    def default_faraday_options
+      {url: @base_uri}
+    end
+
+    def default_faraday_block
       lambda do |faraday|
         faraday.request  :json
         faraday.response :json, content_type: /\bjson$/
@@ -117,38 +133,24 @@ module Hyperclient
       end
     end
 
+    def default_headers
+      {'Content-Type' => 'application/json'}
+    end
+
     # Internal: Sets the authentication method for HTTParty.
     #
     # options - An options Hash to set the authentication options.
     #
     # Returns nothing.
-    def authenticate!
-      if (options = @config[:auth])
-        auth_method = options.fetch(:type).to_s + '_auth'
-        send auth_method, options
-      end
+    def extract_authentication_from_options(options)
+      return unless (options.keys & [:type, :user, :password]).length == 3
+
+      auth_method = options[:type].to_s + '_auth'
+      send(auth_method, options[:user], options[:password])
     end
 
-    def basic_auth(options)
-      faraday.basic_auth options[:user], options[:password]
-    end
-
-    def digest_auth(options)
-      faraday.builder.insert(0, Faraday::Request::DigestAuth, options.fetch(:user), options.fetch(:password))
-    end
-
-    # Internal: Enables HTTP debugging.
-    #
-    # stream - An object to stream the HTTP out to or just a truthy value.
-    def toggle_debug!
-      stream = @config[:debug]
-      require 'logger'
-
-      if stream.respond_to?(:<<)
-        faraday.response :logger, ::Logger.new(stream)
-      else
-        faraday.response :logger, ::Logger.new($stderr)
-      end
+    def valid_options?(options)
+      options && options.respond_to?(:include?) && options.include?(:base_uri)
     end
   end
 end
