@@ -1,9 +1,12 @@
 require_relative '../test_helper'
 require 'hyperclient/link'
+require 'hyperclient/entry_point'
 
 module Hyperclient
   describe Link do
-    let(:entry_point) { stub('Entry point', config: {base_uri: '/'}) }
+    let(:entry_point) do
+      EntryPoint.new('/')
+    end
 
     describe 'templated?' do
       it 'returns true if the link is templated' do

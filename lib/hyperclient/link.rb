@@ -1,4 +1,3 @@
-require 'hyperclient/http'
 require 'hyperclient/resource'
 require 'uri_template'
 
@@ -7,9 +6,8 @@ module Hyperclient
   #
   class Link
     extend Forwardable
-    # Public: Delegate all HTTP methods (get, post, put, delete, options and
-    # head) to the http connection.
-    def_delegators :http, :get, :post, :put, :delete, :options, :head
+
+    def_delegators :@entry_point, :connection
 
     # Public: Initializes a new Link.
     #
@@ -25,7 +23,7 @@ module Hyperclient
 
     # Public: Returns the Resource which the Link is pointing to.
     def resource
-      @resource ||=Resource.new(http.get.body, @entry_point)
+      @resource ||=Resource.new(get.body, @entry_point)
     end
 
     # Public: Indicates if the link is an URITemplate or a regular URI.
@@ -56,12 +54,31 @@ module Hyperclient
       @url ||= URITemplate.new(@link['href']).expand(@uri_variables)
     end
 
-    private
-    # Internal: Returns the HTTP client used to interact with the API.
-    def http
-      @http ||= HTTP.new(url, @entry_point.config)
+    def get
+      connection.get(url)
     end
 
+    def post(params)
+      connection.post(url, params)
+    end
+
+    def put(params)
+      connection.put(url, params)
+    end
+
+    def options
+      connection.options(url)
+    end
+
+    def head
+      connection.head(url)
+    end
+
+    def delete
+      connection.delete(url)
+    end
+
+    private
     # Internal: Delegate the method to the API if it exists.
     #
     # This allows `api.links.posts.embedded` instead of

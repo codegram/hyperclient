@@ -1,4 +1,5 @@
 require 'hyperclient/link'
+require 'hyperclient/http'
 
 module Hyperclient
   # Public: The EntryPoint is the main public API for Hyperclient. It is used to
@@ -48,6 +49,9 @@ module Hyperclient
     def respond_to_missing?(method, include_private = false)
       entry.respond_to?(method.to_s)
     end
+
+    def connection
+      @connection ||= HTTP.new(config)
     end
   end
 end
