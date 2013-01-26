@@ -3,7 +3,7 @@ require 'hyperclient/entry_point'
 
 module Hyperclient
   describe EntryPoint do
-    let(:api) do
+    let(:entry_point) do
       EntryPoint.new 'http://my.api.org'
     end
 
@@ -13,38 +13,34 @@ module Hyperclient
     end
 
     describe 'initialize' do
-      it 'initializes a Resource at the entry point' do
-        api.links['self'].url.must_equal 'http://my.api.org'
-      end
-
       it 'setups the HTTP config' do
         options = {:headers => {'accept-encoding' => 'deflate, gzip'}}
 
-        api = EntryPoint.new('http://my.api.org', options)
+        entry_point = EntryPoint.new('http://my.api.org', options)
 
-        api.config[:headers].must_include 'accept-encoding'
+        entry_point.config[:headers].must_include 'accept-encoding'
       end
 
       it 'sets the base_uri for HTTP' do
-        api = EntryPoint.new('http://my.api.org')
+        entry_point = EntryPoint.new('http://my.api.org')
 
-        api.config[:base_uri].must_equal 'http://my.api.org'
+        entry_point.config[:base_uri].must_equal 'http://my.api.org'
       end
     end
 
     describe 'method missing' do
       it 'delegates undefined methods to the API when they exist' do
         Resource.any_instance.expects(:foo).returns 'foo'
-        api.foo.must_equal 'foo'
+        entry_point.foo.must_equal 'foo'
       end
 
       it 'responds to missing methods' do
         Resource.any_instance.expects(:respond_to?).with('foo').returns(true)
-        api.respond_to?(:foo).must_equal true
+        entry_point.respond_to?(:foo).must_equal true
       end
 
       it 'raises an error when the method does not exist in the API' do
-        lambda { api.this_method_does_not_exist }.must_raise(NoMethodError)
+        lambda { entry_point.this_method_does_not_exist }.must_raise(NoMethodError)
       end
     end
   end
