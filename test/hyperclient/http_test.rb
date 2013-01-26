@@ -104,12 +104,30 @@ module Hyperclient
 
     describe 'faraday' do
       describe 'faraday_options' do
-        it 'merges with the default options'
+        it 'merges with the default options' do
+          faraday_config = config.merge(faraday_options: {params: {foo: 1}})
+          http = HTTP.new(url, faraday_config)
+
+          http.faraday_options.must_include(:url)
+          http.faraday_options.must_include(:params)
+        end
       end
 
       describe 'faraday_block' do
-        it 'uses the given faraday block'
-        it 'fallbacks to the default block'
+        it 'uses the given faraday block' do
+          custom_block = lambda do |foo|
+            foo + 1
+          end
+
+          faraday_config = config.merge(faraday_options: {block: custom_block})
+          http = HTTP.new(url, faraday_config)
+
+          http.faraday_block.call(1).must_equal 2
+        end
+
+        it 'fallbacks to the default block' do
+          http.faraday_block.class.must_equal Proc
+        end
 
         describe 'default block' do
           it 'parses JSON' do
@@ -120,8 +138,9 @@ module Hyperclient
             response.body.must_equal({'some_json' => 12345})
           end
 
-          it 'encodes JSON'
-          it 'uses Net::HTTP'
+          it 'uses Net::HTTP' do
+            http.connection.builder.handlers.must_include Faraday::Adapter::NetHttp
+          end
         end
       end
     end

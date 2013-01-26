@@ -16,6 +16,7 @@ module Hyperclient
     #
     # url     - A String to send the HTTP requests.
     # options - A Hash with the configuration of the HTTP connection.
+    #          :base_uri - The base uri String
     #          :headers - The Hash with the headers of the connection.
     #          :auth    - The Hash with the authentication options:
     #            :type     - A String or Symbol to set the authentication type.
