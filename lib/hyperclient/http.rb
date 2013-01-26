@@ -14,7 +14,6 @@ module Hyperclient
 
     # Public: Initializes the HTTP agent.
     #
-    # url     - A String to send the HTTP requests.
     # options - A Hash with the configuration of the HTTP connection.
     #          :base_uri - The base uri String
     #          :headers - The Hash with the headers of the connection.
@@ -27,10 +26,9 @@ module Hyperclient
     #                             Can additionally include a :block => <Proc> that is also
     #                             passed to Faraday.
     #
-    def initialize(url, options)
+    def initialize(options)
       raise "Invalid options for HTTP" unless valid_options?(options)
 
-      @url      = url
       @options  = options
 
       @headers = default_headers.merge(@options.fetch(:headers, {}))
@@ -39,19 +37,11 @@ module Hyperclient
       @base_uri = @options.fetch(:base_uri)
     end
 
-    def url
-      begin
-        URI.parse(@base_uri).merge(@url).to_s
-      rescue URI::InvalidURIError
-        @url
-      end
-    end
-
     # Public: Sends a GET request the the resource url.
     #
     # Returns: The parsed response.
-    def get
-      process_request :get
+    def get(path)
+      process_request(:get, path)
     end
 
     # Public: Sends a POST request the the resource url.
@@ -59,8 +49,8 @@ module Hyperclient
     # params - A Hash to send as POST params
     #
     # Returns: A HTTParty::Response
-    def post(params)
-      process_request(:post, params)
+    def post(path, params)
+      process_request(:post, path, params)
     end
 
     # Public: Sends a PUT request the the resource url.
@@ -68,29 +58,29 @@ module Hyperclient
     # params - A Hash to send as PUT params
     #
     # Returns: A HTTParty::Response
-    def put(params)
-      process_request(:put, params)
+    def put(path, params)
+      process_request(:put, path, params)
     end
 
     # Public: Sends an OPTIONS request the the resource url.
     #
     # Returns: A HTTParty::Response
-    def options
-      process_request(:options)
+    def options(path)
+      process_request(:options, path)
     end
 
     # Public: Sends a HEAD request the the resource url.
     #
     # Returns: A HTTParty::Response
-    def head
-      process_request(:head)
+    def head(path)
+      process_request(:head, path)
     end
 
     # Public: Sends a DELETE request the the resource url.
     #
     # Returns: A HTTParty::Response
-    def delete
-      process_request(:delete)
+    def delete(path)
+      process_request(:delete, path)
     end
 
     def connection
@@ -118,8 +108,8 @@ module Hyperclient
     end
 
     private
-    def process_request(method, params = nil)
-      connection.run_request(method, url, params, headers)
+    def process_request(method, path, params = nil)
+      connection.run_request(method, path, params, headers)
     end
 
     def default_faraday_options

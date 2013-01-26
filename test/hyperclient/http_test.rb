@@ -3,20 +3,20 @@ require 'hyperclient/http'
 
 module Hyperclient
   describe HTTP do
-    let(:url) do
+    let(:path) do
       '/productions/1'
     end
 
     let(:config) { {base_uri: 'http://api.example.org'} }
 
     let(:http) do
-      HTTP.new(url, config)
+      HTTP.new(config)
     end
 
     describe 'initialize' do
       it 'warns when invalid options given' do
         proc do
-          HTTP.new(url, nil)
+          HTTP.new(nil)
         end.must_raise RuntimeError
       end
 
@@ -27,20 +27,8 @@ module Hyperclient
       it 'sets authentication options' do
         auth_config = config.merge({auth: {type: :basic, user: 'foo', password: 'baz'}})
 
-        http = HTTP.new(url, auth_config)
+        http = HTTP.new(auth_config)
         http.connection.headers['Authorization'].wont_be_empty
-      end
-    end
-
-    describe 'url' do
-      it 'merges the resource url with the base uri' do
-        http.url.to_s.must_equal 'http://api.example.org/productions/1'
-      end
-
-      it 'returns the given url if it cannot merge it' do
-        config = {base_uri: nil}
-        http = HTTP.new(url, config)
-        http.url.to_s.must_equal '/productions/1'
       end
     end
 
@@ -51,7 +39,7 @@ module Hyperclient
            headers: {content_type: 'application/json'})
 
         http.basic_auth('user', 'pass')
-        http.get.body.must_equal({'resource' => 'This is the resource'})
+        http.get(path).body.must_equal({'resource' => 'This is the resource'})
       end
     end
 
@@ -69,7 +57,7 @@ module Hyperclient
            headers: {content_type: 'application/json'})
 
         http.digest_auth('user', 'pass')
-        http.post({foo: 1}).body.must_equal({'resource' => 'This is the resource'})
+        http.post(path, {foo: 1}).body.must_equal({'resource' => 'This is the resource'})
       end
     end
 
@@ -81,7 +69,7 @@ module Hyperclient
           to_return(body: '{"resource": "This is the resource"}')
 
         http.headers = {'accept-encoding' => 'deflate, gzip'}
-        http.get
+        http.get(path)
       end
     end
 
@@ -96,7 +84,7 @@ module Hyperclient
         logger = Logger.new(output)
 
         http.log!(logger)
-        http.get
+        http.get(path)
 
         output.string.must_include('get http://api.example.org/productions/1')
       end
@@ -106,7 +94,7 @@ module Hyperclient
       describe 'faraday_options' do
         it 'merges with the default options' do
           faraday_config = config.merge(faraday_options: {params: {foo: 1}})
-          http = HTTP.new(url, faraday_config)
+          http = HTTP.new(faraday_config)
 
           http.faraday_options.must_include(:url)
           http.faraday_options.must_include(:params)
@@ -120,7 +108,7 @@ module Hyperclient
           end
 
           faraday_config = config.merge(faraday_options: {block: custom_block})
-          http = HTTP.new(url, faraday_config)
+          http = HTTP.new(faraday_config)
 
           http.faraday_block.call(1).must_equal 2
         end
@@ -134,7 +122,7 @@ module Hyperclient
             stub_request(:get, 'http://api.example.org/productions/1').
               to_return(body: '{"some_json": 12345 }', headers: {content_type: 'application/json'})
 
-            response = http.get
+            response = http.get(path)
             response.body.must_equal({'some_json' => 12345})
           end
 
@@ -149,7 +137,7 @@ module Hyperclient
       it 'sends a GET request' do
         stub_request(:get, 'http://api.example.org/productions/1')
 
-        http.get
+        http.get(path)
         assert_requested :get, 'http://api.example.org/productions/1'
       end
     end
@@ -159,7 +147,7 @@ module Hyperclient
         stub_request(:post, 'http://api.example.org/productions/1').
           to_return(body: 'Posting like a big boy huh?', status: 201)
 
-        response = http.post({data: 'foo'})
+        response = http.post(path, {data: 'foo'})
         response.status.must_equal 201
         assert_requested :post, 'http://api.example.org/productions/1',
                          body: {data: 'foo'}
@@ -171,7 +159,7 @@ module Hyperclient
         stub_request(:put, 'http://api.example.org/productions/1').
           to_return(body: 'No changes were made', status: 204)
 
-        response = http.put({attribute: 'changed'})
+        response = http.put(path, {attribute: 'changed'})
         response.status.must_equal 204
         assert_requested :put, 'http://api.example.org/productions/1',
                          body: {attribute: 'changed'}
@@ -183,7 +171,7 @@ module Hyperclient
         stub_request(:options, 'http://api.example.org/productions/1').
           to_return(status: 200, headers: {allow: 'GET, POST'})
 
-        response = http.options
+        response = http.options(path)
         response.headers.must_include 'allow'
       end
     end
@@ -193,7 +181,7 @@ module Hyperclient
         stub_request(:head, 'http://api.example.org/productions/1').
           to_return(status: 200, headers: {content_type: 'application/json'})
 
-        response = http.head
+        response = http.head(path)
         response.headers.must_include 'content-type'
       end
     end
@@ -203,7 +191,7 @@ module Hyperclient
         stub_request(:delete, 'http://api.example.org/productions/1').
           to_return(body: 'Resource deleted', status: 200)
 
-        response = http.delete
+        response = http.delete(path)
         response.status.must_equal 200
       end
     end
