@@ -12,20 +12,15 @@ module Hyperclient
           to_return(body: '{"_links": {"self": {"href": "http://my.api.org"}}}', headers: {content_type: 'application/json'})
     end
 
-    describe 'initialize' do
-      it 'setups the HTTP config' do
-        options = {:headers => {'accept-encoding' => 'deflate, gzip'}}
+    describe 'connection' do
+      it 'creates a Faraday connection with the entry point url'
+      it 'creates a Faraday connection with the default headers'
+      it 'creates a Faraday connection with the default block'
+    end
 
-        entry_point = EntryPoint.new('http://my.api.org', options)
-
-        entry_point.config[:headers].must_include 'accept-encoding'
-      end
-
-      it 'sets the base_uri for HTTP' do
-        entry_point = EntryPoint.new('http://my.api.org')
-
-        entry_point.config[:base_uri].must_equal 'http://my.api.org'
-      end
+    describe 'entry' do
+      it 'creates a Link with the entry point url'
+      it 'returns the entry point Resource'
     end
 
     describe 'method missing' do

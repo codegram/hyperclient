@@ -1,5 +1,6 @@
 require 'hyperclient/link'
-require 'hyperclient/http'
+require 'faraday_middleware'
+require 'faraday/connection'
 
 module Hyperclient
   # Public: The EntryPoint is the main public API for Hyperclient. It is used to
@@ -15,21 +16,19 @@ module Hyperclient
   #  client = Hyperclient::EntryPoint.new('http://my.api.org', options)
   #
   class EntryPoint
-
-    # Public: Returns the Hash with the configuration.
-    attr_accessor :config
-
     # Public: Initializes an EntryPoint.
     #
     # url    - A String with the entry point of your API.
-    # config - The Hash options used to setup the HTTP client (default: {})
-    #          See HTTP for more documentation.
-    def initialize(url, config = {})
-      @config = config.update(base_uri: url)
+    def initialize(url)
+      @url = url
     end
 
     def entry
-      @entry ||= Link.new({'href' => config[:base_uri]}, self).resource
+      @entry ||= Link.new({'href' => @url}, self).resource
+    end
+
+    def connection
+      @connection ||= Faraday.new(@url, {headers: default_headers}, &default_faraday_block)
     end
 
     # Internal: Delegate the method to the entry point Resource if it exists.
@@ -50,8 +49,17 @@ module Hyperclient
       entry.respond_to?(method.to_s)
     end
 
-    def connection
-      @connection ||= HTTP.new(config)
+    private
+    def default_faraday_block
+      lambda do |faraday|
+        faraday.request  :json
+        faraday.response :json, content_type: /\bjson$/
+        faraday.adapter :net_http
+      end
+    end
+
+    def default_headers
+      {'Content-Type' => 'application/json'}
     end
   end
 end
