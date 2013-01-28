@@ -18,9 +18,8 @@ module Hyperclient
       it 'creates a Faraday connection with the default block'
     end
 
-    describe 'entry' do
-      it 'creates a Link with the entry point url'
-      it 'returns the entry point Resource'
+    describe 'initialize' do
+      it 'sets a Link with the entry point url'
     end
 
     describe 'method missing' do
