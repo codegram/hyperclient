@@ -41,6 +41,10 @@ module Hyperclient
       @collection.to_hash
     end
 
+    def to_s
+      to_hash
+    end
+
     # Public: Provides method access to the collection values.
     #
     # It allows accessing a value as `collection.name` instead of

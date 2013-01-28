@@ -39,6 +39,10 @@ module Hyperclient
       self.class.new(@link, @entry_point, uri_variables)
     end
 
+    def to_s
+      @link
+    end
+
     # Public: Returns the url of the Link.
     #
     # Raises MissingURITemplateVariables if the Link is templated but there are
