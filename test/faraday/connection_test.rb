@@ -1,5 +1,5 @@
 require_relative '../test_helper'
-require 'faraday/connection'
+require_relative '../../lib/faraday/connection'
 
 module Faraday
   describe Connection do

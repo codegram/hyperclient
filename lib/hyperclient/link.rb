@@ -5,10 +5,6 @@ module Hyperclient
   # Internal: The Link is  used to let a Resource interact with the API.
   #
   class Link
-    extend Forwardable
-
-    def_delegators :@entry_point, :connection
-
     # Public: Initializes a new Link.
     #
     # link          - The String with the URI of the link.
@@ -52,6 +48,10 @@ module Hyperclient
       raise MissingURITemplateVariablesException if @uri_variables == nil
 
       @url ||= URITemplate.new(@link['href']).expand(@uri_variables)
+    end
+
+    def connection
+      @entry_point.connection
     end
 
     def get
