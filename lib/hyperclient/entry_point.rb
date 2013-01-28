@@ -11,6 +11,9 @@ module Hyperclient
   #  client = Hyperclient::EntryPoint.new('http://my.api.org')
   #
   class EntryPoint < Link
+    extend Forwardable
+    def_delegators :connection, :basic_auth, :digest_auth, :token_auth, :headers, :headers=, :params, :params=
+
     # Public: Initializes an EntryPoint.
     #
     # url    - A String with the entry point of your API.
