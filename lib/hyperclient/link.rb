@@ -17,15 +17,10 @@ module Hyperclient
       @uri_variables = uri_variables
     end
 
-    # Public: Returns the Resource which the Link is pointing to.
-    def resource
-      @resource ||=Resource.new(get.body, @entry_point)
-    end
-
     # Public: Indicates if the link is an URITemplate or a regular URI.
     #
     # Returns true if it is templated.
-    # Returns false if it nos templated.
+    # Returns false if it not templated.
     def templated?
       !!@link['templated']
     end
@@ -39,10 +34,6 @@ module Hyperclient
       self.class.new(@link, @entry_point, uri_variables)
     end
 
-    def to_s
-      @link
-    end
-
     # Public: Returns the url of the Link.
     #
     # Raises MissingURITemplateVariables if the Link is templated but there are
@@ -54,12 +45,29 @@ module Hyperclient
       @url ||= URITemplate.new(@link['href']).expand(@uri_variables)
     end
 
+    # Public: Returns the Resource which the Link is pointing to.
+    def resource
+      @resource ||=Resource.new(get.body, @entry_point)
+    end
+
     def connection
       @entry_point.connection
     end
 
     def get
       connection.get(url)
+    end
+
+    def options
+      connection.run_request(:options, url, nil, nil)
+    end
+
+    def head
+      connection.head(url)
+    end
+
+    def delete
+      connection.delete(url)
     end
 
     def post(params)
@@ -70,16 +78,12 @@ module Hyperclient
       connection.put(url, params)
     end
 
-    def options
-      connection.options(url)
+    def patch(params)
+      connection.patch(url, params)
     end
 
-    def head
-      connection.head(url)
-    end
-
-    def delete
-      connection.delete(url)
+    def inspect
+      "#<#{self.class.name} #{@link}>"
     end
 
     private
