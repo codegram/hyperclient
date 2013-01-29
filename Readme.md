@@ -14,13 +14,14 @@ Hyperclient is a Ruby Hypermedia API client written in Ruby.
 Example API client:
 
 ````ruby
-options = {}
-options[:auth]    = {type: :digest, user:, 'user', password: 'password'}
-options[:headers] = {'accept-encoding' => 'deflate, gzip'}
-options[:debug]   = true
-
-api = Hyperclient::EntryPoint.new('http://myapp.com/api', options)
+api = Hyperclient.new('http://myapp.com/api').tap do |api|
+  api.digest_auth('user', 'password')
+  api.headers.merge({'accept-encoding' => 'deflate, gzip'})
+end
 ````
+
+By default, Hyperclient adds `application/json` as `Content-Type` and `Accept`
+headers. It will also sent requests as JSON and parse JSON responses.
 
 [More examples][examples]
 
@@ -96,7 +97,7 @@ api.embedded.posts.first.attributes
 OK, navigating an API is really cool, but you may want to actually do something
 with it, right?
 
-Hyperclient uses [HTTParty][httparty] under the hood to perform HTTP calls. You can
+Hyperclient uses [Faraday][faraday] under the hood to perform HTTP calls. You can
 call any valid HTTP method on any Resource:
 
 ````ruby
@@ -104,6 +105,7 @@ post = api.embedded.posts.first
 post.get
 post.head
 post.put({title: 'New title'})
+post.patch({title: 'New title'})
 post.delete
 post.options
 
@@ -117,6 +119,9 @@ If you have a templated link you can expand it like so:
 api.links.post.expand(:id => 3).first
 # => #<Resource ...>
 ````
+
+If you want to access the Faraday connection (to add middlewares or do whatever
+you want) by calling `connection` on the entry point.
 
 ## Other
 
@@ -151,7 +156,7 @@ MIT License. Copyright 2012 [Codegram Technologies][codegram]
 [contributors]: https://github.com/codegram/hyperclient/contributors
 [codegram]: http://codegram.com
 [documentup]: http://codegram.github.com/hyperclient
-[httparty]: http://github.com/jnunemaker/httparty
+[faraday]: http://github.com/lostisland/faraday
 [examples]: http://github.com/codegram/hyperclient/tree/master/examples
 [enumerable]: http://ruby-doc.org/core-1.9.3/Enumerable.html
 [rdoc]: http://rubydoc.org/github/codegram/hyperclient/master/frames
