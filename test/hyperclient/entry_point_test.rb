@@ -7,34 +7,27 @@ module Hyperclient
       EntryPoint.new 'http://my.api.org'
     end
 
-    before do
-      stub_request(:get, "http://my.api.org/").
-          to_return(body: '{"_links": {"self": {"href": "http://my.api.org"}}}', headers: {content_type: 'application/json'})
-    end
-
     describe 'connection' do
-      it 'creates a Faraday connection with the entry point url'
-      it 'creates a Faraday connection with the default headers'
-      it 'creates a Faraday connection with the default block'
+      it 'creates a Faraday connection with the entry point url' do
+        entry_point.connection.url_prefix.to_s.must_equal 'http://my.api.org/'
+      end
+
+      it 'creates a Faraday connection with the default headers' do
+        entry_point.headers['Content-Type'].must_equal 'application/json'
+        entry_point.headers['Accept'].must_equal 'application/json'
+      end
+
+      it 'creates a Faraday connection with the default block' do
+        handlers = entry_point.connection.builder.handlers
+        handlers.must_include FaradayMiddleware::EncodeJson
+        handlers.must_include FaradayMiddleware::ParseJson
+        handlers.must_include Faraday::Adapter::NetHttp
+      end
     end
 
     describe 'initialize' do
-      it 'sets a Link with the entry point url'
-    end
-
-    describe 'method missing' do
-      it 'delegates undefined methods to the API when they exist' do
-        Resource.any_instance.expects(:foo).returns 'foo'
-        entry_point.foo.must_equal 'foo'
-      end
-
-      it 'responds to missing methods' do
-        Resource.any_instance.expects(:respond_to?).with('foo').returns(true)
-        entry_point.respond_to?(:foo).must_equal true
-      end
-
-      it 'raises an error when the method does not exist in the API' do
-        lambda { entry_point.this_method_does_not_exist }.must_raise(NoMethodError)
+      it 'sets a Link with the entry point url' do
+        entry_point.url.must_equal 'http://my.api.org'
       end
     end
   end

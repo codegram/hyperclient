@@ -12,6 +12,7 @@ module Hyperclient
   #
   class EntryPoint < Link
     extend Forwardable
+    # Public: Delegates common methods to be used with the Faraday connection.
     def_delegators :connection, :basic_auth, :digest_auth, :token_auth, :headers, :headers=, :params, :params=
 
     # Public: Initializes an EntryPoint.
@@ -22,11 +23,23 @@ module Hyperclient
       @entry_point = self
     end
 
+    # Public: A Faraday connection to use as a HTTP client.
+    #
+    # Returns a Faraday::Connection.
     def connection
       @connection ||= Faraday.new(url, {headers: default_headers}, &default_faraday_block)
     end
 
     private
+    # Internal: Returns a block to initialize the Faraday connection. The
+    # default block includes a middleware to encode requests as JSON, a
+    # response middleware to parse JSON responses and sets the adapter as
+    # NetHttp.
+    #
+    # These middleware can always be changed by accessing the Faraday
+    # connection.
+    #
+    # Returns a block.
     def default_faraday_block
       lambda do |faraday|
         faraday.request  :json
@@ -35,8 +48,12 @@ module Hyperclient
       end
     end
 
+    # Internal: Returns the default headers to initialize the Faraday connection.
+    # The default headers et the Content-Type and Accept to application/json.
+    #
+    # Returns a Hash.
     def default_headers
-      {'Content-Type' => 'application/json'}
+      {'Content-Type' => 'application/json', 'Accept' => 'application/json'}
     end
   end
 end
