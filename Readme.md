@@ -120,7 +120,7 @@ api.links.post.expand(:id => 3).first
 # => #<Resource ...>
 ````
 
-If you want to access the Faraday connection (to add middlewares or do whatever
+You can access the Faraday connection (to add middlewares or do whatever
 you want) by calling `connection` on the entry point.
 
 ## Other
