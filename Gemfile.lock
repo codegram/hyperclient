@@ -10,10 +10,10 @@ PATH
   remote: .
   specs:
     hyperclient (0.2.0)
-      faraday
-      faraday_middleware
-      net-http-digest_auth
-      uri_template
+      faraday (~> 0.8)
+      faraday_middleware (~> 0.9)
+      net-http-digest_auth (~> 1.2)
+      uri_template (~> 0.5)
 
 GEM
   remote: https://rubygems.org/
@@ -74,13 +74,13 @@ DEPENDENCIES
   guard-minitest
   hyperclient!
   minitest (~> 3.4.0)
-  mocha
+  mocha (~> 0.13)
   pry
-  rack-test
+  rack-test (~> 0.6)
   rake
   redcarpet
   simplecov
-  turn
-  webmock
+  turn (~> 0.9)
+  webmock (~> 1.8)
   yard (~> 0.8)
   yard-tomdoc!
