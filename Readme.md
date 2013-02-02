@@ -121,7 +121,12 @@ api.links.post.expand(:id => 3).first
 ````
 
 You can access the Faraday connection (to add middlewares or do whatever
-you want) by calling `connection` on the entry point.
+you want) by calling `connection` on the entry point. As an example, you could use the [faraday-http-cache-middleware](https://github.com/plataformatec/faraday-http-cache)
+:
+
+````ruby
+api.connection.use :http_cache
+````
 
 ## Other
 
