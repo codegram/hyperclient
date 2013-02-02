@@ -24,4 +24,5 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'webmock', '~> 1.8'
   gem.add_development_dependency 'mocha', '~> 0.13'
   gem.add_development_dependency 'rack-test', '~> 0.6'
+  gem.add_development_dependency 'spinach'
 end

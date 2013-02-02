@@ -23,7 +23,7 @@ module Hyperclient
     def_delegators :self_link, :get, :post, :put, :delete, :options, :head
 
     # Public: Initializes a Resource.
-      #
+    #
     # representation - The hash with the HAL representation of the Resource.
     # entry_point    - The EntryPoint object to inject the configutation.
     def initialize(representation, entry_point)
