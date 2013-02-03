@@ -24,5 +24,9 @@ Rake::TestTask.new(:test) do |t|
   t.verbose = false
 end
 
+desc 'runs the whole spinach suite'
+task :spinach do
+  ruby '-S spinach'
+end
 
-task :default => :test
+task default: [:test, :spinach]

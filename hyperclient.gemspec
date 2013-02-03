@@ -14,13 +14,15 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = Hyperclient::VERSION
 
-  gem.add_dependency 'faraday'
-  gem.add_dependency 'uri_template'
-  gem.add_dependency 'net-http-digest_auth'
+  gem.add_dependency 'faraday', '~> 0.8'
+  gem.add_dependency 'faraday_middleware', '~> 0.9'
+  gem.add_dependency 'uri_template', '~> 0.5'
+  gem.add_dependency 'net-http-digest_auth', '~> 1.2'
 
   gem.add_development_dependency 'minitest', '~> 3.4.0'
-  gem.add_development_dependency 'turn'
-  gem.add_development_dependency 'webmock'
-  gem.add_development_dependency 'mocha'
-  gem.add_development_dependency 'rack-test'
+  gem.add_development_dependency 'turn', '~> 0.9'
+  gem.add_development_dependency 'webmock', '~> 1.8'
+  gem.add_development_dependency 'mocha', '~> 0.13'
+  gem.add_development_dependency 'rack-test', '~> 0.6'
+  gem.add_development_dependency 'spinach'
 end
