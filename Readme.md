@@ -1,7 +1,7 @@
 # Hyperclient
 [![Build Status](https://secure.travis-ci.org/codegram/hyperclient.png)](http://travis-ci.org/codegram/hyperclient)
 [![Dependency Status](https://gemnasium.com/codegram/hyperclient.png)](http://gemnasium.com/codegram/hyperclient)
-[![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/codegram/hyperclient)
+[![Code Climate](https://codeclimate.com/github/codegram/hyperclient.png)](https://codeclimate.com/github/codegram/hyperclient)
 
 Hyperclient is a Ruby Hypermedia API client written in Ruby.
 
