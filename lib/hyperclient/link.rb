@@ -1,4 +1,3 @@
-require 'hyperclient/http'
 require 'hyperclient/resource'
 require 'uri_template'
 
@@ -6,11 +5,6 @@ module Hyperclient
   # Internal: The Link is  used to let a Resource interact with the API.
   #
   class Link
-    extend Forwardable
-    # Public: Delegate all HTTP methods (get, post, put, delete, options and
-    # head) to the http connection.
-    def_delegators :http, :get, :post, :put, :delete, :options, :head
-
     # Public: Initializes a new Link.
     #
     # link          - The String with the URI of the link.
@@ -23,15 +17,10 @@ module Hyperclient
       @uri_variables = uri_variables
     end
 
-    # Public: Returns the Resource which the Link is pointing to.
-    def resource
-      @resource ||=Resource.new(http.get, @entry_point)
-    end
-
     # Public: Indicates if the link is an URITemplate or a regular URI.
     #
     # Returns true if it is templated.
-    # Returns false if it nos templated.
+    # Returns false if it not templated.
     def templated?
       !!@link['templated']
     end
@@ -56,12 +45,48 @@ module Hyperclient
       @url ||= URITemplate.new(@link['href']).expand(@uri_variables)
     end
 
-    private
-    # Internal: Returns the HTTP client used to interact with the API.
-    def http
-      @http ||= HTTP.new(url, @entry_point.config)
+    # Public: Returns the Resource which the Link is pointing to.
+    def resource
+      @resource ||=Resource.new(get.body, @entry_point)
     end
 
+    def connection
+      @entry_point.connection
+    end
+
+    def get
+      connection.get(url)
+    end
+
+    def options
+      connection.run_request(:options, url, nil, nil)
+    end
+
+    def head
+      connection.head(url)
+    end
+
+    def delete
+      connection.delete(url)
+    end
+
+    def post(params)
+      connection.post(url, params)
+    end
+
+    def put(params)
+      connection.put(url, params)
+    end
+
+    def patch(params)
+      connection.patch(url, params)
+    end
+
+    def inspect
+      "#<#{self.class.name} #{@link}>"
+    end
+
+    private
     # Internal: Delegate the method to the API if it exists.
     #
     # This allows `api.links.posts.embedded` instead of

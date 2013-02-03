@@ -6,6 +6,7 @@ gem 'rake'
 gem 'growl'
 gem 'guard'
 gem 'guard-minitest'
+gem 'guard-spinach'
 gem 'pry'
 
 gem 'redcarpet'

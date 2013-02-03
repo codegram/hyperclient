@@ -41,6 +41,10 @@ module Hyperclient
       @collection.to_hash
     end
 
+    def to_s
+      to_hash
+    end
+
     # Public: Provides method access to the collection values.
     #
     # It allows accessing a value as `collection.name` instead of
@@ -48,7 +52,9 @@ module Hyperclient
     #
     # Returns an Object.
     def method_missing(method_name, *args, &block)
-      @collection.fetch(method_name.to_s) { super }
+      @collection.fetch(method_name.to_s)  do
+        raise "Could not find `#{method_name.to_s}` in #{self.class.name}"
+      end
     end
 
     # Internal: Accessory method to allow the collection respond to the

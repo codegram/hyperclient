@@ -1,9 +1,12 @@
 require_relative '../test_helper'
 require 'hyperclient/link'
+require 'hyperclient/entry_point'
 
 module Hyperclient
   describe Link do
-    let(:entry_point) { stub('Entry point', config: {base_uri: '/'}) }
+    let(:entry_point) do
+      EntryPoint.new('http://api.example.org/')
+    end
 
     describe 'templated?' do
       it 'returns true if the link is templated' do
@@ -16,17 +19,6 @@ module Hyperclient
         link = Link.new({}, entry_point)
 
         link.templated?.must_equal false
-      end
-    end
-
-    describe 'resource' do
-      let(:http) { mock('HTTP', get: {}) }
-
-      it 'builds a resource with the hyperlink representation' do
-        HTTP.expects(:new).returns(http, {})
-        Resource.expects(:new).with({}, entry_point)
-
-        Link.new({}, entry_point).resource
       end
     end
 
@@ -61,6 +53,95 @@ module Hyperclient
       it 'returns the link when no uri template' do
         link = Link.new({'href' => '/orders'}, entry_point)
         link.url.must_equal '/orders'
+      end
+    end
+
+    describe 'resource' do
+      it 'builds a resource with the link href representation' do
+        Resource.expects(:new).with({}, entry_point)
+
+        link = Link.new({'href' => '/'}, entry_point)
+        link.expects(:get).returns(mock(body: {}))
+
+        link.resource
+      end
+    end
+
+    describe 'connection' do
+      it 'returns the entry point connection' do
+        Link.new({}, entry_point).connection.must_equal entry_point.connection
+      end
+    end
+
+    describe 'get' do
+      it 'sends a GET request with the link url' do
+        link = Link.new({'href' => '/productions/1'}, entry_point)
+
+        entry_point.connection.expects(:get).with('/productions/1')
+        link.get
+      end
+    end
+
+    describe 'options' do
+      it 'sends a OPTIONS request with the link url' do
+        link = Link.new({'href' => '/productions/1'}, entry_point)
+
+        entry_point.connection.expects(:run_request).with(:options, '/productions/1', nil, nil)
+        link.options
+      end
+    end
+
+    describe 'head' do
+      it 'sends a HEAD request with the link url' do
+        link = Link.new({'href' => '/productions/1'}, entry_point)
+
+        entry_point.connection.expects(:head).with('/productions/1')
+        link.head
+      end
+    end
+
+    describe 'delete' do
+      it 'sends a DELETE request with the link url' do
+        link = Link.new({'href' => '/productions/1'}, entry_point)
+
+        entry_point.connection.expects(:delete).with('/productions/1')
+        link.delete
+      end
+    end
+
+    describe 'post' do
+      it 'sends a POST request with the link url and params' do
+        link = Link.new({'href' => '/productions/1'}, entry_point)
+
+        entry_point.connection.expects(:post).with('/productions/1', {'foo' => 'bar'})
+        link.post({'foo' => 'bar'})
+      end
+    end
+
+    describe 'put' do
+      it 'sends a PUT request with the link url and params' do
+        link = Link.new({'href' => '/productions/1'}, entry_point)
+
+        entry_point.connection.expects(:put).with('/productions/1', {'foo' => 'bar'})
+        link.put({'foo' => 'bar'})
+      end
+    end
+
+    describe 'patch' do
+      it 'sends a PATCH request with the link url and params' do
+        link = Link.new({'href' => '/productions/1'}, entry_point)
+
+        entry_point.connection.expects(:patch).with('/productions/1', {'foo' => 'bar'})
+        link.patch({'foo' => 'bar'})
+      end
+    end
+
+    describe 'inspect' do
+      it 'outputs a custom-friendly output' do
+        link = Link.new({'href'=>'/productions/1'}, 'foo')
+
+        link.inspect.must_include 'Link'
+        link.inspect.must_include '"href"=>"/productions/1"'
       end
     end
 

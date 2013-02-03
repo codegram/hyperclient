@@ -1,4 +1,6 @@
 require 'hyperclient/link'
+require 'faraday_middleware'
+require_relative '../faraday/connection'
 
 module Hyperclient
   # Public: The EntryPoint is the main public API for Hyperclient. It is used to
@@ -6,44 +8,52 @@ module Hyperclient
   #
   # Examples
   #
-  #  options = {}
-  #  options[:headers] = {'accept-encoding' => 'deflate, gzip'}
-  #  options[:auth]    = {type: 'digest', user: 'foo', password: 'secret'}
-  #  options[:debug]   = true
+  #  client = Hyperclient::EntryPoint.new('http://my.api.org')
   #
-  #  client = Hyperclient::EntryPoint.new('http://my.api.org', options)
-  #
-  class EntryPoint
-
-    # Public: Returns the Hash with the configuration.
-    attr_accessor :config
+  class EntryPoint < Link
+    extend Forwardable
+    # Public: Delegates common methods to be used with the Faraday connection.
+    def_delegators :connection, :basic_auth, :digest_auth, :token_auth, :headers, :headers=, :params, :params=
 
     # Public: Initializes an EntryPoint.
     #
     # url    - A String with the entry point of your API.
-    # config - The Hash options used to setup the HTTP client (default: {})
-    #          See HTTP for more documentation.
-    def initialize(url, config = {})
-      @config = config.update(base_uri: url)
-      @entry  = Link.new({'href' => url}, self).resource
+    def initialize(url)
+      @link = {'href' => url}
+      @entry_point = self
     end
 
-    # Internal: Delegate the method to the entry point Resource if it exists.
+    # Public: A Faraday connection to use as a HTTP client.
     #
-    # This way we can call our API client with the resources name instead of
-    # having to add the methods to it.
-    def method_missing(method, *args, &block)
-      if @entry.respond_to?(method)
-        @entry.send(method, *args, &block)
-      else
-        super
+    # Returns a Faraday::Connection.
+    def connection
+      @connection ||= Faraday.new(url, {headers: default_headers}, &default_faraday_block)
+    end
+
+    private
+    # Internal: Returns a block to initialize the Faraday connection. The
+    # default block includes a middleware to encode requests as JSON, a
+    # response middleware to parse JSON responses and sets the adapter as
+    # NetHttp.
+    #
+    # These middleware can always be changed by accessing the Faraday
+    # connection.
+    #
+    # Returns a block.
+    def default_faraday_block
+      lambda do |faraday|
+        faraday.request  :json
+        faraday.response :json, content_type: /\bjson$/
+        faraday.adapter :net_http
       end
     end
 
-    # Internal: Accessory method to allow the entry point respond to the
-    # methods that will hit method_missing.
-    def respond_to_missing?(method, include_private = false)
-      @entry.respond_to?(method.to_s)
+    # Internal: Returns the default headers to initialize the Faraday connection.
+    # The default headers et the Content-Type and Accept to application/json.
+    #
+    # Returns a Hash.
+    def default_headers
+      {'Content-Type' => 'application/json', 'Accept' => 'application/json'}
     end
   end
 end

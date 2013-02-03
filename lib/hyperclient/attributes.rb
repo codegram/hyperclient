@@ -14,7 +14,11 @@ module Hyperclient
     # representation - The hash with the HAL representation of the Resource.
     #
     def initialize(representation)
-      @collection = representation.delete_if {|key, value| key =~ /^_/}
+      @collection = if representation.is_a?(Hash)
+                      representation.delete_if {|key, value| key =~ /^_/}
+                    else
+                      representation
+                    end
     end
   end
 end
