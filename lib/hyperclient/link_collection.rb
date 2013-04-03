@@ -14,23 +14,27 @@ module Hyperclient
     #
     # collection  - The Hash with the links.
     # entry_point - The EntryPoint object to inject the configuration.
-    #
     def initialize(collection, entry_point)
       raise "Invalid response for LinkCollection. The response was: #{collection.inspect}" if collection && !collection.respond_to?(:collect)
 
-      @collection = Hash[
-        (collection || {}).collect do |name, link_or_links|
-          value = if link_or_links.class == Array
-            link_or_links.collect do |link|
-              Link.new(link, entry_point)
-            end
-          else
-            Link.new(link_or_links, entry_point)
-          end
+      @collection = (collection || {}).inject({}) do |hash, (name, link)|
+        hash.update(name => build_link(link, entry_point))
+      end
+    end
 
-          [name, value]
-        end
-      ]
+    private
+    # Internal: Creates links from the response hash.
+    #
+    # link_or_links - A Hash or an Array of hashes with the links to build.
+    # entry_point   - The EntryPoint object to inject the configuration.
+    #
+    # Returns a Link or an array of Links when given an Array.
+    def build_link(link_or_links, entry_point)
+      return Link.new(link_or_links, entry_point) unless link_or_links.respond_to?(:to_ary)
+
+      link_or_links.collect do |link|
+        build_link(link, entry_point)
+      end
     end
   end
 end
