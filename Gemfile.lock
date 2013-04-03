@@ -9,7 +9,7 @@ GIT
 PATH
   remote: .
   specs:
-    hyperclient (0.3.0)
+    hyperclient (0.3.1)
       faraday (~> 0.8)
       faraday_middleware (~> 0.9)
       net-http-digest_auth (~> 1.2)
