@@ -19,11 +19,29 @@ module Hyperclient
 
     it 'initializes the collection with links' do
       links.must_respond_to :filter
+      links.must_respond_to :gizmos
     end
 
     it 'returns link objects for each link' do
       links.filter.must_be_kind_of Link
       links['self'].must_be_kind_of Link
+
+      links.gizmos.must_be_kind_of Array
+      links['gizmos'].must_be_kind_of Array
+    end
+
+    describe "array of links" do
+      let(:gizmos) { links.gizmos }
+
+      it 'should have 2 items' do
+        gizmos.length.must_equal 2
+      end
+
+      it 'must be an array of Links' do
+        gizmos.each do |link|
+          link.must_be_kind_of Link
+        end
+      end
     end
   end
 end
