@@ -5,6 +5,14 @@ rescue LoadError
   puts 'You must `gem install bundler` and `bundle install` to run rake tasks'
 end
 
+if ENV['COVERAGE']
+  require 'simplecov'
+  SimpleCov.start do
+    add_filter '/test/'
+    add_filter '/features/'
+  end
+end
+
 require 'yard'
 YARD::Config.load_plugin('yard-tomdoc') 
 YARD::Rake::YardocTask.new do |t|
