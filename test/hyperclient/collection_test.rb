@@ -32,7 +32,7 @@ module Hyperclient
         name
       end
 
-      names.must_equal ['_links', 'title', 'description', 'permitted', '_embedded']
+      names.must_equal ['_links', 'title', 'description', 'permitted', '_hidden_attribute', '_embedded']
     end
 
     describe '#to_hash' do
