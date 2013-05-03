@@ -43,5 +43,12 @@ module Hyperclient
         end
       end
     end
+
+    describe "null link value" do
+      let(:null_link) { links.null_link }
+      it 'must be nil' do
+        null_link.must_be_nil
+      end
+    end
   end
 end
