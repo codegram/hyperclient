@@ -14,7 +14,8 @@
             {
                 "href": "/gizmos/2"
             }
-        ]
+        ],
+        "null_link": null
     },
     "title": "Real World ASP.NET MVC3",
     "description": "In this advanced, somewhat-opinionated production you'll get your very own startup off the ground using ASP.NET MVC 3...",

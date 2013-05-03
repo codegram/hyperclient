@@ -30,6 +30,7 @@ module Hyperclient
     #
     # Returns a Link or an array of Links when given an Array.
     def build_link(link_or_links, entry_point)
+      return unless link_or_links
       return Link.new(link_or_links, entry_point) unless link_or_links.respond_to?(:to_ary)
 
       link_or_links.collect do |link|
