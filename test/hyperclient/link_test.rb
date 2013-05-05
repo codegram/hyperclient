@@ -61,7 +61,7 @@ module Hyperclient
       it 'raises if no uri variables are given' do
         link = Link.new({'href' => '/orders{?id}', 'templated' => true}, entry_point)
 
-        proc { link.resource.inspect }.must_raise MissingURITemplateVariablesException
+        proc { link.resource.url }.must_raise MissingURITemplateVariablesException
       end
     end
 
