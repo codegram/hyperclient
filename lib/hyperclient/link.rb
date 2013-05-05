@@ -1,5 +1,6 @@
 require 'hyperclient/resource'
 require 'uri_template'
+require 'futuroscope'
 
 module Hyperclient
   # Internal: The Link is  used to let a Resource interact with the API.
@@ -100,31 +101,45 @@ module Hyperclient
     end
 
     def get
-      connection.get(url)
+      Futuroscope::Future.new{
+        connection.get(url)
+      }
     end
 
     def options
-      connection.run_request(:options, url, nil, nil)
+      Futuroscope::Future.new{
+        connection.run_request(:options, url, nil, nil)
+      }
     end
 
     def head
-      connection.head(url)
+      Futuroscope::Future.new{
+        connection.head(url)
+      }
     end
 
     def delete
-      connection.delete(url)
+      Futuroscope::Future.new{
+        connection.delete(url)
+      }
     end
 
     def post(params = {})
-      connection.post(url, params)
+      Futuroscope::Future.new{
+        connection.post(url, params)
+      }
     end
 
     def put(params = {})
-      connection.put(url, params)
+      Futuroscope::Future.new{
+        connection.put(url, params)
+      }
     end
 
     def patch(params = {})
-      connection.patch(url, params)
+      Futuroscope::Future.new{
+        connection.patch(url, params)
+      }
     end
 
     def inspect

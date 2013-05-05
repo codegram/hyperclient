@@ -15,6 +15,7 @@ Gem::Specification.new do |gem|
   gem.version       = Hyperclient::VERSION
 
   gem.add_dependency 'faraday', '~> 0.8'
+  gem.add_dependency 'futuroscope'
   gem.add_dependency 'faraday_middleware', '~> 0.9'
   gem.add_dependency 'uri_template', '~> 0.5'
   gem.add_dependency 'net-http-digest_auth', '~> 1.2'

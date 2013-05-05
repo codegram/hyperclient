@@ -61,7 +61,7 @@ module Hyperclient
       it 'raises if no uri variables are given' do
         link = Link.new({'href' => '/orders{?id}', 'templated' => true}, entry_point)
 
-        proc { link.resource }.must_raise MissingURITemplateVariablesException
+        proc { link.resource.inspect }.must_raise MissingURITemplateVariablesException
       end
     end
 
@@ -119,7 +119,7 @@ module Hyperclient
         link = Link.new({'href' => '/productions/1'}, entry_point)
 
         entry_point.connection.expects(:get).with('/productions/1')
-        link.get
+        link.get.inspect
       end
     end
 
@@ -128,7 +128,7 @@ module Hyperclient
         link = Link.new({'href' => '/productions/1'}, entry_point)
 
         entry_point.connection.expects(:run_request).with(:options, '/productions/1', nil, nil)
-        link.options
+        link.options.inspect
       end
     end
 
@@ -137,7 +137,7 @@ module Hyperclient
         link = Link.new({'href' => '/productions/1'}, entry_point)
 
         entry_point.connection.expects(:head).with('/productions/1')
-        link.head
+        link.head.inspect
       end
     end
 
@@ -146,7 +146,7 @@ module Hyperclient
         link = Link.new({'href' => '/productions/1'}, entry_point)
 
         entry_point.connection.expects(:delete).with('/productions/1')
-        link.delete
+        link.delete.inspect
       end
     end
 
@@ -155,7 +155,7 @@ module Hyperclient
 
       it 'sends a POST request with the link url and params' do
         entry_point.connection.expects(:post).with('/productions/1', {'foo' => 'bar'})
-        link.post({'foo' => 'bar'})
+        link.post({'foo' => 'bar'}).inspect
       end
 
       it 'defaults params to an empty hash' do
@@ -169,7 +169,7 @@ module Hyperclient
 
       it 'sends a PUT request with the link url and params' do
         entry_point.connection.expects(:put).with('/productions/1', {'foo' => 'bar'})
-        link.put({'foo' => 'bar'})
+        link.put({'foo' => 'bar'}).inspect
       end
 
       it 'defaults params to an empty hash' do
@@ -183,7 +183,7 @@ module Hyperclient
 
       it 'sends a PATCH request with the link url and params' do
         entry_point.connection.expects(:patch).with('/productions/1', {'foo' => 'bar'})
-        link.patch({'foo' => 'bar'})
+        link.patch({'foo' => 'bar'}).inspect
       end
 
       it 'defaults params to an empty hash' do
