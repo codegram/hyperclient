@@ -20,6 +20,7 @@
     "title": "Real World ASP.NET MVC3",
     "description": "In this advanced, somewhat-opinionated production you'll get your very own startup off the ground using ASP.NET MVC 3...",
     "permitted": true,
+    "_hidden_attribute": "useful value",
     "_embedded": {
         "author": {
             "_links": {
