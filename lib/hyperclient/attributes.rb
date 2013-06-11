@@ -16,11 +16,11 @@ module Hyperclient
     # representation - The hash with the HAL representation of the Resource.
     #
     def initialize(representation)
-      @collection = if representation.is_a?(Hash)
-                      representation.delete_if {|key, value| RESERVED_PROPERTIES.any? {|p| p.match(key) } }
-                    else
-                      representation
-                    end
+      if representation.is_a?(Hash)
+        representation.delete_if {|key, value| RESERVED_PROPERTIES.any? {|p| p.match(key) } }
+      end
+
+      super representation
     end
   end
 end

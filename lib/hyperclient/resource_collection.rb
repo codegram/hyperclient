@@ -18,9 +18,11 @@ module Hyperclient
     #
     def initialize(collection, entry_point)
       @entry_point = entry_point
-      @collection = (collection || {}).inject({}) do |hash, (name, resource)|
+      collection = (collection || {}).inject({}) do |hash, (name, resource)|
         hash.update(name => build_resource(resource))
       end
+
+      super collection
     end
 
     private
