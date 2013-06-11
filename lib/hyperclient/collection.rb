@@ -7,22 +7,13 @@ module Hyperclient
   #  collection['value']
   #  collection.value
   #
-  class Collection
-    include Enumerable
+  class Collection < Hash
 
     # Public: Initializes the Collection.
     #
     # collection - The Hash to be wrapped.
     def initialize(collection)
-      @collection = collection
-    end
-
-    # Public: Each implementation to allow the class to use the Enumerable
-    # benefits.
-    #
-    # Returns an Enumerator.
-    def each(&block)
-      @collection.each(&block)
+      update collection
     end
 
     # Public: Provides Hash-like access to the collection.
@@ -31,18 +22,7 @@ module Hyperclient
     #
     # Returns an Object.
     def [](name)
-      @collection[name.to_s]
-    end
-
-    # Public: Returns the wrapped collection as a hash.
-    #
-    # Returns a Hash.
-    def to_hash
-      @collection.to_hash
-    end
-
-    def to_s
-      to_hash
+      super name.to_s
     end
 
     # Public: Provides method access to the collection values.
@@ -52,7 +32,7 @@ module Hyperclient
     #
     # Returns an Object.
     def method_missing(method_name, *args, &block)
-      @collection.fetch(method_name.to_s)  do
+      fetch(method_name.to_s)  do
         raise "Could not find `#{method_name.to_s}` in #{self.class.name}"
       end
     end
@@ -60,7 +40,7 @@ module Hyperclient
     # Internal: Accessory method to allow the collection respond to the
     # methods that will hit method_missing.
     def respond_to_missing?(method_name, include_private = false)
-      @collection.include?(method_name.to_s)
+      include?(method_name.to_s)
     end
   end
 end

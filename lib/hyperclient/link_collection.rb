@@ -17,9 +17,11 @@ module Hyperclient
     def initialize(collection, entry_point)
       raise "Invalid response for LinkCollection. The response was: #{collection.inspect}" if collection && !collection.respond_to?(:collect)
 
-      @collection = (collection || {}).inject({}) do |hash, (name, link)|
+      collection = (collection || {}).inject({}) do |hash, (name, link)|
         hash.update(name => build_link(link, entry_point))
       end
+
+      super collection
     end
 
     private
