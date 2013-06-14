@@ -8,6 +8,20 @@ module Hyperclient
       EntryPoint.new('http://api.example.org/')
     end
 
+    %w(type deprecation name profile title hreflang).each do |prop|
+      describe prop do
+        it "returns the property value" do
+          link = Link.new({prop => 'value'}, entry_point)
+          link.send(prop).must_equal 'value'
+        end
+
+        it 'returns nil if the property is not present' do
+          link = Link.new({}, entry_point)
+          link.send(prop).must_equal nil
+        end
+      end
+    end
+
     describe 'templated?' do
       it 'returns true if the link is templated' do
         link = Link.new({'templated' => true}, entry_point)
