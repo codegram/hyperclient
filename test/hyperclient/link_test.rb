@@ -8,6 +8,15 @@ module Hyperclient
       EntryPoint.new('http://api.example.org/')
     end
 
+    %w(type deprecation name profile title hreflang).each do |attr|
+      describe attr do
+        it "returns the #{attr} attribute" do
+          link = Link.new({attr => 'value'}, entry_point)
+          link.send(attr).must_equal 'value'
+        end
+      end
+    end
+
     describe 'templated?' do
       it 'returns true if the link is templated' do
         link = Link.new({'templated' => true}, entry_point)

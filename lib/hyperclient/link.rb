@@ -92,7 +92,9 @@ module Hyperclient
     # This allows `api.links.posts.embedded` instead of
     # `api.links.posts.resource.embedded`
     def method_missing(method, *args, &block)
-      if resource.respond_to?(method)
+      if @link.key?(method.to_s)
+        @link[method.to_s]
+      elsif resource.respond_to?(method)
         resource.send(method, *args, &block)
       else
         super
@@ -102,7 +104,7 @@ module Hyperclient
     # Internal: Accessory method to allow the link respond to the
     # methods that will hit method_missing.
     def respond_to_missing?(method, include_private = false)
-      resource.respond_to?(method.to_s)
+      @link.key?(method.to_s) || resource.respond_to?(method.to_s)
     end
   end
 
