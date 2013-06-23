@@ -134,6 +134,14 @@ module Hyperclient
     def respond_to_missing?(method, include_private = false)
       resource.respond_to?(method.to_s)
     end
+
+    # Internal: avoid delegating to resource
+    #
+    # #to_ary is called for implicit array coersion (such as parallel assignment
+    # or Array#flatten). Returning nil tells Ruby that this record is not Array-like.
+    def to_ary
+      nil
+    end
   end
 
   # Public: Exception that is raised when building a templated Link without uri

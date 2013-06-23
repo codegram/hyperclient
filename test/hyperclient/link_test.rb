@@ -163,13 +163,14 @@ module Hyperclient
       before do
         stub_request(:get, "http://myapi.org/orders").
           to_return(body: '{"resource": "This is the resource"}')
-        Resource.expects(:new).returns(resource).at_least_once
+        Resource.stubs(:new).returns(resource)
       end
 
       let(:link) { Link.new({'href' => 'http://myapi.org/orders'}, entry_point) }
       let(:resource) { mock('Resource') }
 
       it 'delegates unkown methods to the resource' do
+        Resource.expects(:new).returns(resource).at_least_once
         resource.expects(:embedded)
 
         link.embedded
@@ -182,6 +183,11 @@ module Hyperclient
       it 'responds to missing methods' do
         resource.expects(:respond_to?).with('embedded').returns(true)
         link.respond_to?(:embedded).must_equal true
+      end
+
+      it 'does not delegate to_ary to resource' do
+        resource.expects(:to_ary).never
+        [[link, link]].flatten.must_equal [link, link]
       end
     end
   end
