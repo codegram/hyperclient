@@ -45,6 +45,36 @@ module Hyperclient
       @url ||= URITemplate.new(@link['href']).expand(@uri_variables)
     end
 
+    # Public: Returns the type property of the Link
+    def type
+      @link['type']
+    end
+
+    # Public: Returns the name property of the Link
+    def name
+      @link['name']
+    end
+
+    # Public: Returns the deprecation property of the Link
+    def deprecation
+      @link['deprecation']
+    end
+
+    # Public: Returns the profile property of the Link
+    def profile
+      @link['profile']
+    end
+
+    # Public: Returns the title property of the Link
+    def title
+      @link['title']
+    end
+
+    # Public: Returns the hreflang property of the Link
+    def hreflang
+      @link['hreflang']
+    end
+
     # Public: Returns the Resource which the Link is pointing to.
     def resource
       @resource ||=Resource.new(get.body, @entry_point)
