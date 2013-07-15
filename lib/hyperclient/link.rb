@@ -100,15 +100,15 @@ module Hyperclient
       connection.delete(url)
     end
 
-    def post(params)
+    def post(params = {})
       connection.post(url, params)
     end
 
-    def put(params)
+    def put(params = {})
       connection.put(url, params)
     end
 
-    def patch(params)
+    def patch(params = {})
       connection.patch(url, params)
     end
 
