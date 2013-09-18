@@ -124,29 +124,44 @@ module Hyperclient
     end
 
     describe 'post' do
-      it 'sends a POST request with the link url and params' do
-        link = Link.new({'href' => '/productions/1'}, entry_point)
+      let(:link) { Link.new({'href' => '/productions/1'}, entry_point) }
 
+      it 'sends a POST request with the link url and params' do
         entry_point.connection.expects(:post).with('/productions/1', {'foo' => 'bar'})
         link.post({'foo' => 'bar'})
+      end
+
+      it 'defaults params to an empty hash' do
+        entry_point.connection.expects(:post).with('/productions/1', {})
+        link.post
       end
     end
 
     describe 'put' do
-      it 'sends a PUT request with the link url and params' do
-        link = Link.new({'href' => '/productions/1'}, entry_point)
+      let(:link) { Link.new({'href' => '/productions/1'}, entry_point) }
 
+      it 'sends a PUT request with the link url and params' do
         entry_point.connection.expects(:put).with('/productions/1', {'foo' => 'bar'})
         link.put({'foo' => 'bar'})
+      end
+
+      it 'defaults params to an empty hash' do
+        entry_point.connection.expects(:put).with('/productions/1', {})
+        link.put
       end
     end
 
     describe 'patch' do
-      it 'sends a PATCH request with the link url and params' do
-        link = Link.new({'href' => '/productions/1'}, entry_point)
+      let(:link) { Link.new({'href' => '/productions/1'}, entry_point) }
 
+      it 'sends a PATCH request with the link url and params' do
         entry_point.connection.expects(:patch).with('/productions/1', {'foo' => 'bar'})
         link.patch({'foo' => 'bar'})
+      end
+
+      it 'defaults params to an empty hash' do
+        entry_point.connection.expects(:patch).with('/productions/1', {})
+        link.patch
       end
     end
 
