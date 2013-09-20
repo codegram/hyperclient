@@ -42,7 +42,14 @@ module Hyperclient
       return @link['href'] unless templated?
       raise MissingURITemplateVariablesException if @uri_variables == nil
 
-      @url ||= URITemplate.new(@link['href']).expand(@uri_variables)
+      @url ||= uri_template.expand(@uri_variables)
+    end
+
+    # Public: Returns an array of variables from the URITemplate.
+    #
+    # Returns an empty array for regular URIs.
+    def variables
+      uri_template.variables
     end
 
     # Public: Returns the type property of the Link
@@ -141,6 +148,11 @@ module Hyperclient
     # or Array#flatten). Returning nil tells Ruby that this record is not Array-like.
     def to_ary
       nil
+    end
+
+    # Internal: Memoization for a URITemplate instance
+    def uri_template
+      @uri_template ||= URITemplate.new(@link['href'])
     end
   end
 
