@@ -36,6 +36,20 @@ module Hyperclient
       end
     end
 
+    describe 'variables' do
+      it 'returns a list of required variables' do
+        link = Link.new({'href' => '/orders{?id,owner}', 'templated' => true}, entry_point)
+
+        link.variables.must_equal ['id', 'owner']
+      end
+
+      it 'returns an empty array for untemplated links' do
+        link = Link.new({'href' => '/orders'}, entry_point)
+
+        link.variables.must_equal []
+      end
+    end
+
     describe 'expand' do
       it 'buils a Link with the templated URI representation' do
         link = Link.new({'href' => '/orders{?id}', 'templated' => true}, entry_point)
