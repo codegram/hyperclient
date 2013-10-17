@@ -42,6 +42,14 @@ module Hyperclient
       "#<#{self.class.name} self_link:#{self_link.inspect} attributes:#{@attributes.inspect}>"
     end
 
+    def success?
+      response && response.success?
+    end
+
+    def status
+      response && response.status
+    end
+
     private
     # Internal: Returns the self Link of the Resource. Used to handle the HTTP
     # methods.
