@@ -37,9 +37,10 @@ module Hyperclient
     # Public: Returns the wrapped collection as a hash.
     #
     # Returns a Hash.
-    def to_hash
+    def to_h
       @collection.to_hash
     end
+    alias_method :to_hash, :to_h
 
     def to_s
       to_hash
