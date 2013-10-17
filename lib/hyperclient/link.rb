@@ -84,7 +84,10 @@ module Hyperclient
 
     # Public: Returns the Resource which the Link is pointing to.
     def resource
-      @resource ||=Resource.new(get.body, @entry_point)
+      @resource ||= begin
+        response = get
+        Resource.new(response.body, @entry_point, response)
+      end
     end
 
     def connection
