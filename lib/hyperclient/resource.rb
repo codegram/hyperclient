@@ -31,6 +31,7 @@ module Hyperclient
     # representation - The hash with the HAL representation of the Resource.
     # entry_point    - The EntryPoint object to inject the configutation.
     def initialize(representation, entry_point, response=nil)
+      representation ||= {}
       @links       = LinkCollection.new(representation['_links'], entry_point)
       @embedded    = ResourceCollection.new(representation['_embedded'], entry_point)
       @attributes  = Attributes.new(representation)
