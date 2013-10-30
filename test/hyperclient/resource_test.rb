@@ -78,7 +78,7 @@ module Hyperclient
         end
 
         it "proxies to the response object" do
-          resource.success?
+          resource.success?.must_equal true
         end
       end
 
@@ -104,7 +104,7 @@ module Hyperclient
         end
 
         it "proxies to the response object" do
-          resource.status
+          resource.status.must_equal 200
         end
       end
 
