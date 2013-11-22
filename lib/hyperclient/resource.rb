@@ -19,6 +19,10 @@ module Hyperclient
     # ResourceCollection.
     attr_reader :embedded
 
+    # Public: Returns the response object for the HTTP request that created this
+    # resource, if one exists.
+    attr_reader :response
+
     # Public: Delegate all HTTP methods (get, post, put, delete, options and
     # head) to its self link.
     def_delegators :self_link, :get, :post, :put, :delete, :options, :head
@@ -27,15 +31,25 @@ module Hyperclient
     #
     # representation - The hash with the HAL representation of the Resource.
     # entry_point    - The EntryPoint object to inject the configutation.
-    def initialize(representation, entry_point)
+    def initialize(representation, entry_point, response=nil)
+      representation ||= {}
       @links       = LinkCollection.new(representation['_links'], entry_point)
       @embedded    = ResourceCollection.new(representation['_embedded'], entry_point)
       @attributes  = Attributes.new(representation)
       @entry_point = entry_point
+      @response    = response
     end
 
     def inspect
       "#<#{self.class.name} self_link:#{self_link.inspect} attributes:#{@attributes.inspect}>"
+    end
+
+    def success?
+      response && response.success?
+    end
+
+    def status
+      response && response.status
     end
 
     private

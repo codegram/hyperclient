@@ -23,6 +23,14 @@ module Hyperclient
 
         Resource.new({'_embedded' => {"orders" => [] }}, entry_point)
       end
+
+      it "initializes the response" do
+        mock_response = mock(body: {})
+
+        resource = Resource.new(mock_response.body, entry_point, mock_response)
+
+        resource.response.must_equal mock_response
+      end
     end
 
     describe 'accessors' do
@@ -57,6 +65,58 @@ module Hyperclient
       resource = Resource.new({}, entry_point)
 
       resource.get
+    end
+
+    describe ".success?" do
+      describe "with a response object" do
+        let(:resource) do
+          Resource.new({}, entry_point, mock_response)
+        end
+
+        let(:mock_response) do
+          mock(success?: true)
+        end
+
+        it "proxies to the response object" do
+          resource.success?.must_equal true
+        end
+      end
+
+      describe "without a response object" do
+        let(:resource) do
+          Resource.new({}, entry_point)
+        end
+
+        it "returns nil" do
+          resource.success?.must_be_nil
+        end
+      end
+    end
+
+    describe ".status" do
+      describe "with a response object" do
+        let(:resource) do
+          Resource.new({}, entry_point, mock_response)
+        end
+
+        let(:mock_response) do
+          mock(status: 200)
+        end
+
+        it "proxies to the response object" do
+          resource.status.must_equal 200
+        end
+      end
+
+      describe "without a response object" do
+        let(:resource) do
+          Resource.new({}, entry_point)
+        end
+
+        it "returns nil" do
+          resource.status.must_be_nil
+        end
+      end
     end
   end
 end
