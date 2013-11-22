@@ -40,6 +40,16 @@ module Hyperclient
         collection.to_hash.must_be_kind_of Hash
       end
     end
+
+    describe 'include?' do
+      it 'returns true for keys that exist' do
+        collection.include?('_links').must_equal true
+      end
+
+      it 'returns false for missing keys' do
+        collection.include?('missing key').must_equal false
+      end
+    end
   end
 end
 
