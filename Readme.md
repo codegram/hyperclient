@@ -13,12 +13,12 @@ Hyperclient is a Ruby Hypermedia API client written in Ruby.
 
 Example API client:
 
-````ruby
+```ruby
 api = Hyperclient.new('http://myapp.com/api').tap do |api|
   api.digest_auth('user', 'password')
   api.headers.merge({'accept-encoding' => 'deflate, gzip'})
 end
-````
+```
 
 By default, Hyperclient adds `application/json` as `Content-Type` and `Accept`
 headers. It will also sent requests as JSON and parse JSON responses.
@@ -37,60 +37,73 @@ Hyperclient will try to fetch and discover the resources from your API.
 
 Accessing the links for a given resource is quite straightforward:
 
-````ruby
+```ruby
 api.links.posts_categories
 # => #<Resource ...>
-````
+```
 
 You can also iterate between all the links:
 
-````ruby
+```ruby
 api.links.each do |name, link|
   puts name, link.url
 end
-````
+```
 
 Actually, you can call any [Enumerable][enumerable] method :D
 
 If a Resource doesn't have friendly name you can always access it as a Hash:
 
-````ruby
+```ruby
 api.links['http://myapi.org/rels/post_categories']
-````
+```
 
 ### Embedded resources
 
 Accessing embedded resources is similar to accessing links:
 
-````ruby
+```ruby
 api.embedded.posts
-````
+```
 
 And you can also iterate between them:
 
-````ruby
+```ruby
 api.embedded.each do |name, resource|
   puts name, resource.attributes
 end
-````
+```
 
 You can even chain different calls (this also applies for links):
 
-````ruby
+```ruby
 api.embedded.posts.first.links.author
-````
+```
 
 ### Attributes
 
 Not only you might have links and embedded resources in a Resource, but also
 its attributes:
 
-````ruby
+```ruby
 api.embedded.posts.first.attributes
 # => {title: 'Linting the hell out of your Ruby classes with Pelusa',
       teaser: 'Gain new insights about your code thanks to static analysis',
       body:   '...' }
-````
+```
+
+You can access the attribute values via attribute methods, or as a hash:
+
+```ruby
+api.embedded.posts.first.attributes.title
+# => 'Linting the hell out of your Ruby classes with Pelusa'
+
+api.embedded.posts.first.attributes['title']
+# => 'Linting the hell out of your Ruby classes with Pelusa'
+
+api.embedded.posts.first.attributes.fetch('title')
+# => 'Linting the hell out of your Ruby classes with Pelusa'
+```
 
 ### HTTP
 
@@ -100,7 +113,7 @@ with it, right?
 Hyperclient uses [Faraday][faraday] under the hood to perform HTTP calls. You can
 call any valid HTTP method on any Resource:
 
-````ruby
+```ruby
 post = api.embedded.posts.first
 post.get
 post.head
@@ -111,22 +124,22 @@ post.options
 
 posts = api.links.posts
 posts.post({title: "I'm a blogger!", body: 'Wohoo!!'})
-````
+```
 
 If you have a templated link you can expand it like so:
 
-````ruby
+```ruby
 api.links.post.expand(:id => 3).first
 # => #<Resource ...>
-````
+```
 
 You can access the Faraday connection (to add middlewares or do whatever
 you want) by calling `connection` on the entry point. As an example, you could use the [faraday-http-cache-middleware](https://github.com/plataformatec/faraday-http-cache)
 :
 
-````ruby
+```ruby
 api.connection.use :http_cache
-````
+```
 
 ## Other
 
