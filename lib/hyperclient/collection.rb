@@ -29,6 +29,15 @@ module Hyperclient
       @collection.include?(obj)
     end
 
+    # Public: Returns a value from the collection for the given key.
+    # If the key can’t be found, there are several options:
+    # With no other arguments, it will raise an KeyError exception;
+    # if default is given, then that will be returned;
+    #
+    # key - A String or Symbol of the value to get from the collection.
+    # default - An optional value to be returned if the key is not found.
+    #
+    # Returns an Object.
     def fetch(*args)
       @collection.fetch(*args)
     end
