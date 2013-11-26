@@ -29,6 +29,10 @@ module Hyperclient
       @collection.include?(obj)
     end
 
+    def fetch(*args)
+      @collection.fetch(*args)
+    end
+
     # Public: Provides Hash-like access to the collection.
     #
     # name - A String or Symbol of the value to get from the collection.
