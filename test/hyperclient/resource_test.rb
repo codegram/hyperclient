@@ -31,6 +31,16 @@ module Hyperclient
 
         resource.response.must_equal mock_response
       end
+
+      it "does not mutate the response.body" do
+        body = { 'foo' => 'bar', '_links' => {}, '_embedded' => {} }
+        mock_response = stub(body: body.dup)
+
+        resource = Resource.new(mock_response.body, entry_point, mock_response)
+
+        resource.response.body.must_equal body
+      end
+
     end
 
     describe 'accessors' do
