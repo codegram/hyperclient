@@ -50,6 +50,27 @@ module Hyperclient
         collection.include?('missing key').must_equal false
       end
     end
+
+    describe '#fetch' do
+      it 'returns the value for keys that exist' do
+        collection.fetch('title').must_equal "Real World ASP.NET MVC3"
+      end
+
+      it 'raises an error for missing keys' do
+        Proc.new { collection.fetch('missing key') }.must_raise KeyError
+      end
+
+      describe 'with a default value' do
+        it 'returns the value for keys that exist' do
+          collection.fetch('title', 'default').must_equal "Real World ASP.NET MVC3"
+        end
+
+        it 'returns the default value for missing keys' do
+          collection.fetch('missing key', 'default').must_equal 'default'
+        end
+      end
+    end
+
   end
 end
 
