@@ -1,3 +1,4 @@
+$: << 'lib'
 gem 'minitest'
 
 require 'minitest/spec'
