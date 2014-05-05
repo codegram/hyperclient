@@ -9,7 +9,7 @@ GIT
 PATH
   remote: .
   specs:
-    hyperclient (0.3.2)
+    hyperclient (0.4.0)
       faraday (~> 0.8)
       faraday_middleware (~> 0.9)
       futuroscope (>= 0.0.10)
@@ -24,7 +24,7 @@ GEM
     coderay (1.0.9)
     colorize (0.5.8)
     crack (0.3.2)
-    faraday (0.8.8)
+    faraday (0.8.9)
       multipart-post (~> 1.2.0)
     faraday_middleware (0.9.0)
       faraday (>= 0.7.4, < 0.9)
@@ -83,7 +83,7 @@ GEM
     tomparse (0.4.2)
     turn (0.9.6)
       ansi
-    uri_template (0.6.0)
+    uri_template (0.7.0)
     webmock (1.11.0)
       addressable (>= 2.2.7)
       crack (>= 0.3.2)
