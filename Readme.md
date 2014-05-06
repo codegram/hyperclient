@@ -16,7 +16,7 @@ Example API client:
 ```ruby
 api = Hyperclient.new('http://myapp.com/api').tap do |api|
   api.digest_auth('user', 'password')
-  api.headers.merge({'accept-encoding' => 'deflate, gzip'})
+  api.headers.update({'accept-encoding' => 'deflate, gzip'})
 end
 ```
 
