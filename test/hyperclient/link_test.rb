@@ -10,8 +10,8 @@ module Hyperclient
 
     %w(type deprecation name profile title hreflang).each do |prop|
       describe prop do
-        it "returns the property value" do
-          link = Link.new({prop => 'value'}, entry_point)
+        it 'returns the property value' do
+          link = Link.new({ prop => 'value' }, entry_point)
           link.send(prop).must_equal 'value'
         end
 
@@ -24,7 +24,7 @@ module Hyperclient
 
     describe 'templated?' do
       it 'returns true if the link is templated' do
-        link = Link.new({'templated' => true}, entry_point)
+        link = Link.new({ 'templated' => true }, entry_point)
 
         link.templated?.must_equal true
       end
@@ -38,13 +38,13 @@ module Hyperclient
 
     describe 'variables' do
       it 'returns a list of required variables' do
-        link = Link.new({'href' => '/orders{?id,owner}', 'templated' => true}, entry_point)
+        link = Link.new({ 'href' => '/orders{?id,owner}', 'templated' => true }, entry_point)
 
-        link.variables.must_equal ['id', 'owner']
+        link.variables.must_equal %w(id owner)
       end
 
       it 'returns an empty array for untemplated links' do
-        link = Link.new({'href' => '/orders'}, entry_point)
+        link = Link.new({ 'href' => '/orders' }, entry_point)
 
         link.variables.must_equal []
       end
@@ -52,33 +52,33 @@ module Hyperclient
 
     describe 'expand' do
       it 'buils a Link with the templated URI representation' do
-        link = Link.new({'href' => '/orders{?id}', 'templated' => true}, entry_point)
+        link = Link.new({ 'href' => '/orders{?id}', 'templated' => true }, entry_point)
 
-        Link.expects(:new).with(anything, entry_point, {id: '1'})
+        Link.expects(:new).with(anything, entry_point, id: '1')
         link.expand(id: '1')
       end
 
       it 'raises if no uri variables are given' do
-        link = Link.new({'href' => '/orders{?id}', 'templated' => true}, entry_point)
+        link = Link.new({ 'href' => '/orders{?id}', 'templated' => true }, entry_point)
         lambda { link.expand }.must_raise ArgumentError
       end
     end
 
     describe 'url' do
       it 'raises when missing required uri_variables' do
-        link = Link.new({'href' => '/orders{?id}', 'templated' => true}, entry_point)
+        link = Link.new({ 'href' => '/orders{?id}', 'templated' => true }, entry_point)
 
         lambda { link.url }.must_raise MissingURITemplateVariablesException
       end
 
       it 'expands an uri template with variables' do
-        link = Link.new({'href' => '/orders{?id}', 'templated' => true}, entry_point, {id: 1})
+        link = Link.new({ 'href' => '/orders{?id}', 'templated' => true }, entry_point, id: 1)
 
         link.url.must_equal '/orders?id=1'
       end
 
       it 'returns the link when no uri template' do
-        link = Link.new({'href' => '/orders'}, entry_point)
+        link = Link.new({ 'href' => '/orders' }, entry_point)
         link.url.must_equal '/orders'
       end
     end
@@ -89,18 +89,18 @@ module Hyperclient
 
         Resource.expects(:new).with({}, entry_point, mock_response)
 
-        link = Link.new({'href' => '/'}, entry_point)
+        link = Link.new({ 'href' => '/' }, entry_point)
         link.expects(:get).returns(mock_response)
 
         link.resource
       end
 
-      it "has an empty body when the response fails" do
+      it 'has an empty body when the response fails' do
         mock_response = mock(success?: false)
 
         Resource.expects(:new).with(nil, entry_point, mock_response)
 
-        link = Link.new({'href' => '/'}, entry_point)
+        link = Link.new({ 'href' => '/' }, entry_point)
         link.expects(:get).returns(mock_response)
 
         link.resource
@@ -115,7 +115,7 @@ module Hyperclient
 
     describe 'get' do
       it 'sends a GET request with the link url' do
-        link = Link.new({'href' => '/productions/1'}, entry_point)
+        link = Link.new({ 'href' => '/productions/1' }, entry_point)
 
         entry_point.connection.expects(:get).with('/productions/1')
         link.get.inspect
@@ -124,7 +124,7 @@ module Hyperclient
 
     describe 'options' do
       it 'sends a OPTIONS request with the link url' do
-        link = Link.new({'href' => '/productions/1'}, entry_point)
+        link = Link.new({ 'href' => '/productions/1' }, entry_point)
 
         entry_point.connection.expects(:run_request).with(:options, '/productions/1', nil, nil)
         link.options.inspect
@@ -133,7 +133,7 @@ module Hyperclient
 
     describe 'head' do
       it 'sends a HEAD request with the link url' do
-        link = Link.new({'href' => '/productions/1'}, entry_point)
+        link = Link.new({ 'href' => '/productions/1' }, entry_point)
 
         entry_point.connection.expects(:head).with('/productions/1')
         link.head.inspect
@@ -142,7 +142,7 @@ module Hyperclient
 
     describe 'delete' do
       it 'sends a DELETE request with the link url' do
-        link = Link.new({'href' => '/productions/1'}, entry_point)
+        link = Link.new({ 'href' => '/productions/1' }, entry_point)
 
         entry_point.connection.expects(:delete).with('/productions/1')
         link.delete.inspect
@@ -150,11 +150,11 @@ module Hyperclient
     end
 
     describe 'post' do
-      let(:link) { Link.new({'href' => '/productions/1'}, entry_point) }
+      let(:link) { Link.new({ 'href' => '/productions/1' }, entry_point) }
 
       it 'sends a POST request with the link url and params' do
-        entry_point.connection.expects(:post).with('/productions/1', {'foo' => 'bar'})
-        link.post({'foo' => 'bar'}).inspect
+        entry_point.connection.expects(:post).with('/productions/1', 'foo' => 'bar')
+        link.post('foo' => 'bar').inspect
       end
 
       it 'defaults params to an empty hash' do
@@ -164,11 +164,11 @@ module Hyperclient
     end
 
     describe 'put' do
-      let(:link) { Link.new({'href' => '/productions/1'}, entry_point) }
+      let(:link) { Link.new({ 'href' => '/productions/1' }, entry_point) }
 
       it 'sends a PUT request with the link url and params' do
-        entry_point.connection.expects(:put).with('/productions/1', {'foo' => 'bar'})
-        link.put({'foo' => 'bar'}).inspect
+        entry_point.connection.expects(:put).with('/productions/1', 'foo' => 'bar')
+        link.put('foo' => 'bar').inspect
       end
 
       it 'defaults params to an empty hash' do
@@ -178,11 +178,11 @@ module Hyperclient
     end
 
     describe 'patch' do
-      let(:link) { Link.new({'href' => '/productions/1'}, entry_point) }
+      let(:link) { Link.new({ 'href' => '/productions/1' }, entry_point) }
 
       it 'sends a PATCH request with the link url and params' do
-        entry_point.connection.expects(:patch).with('/productions/1', {'foo' => 'bar'})
-        link.patch({'foo' => 'bar'}).inspect
+        entry_point.connection.expects(:patch).with('/productions/1', 'foo' => 'bar')
+        link.patch('foo' => 'bar').inspect
       end
 
       it 'defaults params to an empty hash' do
@@ -193,7 +193,7 @@ module Hyperclient
 
     describe 'inspect' do
       it 'outputs a custom-friendly output' do
-        link = Link.new({'href'=>'/productions/1'}, 'foo')
+        link = Link.new({ 'href' => '/productions/1' }, 'foo')
 
         link.inspect.must_include 'Link'
         link.inspect.must_include '"href"=>"/productions/1"'
@@ -202,12 +202,12 @@ module Hyperclient
 
     describe 'method_missing' do
       before do
-        stub_request(:get, "http://myapi.org/orders").
-          to_return(body: '{"resource": "This is the resource"}')
+        stub_request(:get, 'http://myapi.org/orders')
+          .to_return(body: '{"resource": "This is the resource"}')
         Resource.stubs(:new).returns(resource)
       end
 
-      let(:link) { Link.new({'href' => 'http://myapi.org/orders'}, entry_point) }
+      let(:link) { Link.new({ 'href' => 'http://myapi.org/orders' }, entry_point) }
       let(:resource) { mock('Resource') }
 
       it 'delegates unkown methods to the resource' do

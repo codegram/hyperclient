@@ -16,7 +16,7 @@ class Cyberscore
   end
 
   def add_game(name)
-    client.links.submissions.post({name: name})
+    client.links.submissions.post(name: name)
   end
 
   def motd
@@ -32,9 +32,10 @@ class Cyberscore
   end
 
   private
+
   def client
-    @client ||= Hyperclient::EntryPoint.new 'http://cs-api.heroku.com/api', 
-                {debug: false, headers: {'content-type' => 'application/json'}}
+    @client ||= Hyperclient::EntryPoint.new 'http://cs-api.heroku.com/api',
+                                            debug: false, headers: { 'content-type' => 'application/json' }
   end
 end
 
@@ -43,17 +44,16 @@ def print_links(links)
     if link.is_a?(Array)
       print_links(link)
     else
-      puts %{Found "#{name}" at "#{link.url}" }
+      puts %(Found "#{name}" at "#{link.url}" )
     end
   end
 end
 
 def print_games(games)
   games.each do |game|
-    puts %{Found "#{game.attributes['name']}" }
+    puts %(Found "#{game.attributes['name']}" )
   end
 end
-
 
 api = Cyberscore.new
 
@@ -72,5 +72,5 @@ puts "Let's read the news:"
 print_links(api.links.news.links)
 puts "\n"
 
-puts "I like games!"
+puts 'I like games!'
 print_games(api.games)

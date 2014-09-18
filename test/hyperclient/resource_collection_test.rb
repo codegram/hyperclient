@@ -3,10 +3,10 @@ require 'hyperclient/resource_collection'
 
 module Hyperclient
   describe ResourceCollection do
-    let(:entry_point) { stub('Entry point', config: {base_uri: '/'}) }
+    let(:entry_point) { stub('Entry point', config: { base_uri: '/' }) }
 
     let(:representation) do
-      JSON.parse( File.read('test/fixtures/element.json'))
+      JSON.parse(File.read('test/fixtures/element.json'))
     end
 
     let(:resources) do

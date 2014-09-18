@@ -14,12 +14,11 @@ if ENV['COVERAGE']
 end
 
 require 'yard'
-YARD::Config.load_plugin('yard-tomdoc') 
+YARD::Config.load_plugin('yard-tomdoc')
 YARD::Rake::YardocTask.new do |t|
   t.files   = ['lib/**/*.rb']
   t.options = %w(-r README.md)
 end
-
 
 Bundler::GemHelper.install_tasks
 
@@ -37,4 +36,7 @@ task :spinach do
   ruby '-S spinach'
 end
 
-task default: [:test, :spinach]
+require 'rubocop/rake_task'
+RuboCop::RakeTask.new(:rubocop)
+
+task default: [:rubocop, :test, :spinach]

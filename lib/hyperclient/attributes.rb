@@ -17,7 +17,7 @@ module Hyperclient
     #
     def initialize(representation)
       @collection = if representation.is_a?(Hash)
-                      representation.delete_if {|key, value| RESERVED_PROPERTIES.any? {|p| p.match(key) } }
+                      representation.delete_if { |key, _value| RESERVED_PROPERTIES.any? { |p| p.match(key) } }
                     else
                       representation
                     end

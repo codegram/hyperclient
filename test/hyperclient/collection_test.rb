@@ -4,7 +4,7 @@ require 'hyperclient/resource'
 module Hyperclient
   describe Collection do
     let(:representation) do
-      JSON.parse( File.read('test/fixtures/element.json'))
+      JSON.parse(File.read('test/fixtures/element.json'))
     end
 
     let(:collection) do
@@ -28,11 +28,11 @@ module Hyperclient
     end
 
     it 'acts as enumerable' do
-      names = collection.map do |name, value|
+      names = collection.map do |name, _value|
         name
       end
 
-      names.must_equal ['_links', 'title', 'description', 'permitted', '_hidden_attribute', '_embedded']
+      names.must_equal %w(_links title description permitted _hidden_attribute _embedded)
     end
 
     describe '#to_hash' do
@@ -53,16 +53,16 @@ module Hyperclient
 
     describe '#fetch' do
       it 'returns the value for keys that exist' do
-        collection.fetch('title').must_equal "Real World ASP.NET MVC3"
+        collection.fetch('title').must_equal 'Real World ASP.NET MVC3'
       end
 
       it 'raises an error for missing keys' do
-        Proc.new { collection.fetch('missing key') }.must_raise KeyError
+        proc { collection.fetch('missing key') }.must_raise KeyError
       end
 
       describe 'with a default value' do
         it 'returns the value for keys that exist' do
-          collection.fetch('title', 'default').must_equal "Real World ASP.NET MVC3"
+          collection.fetch('title', 'default').must_equal 'Real World ASP.NET MVC3'
         end
 
         it 'returns the default value for missing keys' do
@@ -73,4 +73,3 @@ module Hyperclient
 
   end
 end
-

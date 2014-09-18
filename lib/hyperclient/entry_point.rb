@@ -19,7 +19,7 @@ module Hyperclient
     #
     # url    - A String with the entry point of your API.
     def initialize(url)
-      @link = {'href' => url}
+      @link = { 'href' => url }
       @entry_point = self
     end
 
@@ -27,10 +27,11 @@ module Hyperclient
     #
     # Returns a Faraday::Connection.
     def connection
-      @connection ||= Faraday.new(url, {headers: default_headers}, &default_faraday_block)
+      @connection ||= Faraday.new(url, { headers: default_headers }, &default_faraday_block)
     end
 
     private
+
     # Internal: Returns a block to initialize the Faraday connection. The
     # default block includes a middleware to encode requests as JSON, a
     # response middleware to parse JSON responses and sets the adapter as
@@ -43,7 +44,7 @@ module Hyperclient
     def default_faraday_block
       lambda do |faraday|
         faraday.use FaradayMiddleware::FollowRedirects
-        faraday.request  :json
+        faraday.request :json
         faraday.response :json, content_type: /\bjson$/
         faraday.adapter :net_http
       end
@@ -54,7 +55,7 @@ module Hyperclient
     #
     # Returns a Hash.
     def default_headers
-      {'Content-Type' => 'application/json', 'Accept' => 'application/json'}
+      { 'Content-Type' => 'application/json', 'Accept' => 'application/json' }
     end
   end
 end
