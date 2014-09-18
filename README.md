@@ -16,12 +16,11 @@ Example API client:
 ```ruby
 api = Hyperclient.new('http://myapp.com/api').tap do |api|
   api.digest_auth('user', 'password')
-  api.headers.update({'accept-encoding' => 'deflate, gzip'})
+  api.headers.update('accept-encoding' => 'deflate, gzip')
 end
 ```
 
-By default, Hyperclient adds `application/json` as `Content-Type` and `Accept`
-headers. It will also sent requests as JSON and parse JSON responses.
+By default, Hyperclient adds `application/json` as `Content-Type` and `Accept` headers. It will also sent requests as JSON and parse JSON responses.
 
 [More examples][examples]
 
@@ -38,15 +37,22 @@ Hyperclient will try to fetch and discover the resources from your API.
 Accessing the links for a given resource is quite straightforward:
 
 ```ruby
-api.links.posts_categories
+api._links.posts_categories
+# => #<Resource ...>
+```
+
+Or omit `_links`, which will look for a link called "posts_categories" by default:
+
+```ruby
+api.posts_categories
 # => #<Resource ...>
 ```
 
 You can also iterate between all the links:
 
 ```ruby
-api.links.each do |name, link|
-  puts name, link.url
+api._links.each do |name, link|
+  puts name, link._url
 end
 ```
 
@@ -55,7 +61,7 @@ Actually, you can call any [Enumerable][enumerable] method :D
 If a Resource doesn't have friendly name you can always access it as a Hash:
 
 ```ruby
-api.links['http://myapi.org/rels/post_categories']
+api._links['http://myapi.org/rels/post_categories']
 ```
 
 ### Embedded resources
@@ -63,7 +69,13 @@ api.links['http://myapi.org/rels/post_categories']
 Accessing embedded resources is similar to accessing links:
 
 ```ruby
-api.embedded.posts
+api._embedded.posts
+```
+
+Or omit the `_embedded` keyword. By default Hyperclient will look for a "posts" link, then for an embedded "posts" collection:
+
+```ruby
+api.posts
 ```
 
 And you can also iterate between them:
@@ -80,10 +92,25 @@ You can even chain different calls (this also applies for links):
 api.embedded.posts.first.links.author
 ```
 
+Or omit the navigational structures:
+
+```ruby
+api.posts.first.author
+```
+
+If you have a named link that retrieves an embedded collection of the same name, you can collapse the nested reference. The following statements produce identical results:
+
+```ruby
+api.links.posts.embedded.posts.first
+```
+
+```ruby
+api.posts.first
+```
+
 ### Attributes
 
-Not only you might have links and embedded resources in a Resource, but also
-its attributes:
+Not only you might have links and embedded resources in a Resource, but also its attributes:
 
 ```ruby
 api.embedded.posts.first.attributes
@@ -95,6 +122,9 @@ api.embedded.posts.first.attributes
 You can access the attribute values via attribute methods, or as a hash:
 
 ```ruby
+api.posts.first.title
+# => 'Linting the hell out of your Ruby classes with Pelusa'
+
 api.embedded.posts.first.attributes.title
 # => 'Linting the hell out of your Ruby classes with Pelusa'
 
@@ -107,35 +137,38 @@ api.embedded.posts.first.attributes.fetch('title')
 
 ### HTTP
 
-OK, navigating an API is really cool, but you may want to actually do something
-with it, right?
+OK, navigating an API is really cool, but you may want to actually do something with it, right?
 
-Hyperclient uses [Faraday][faraday] under the hood to perform HTTP calls. You can
-call any valid HTTP method on any Resource:
+Hyperclient uses [Faraday][faraday] under the hood to perform HTTP calls. You can call any valid HTTP method on any Resource:
 
 ```ruby
-post = api.embedded.posts.first
-post.get
-post.head
-post.put({title: 'New title'})
-post.patch({title: 'New title'})
-post.delete
-post.options
+post = api._embedded.posts.first
+post._get
+post._head
+post._put(title: 'New title')
+post._patch(title: 'New title')
+post._delete
+post._options
 
-posts = api.links.posts
-posts.post({title: "I'm a blogger!", body: 'Wohoo!!'})
+posts = api._links.posts
+posts._post(title: "I'm a blogger!", body: 'Wohoo!!')
 ```
 
 If you have a templated link you can expand it like so:
 
 ```ruby
-api.links.post.expand(:id => 3).first
+api._links.post._expand(id: 3).first
 # => #<Resource ...>
 ```
 
-You can access the Faraday connection (to add middlewares or do whatever
-you want) by calling `connection` on the entry point. As an example, you could use the [faraday-http-cache-middleware](https://github.com/plataformatec/faraday-http-cache)
-:
+You can omit the "_expand" keyword.
+
+```ruby
+api.post(id: 3).first
+# => #<Resource ...>
+```
+
+You can access the Faraday connection (to add middlewares or do whatever you want) by calling `connection` on the entry point. As an example, you could use the [faraday-http-cache-middleware](https://github.com/plataformatec/faraday-http-cache):
 
 ```ruby
 api.connection.use :http_cache
@@ -168,7 +201,7 @@ There's also a PHP library named [HyperClient](https://github.com/FoxyCart/Hyper
 
 ## License
 
-MIT License. Copyright 2012 [Codegram Technologies][codegram]
+MIT License. Copyright 2012-2014 [Codegram Technologies][codegram]
 
 [hal]: http://stateless.co/hal_specification.html
 [contributors]: https://github.com/codegram/hyperclient/contributors

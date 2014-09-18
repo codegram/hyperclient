@@ -27,7 +27,7 @@ module Hyperclient
     #
     # Returns a Faraday::Connection.
     def connection
-      @connection ||= Faraday.new(url, { headers: default_headers }, &default_faraday_block)
+      @connection ||= Faraday.new(_url, { headers: default_headers }, &default_faraday_block)
     end
 
     private

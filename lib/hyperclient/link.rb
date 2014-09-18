@@ -3,16 +3,18 @@ require 'uri_template'
 require 'futuroscope'
 
 module Hyperclient
-  # Internal: The Link is  used to let a Resource interact with the API.
+  # Internal: The Link is used to let a Resource interact with the API.
   #
   class Link
     # Public: Initializes a new Link.
     #
+    # key           - The key or name of the link.
     # link          - The String with the URI of the link.
     # entry_point   - The EntryPoint object to inject the cofnigutation.
     # uri_variables - The optional Hash with the variables to expand the link
     #                 if it is templated.
-    def initialize(link, entry_point, uri_variables = nil)
+    def initialize(key, link, entry_point, uri_variables = nil)
+      @key           = key
       @link          = link
       @entry_point   = entry_point
       @uri_variables = uri_variables
@@ -22,7 +24,7 @@ module Hyperclient
     #
     # Returns true if it is templated.
     # Returns false if it not templated.
-    def templated?
+    def _templated?
       !!@link['templated']
     end
 
@@ -31,62 +33,62 @@ module Hyperclient
     # uri_variables - The Hash with the variables to expand the URITemplate.
     #
     # Returns a new Link with the expanded variables.
-    def expand(uri_variables)
-      self.class.new(@link, @entry_point, uri_variables)
+    def _expand(uri_variables)
+      self.class.new(@key, @link, @entry_point, uri_variables)
     end
 
     # Public: Returns the url of the Link.
     #
     # Raises MissingURITemplateVariables if the Link is templated but there are
     # no uri variables to expand it.
-    def url
-      return @link['href'] unless templated?
+    def _url
+      return @link['href'] unless _templated?
       fail MissingURITemplateVariablesException if @uri_variables.nil?
 
-      @url ||= uri_template.expand(@uri_variables)
+      @url ||= _uri_template.expand(@uri_variables)
     end
 
     # Public: Returns an array of variables from the URITemplate.
     #
     # Returns an empty array for regular URIs.
-    def variables
-      uri_template.variables
+    def _variables
+      _uri_template.variables
     end
 
     # Public: Returns the type property of the Link
-    def type
+    def _type
       @link['type']
     end
 
     # Public: Returns the name property of the Link
-    def name
+    def _name
       @link['name']
     end
 
     # Public: Returns the deprecation property of the Link
-    def deprecation
+    def _deprecation
       @link['deprecation']
     end
 
     # Public: Returns the profile property of the Link
-    def profile
+    def _profile
       @link['profile']
     end
 
     # Public: Returns the title property of the Link
-    def title
+    def _title
       @link['title']
     end
 
     # Public: Returns the hreflang property of the Link
-    def hreflang
+    def _hreflang
       @link['hreflang']
     end
 
     # Public: Returns the Resource which the Link is pointing to.
-    def resource
+    def _resource
       @resource ||= begin
-        response = get
+        response = _get
 
         if response.success?
           Resource.new(response.body, @entry_point, response)
@@ -96,65 +98,67 @@ module Hyperclient
       end
     end
 
-    def connection
+    def _connection
       @entry_point.connection
     end
 
-    def get
+    def _get
       Futuroscope::Future.new do
-        connection.get(url)
+        _connection.get(_url)
       end
     end
 
-    def options
+    def _options
       Futuroscope::Future.new do
-        connection.run_request(:options, url, nil, nil)
+        _connection.run_request(:options, _url, nil, nil)
       end
     end
 
-    def head
+    def _head
       Futuroscope::Future.new do
-        connection.head(url)
+        _connection.head(_url)
       end
     end
 
-    def delete
+    def _delete
       Futuroscope::Future.new do
-        connection.delete(url)
+        _connection.delete(_url)
       end
     end
 
-    def post(params = {})
+    def _post(params = {})
       Futuroscope::Future.new do
-        connection.post(url, params)
+        _connection.post(_url, params)
       end
     end
 
-    def put(params = {})
+    def _put(params = {})
       Futuroscope::Future.new do
-        connection.put(url, params)
+        _connection.put(_url, params)
       end
     end
 
-    def patch(params = {})
+    def _patch(params = {})
       Futuroscope::Future.new do
-        connection.patch(url, params)
+        _connection.patch(_url, params)
       end
     end
 
     def inspect
-      "#<#{self.class.name} #{@link}>"
+      "#<#{self.class.name}(#{@key}) #{@link}>"
     end
 
     private
 
     # Internal: Delegate the method to the API if it exists.
     #
-    # This allows `api.links.posts.embedded` instead of
-    # `api.links.posts.resource.embedded`
+    # This allows `api.posts` instead of `api.links.posts.embedded`
     def method_missing(method, *args, &block)
-      if resource.respond_to?(method)
-        resource.send(method, *args, &block)
+      if @key && _resource.respond_to?(@key) && (delegate = _resource.send(@key)) && delegate.respond_to?(method.to_s)
+        # named.named becomes named
+        delegate.send(method, *args, &block)
+      elsif _resource.respond_to?(method.to_s)
+        _resource.send(method, *args, &block)
       else
         super
       end
@@ -163,7 +167,11 @@ module Hyperclient
     # Internal: Accessory method to allow the link respond to the
     # methods that will hit method_missing.
     def respond_to_missing?(method, _include_private = false)
-      resource.respond_to?(method.to_s)
+      if @key && _resource.respond_to?(@key) && (delegate = _resource.send(@key)) && delegate.respond_to?(method.to_s)
+        true
+      else
+        _resource.respond_to?(method.to_s)
+      end
     end
 
     # Internal: avoid delegating to resource
@@ -175,7 +183,7 @@ module Hyperclient
     end
 
     # Internal: Memoization for a URITemplate instance
-    def uri_template
+    def _uri_template
       @uri_template ||= URITemplate.new(@link['href'])
     end
   end

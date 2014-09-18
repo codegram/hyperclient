@@ -15,7 +15,7 @@ module API
   end
 
   step 'I connect to the API' do
-    api.links
+    api._links
   end
 
   after do

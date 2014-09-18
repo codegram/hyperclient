@@ -29,7 +29,7 @@ module Hyperclient
 
         resource = Resource.new(mock_response.body, entry_point, mock_response)
 
-        resource.response.must_equal mock_response
+        resource._response.must_equal mock_response
       end
 
       it 'does not mutate the response.body' do
@@ -38,9 +38,17 @@ module Hyperclient
 
         resource = Resource.new(mock_response.body, entry_point, mock_response)
 
-        resource.response.body.must_equal body
+        resource._response.body.must_equal body
       end
+    end
 
+    describe '_links' do
+      it '_expand' do
+        resource = Resource.new({ '_links' => { 'orders' => { 'href' => '/orders/{id}', 'templated' => true } } }, entry_point)
+        resource._links.orders._expand(id: 1)._url.must_equal '/orders/1'
+        resource.orders._expand(id: 1)._url.must_equal '/orders/1'
+        resource.orders(id: 1)._url.must_equal '/orders/1'
+      end
     end
 
     describe 'accessors' do
@@ -50,34 +58,58 @@ module Hyperclient
 
       describe 'links' do
         it 'returns a LinkCollection' do
-          resource.links.must_be_kind_of LinkCollection
+          resource._links.must_be_kind_of LinkCollection
         end
       end
 
       describe 'attributes' do
         it 'returns a Attributes' do
-          resource.attributes.must_be_kind_of Attributes
+          resource._attributes.must_be_kind_of Attributes
         end
       end
 
       describe 'embedded' do
         it 'returns a ResourceCollection' do
-          resource.embedded.must_be_kind_of ResourceCollection
+          resource._embedded.must_be_kind_of ResourceCollection
+        end
+      end
+
+      describe 'method_missing' do
+        it 'delegates to attributes' do
+          resource._attributes.expects(:foo).returns('bar')
+          resource.foo.must_equal 'bar'
+        end
+
+        it 'delegates to links' do
+          resource._links.expects(:foo).returns('bar')
+          resource.foo.must_equal 'bar'
+        end
+
+        it 'delegates to embedded' do
+          resource._embedded.expects(:foo).returns('bar')
+          resource.foo.must_equal 'bar'
+        end
+
+        it 'delegates to attributes, links, embedded' do
+          resource._attributes.expects('respond_to?').with('foo').returns(false)
+          resource._links.expects('respond_to?').with('foo').returns(false)
+          resource._embedded.expects('respond_to?').with('foo').returns(false)
+          lambda { resource.foo }.must_raise NoMethodError
         end
       end
     end
 
     it 'uses its self Link to handle HTTP connections' do
       self_link = mock('Self Link')
-      self_link.expects(:get)
+      self_link.expects(:_get)
 
       LinkCollection.expects(:new).returns('self' => self_link)
       resource = Resource.new({}, entry_point)
 
-      resource.get
+      resource._get
     end
 
-    describe '.success?' do
+    describe '._success?' do
       describe 'with a response object' do
         let(:resource) do
           Resource.new({}, entry_point, mock_response)
@@ -88,7 +120,7 @@ module Hyperclient
         end
 
         it 'proxies to the response object' do
-          resource.success?.must_equal true
+          resource._success?.must_equal true
         end
       end
 
@@ -98,12 +130,12 @@ module Hyperclient
         end
 
         it 'returns nil' do
-          resource.success?.must_be_nil
+          resource._success?.must_be_nil
         end
       end
     end
 
-    describe '.status' do
+    describe '._status' do
       describe 'with a response object' do
         let(:resource) do
           Resource.new({}, entry_point, mock_response)
@@ -114,7 +146,7 @@ module Hyperclient
         end
 
         it 'proxies to the response object' do
-          resource.status.must_equal 200
+          resource._status.must_equal 200
         end
       end
 
@@ -124,7 +156,7 @@ module Hyperclient
         end
 
         it 'returns nil' do
-          resource.status.must_be_nil
+          resource._status.must_be_nil
         end
       end
     end

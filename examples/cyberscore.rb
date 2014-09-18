@@ -44,7 +44,7 @@ def print_links(links)
     if link.is_a?(Array)
       print_links(link)
     else
-      puts %(Found "#{name}" at "#{link.url}" )
+      puts %(Found "#{name}" at "#{link._url}" )
     end
   end
 end
