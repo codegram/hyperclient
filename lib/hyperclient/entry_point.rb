@@ -42,6 +42,7 @@ module Hyperclient
     # Returns a block.
     def default_faraday_block
       lambda do |faraday|
+        faraday.use FaradayMiddleware::FollowRedirects
         faraday.request  :json
         faraday.response :json, content_type: /\bjson$/
         faraday.adapter :net_http

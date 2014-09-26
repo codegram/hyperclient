@@ -19,6 +19,7 @@ module Hyperclient
 
       it 'creates a Faraday connection with the default block' do
         handlers = entry_point.connection.builder.handlers
+        handlers.must_include FaradayMiddleware::FollowRedirects
         handlers.must_include FaradayMiddleware::EncodeJson
         handlers.must_include FaradayMiddleware::ParseJson
         handlers.must_include Faraday::Adapter::NetHttp
