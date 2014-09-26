@@ -18,16 +18,18 @@ module Hyperclient
     # Public: Initializes an EntryPoint.
     #
     # url    - A String with the entry point of your API.
-    def initialize(url)
+    def initialize(url, &block)
       @link = {'href' => url}
       @entry_point = self
+      @faraday_block = block if block_given?
     end
 
     # Public: A Faraday connection to use as a HTTP client.
     #
     # Returns a Faraday::Connection.
     def connection
-      @connection ||= Faraday.new(url, {headers: default_headers}, &default_faraday_block)
+      block = @faraday_block || default_faraday_block
+      @connection ||= Faraday.new(url, {headers: default_headers}, &block)
     end
 
     private
