@@ -7,7 +7,7 @@ module Hyperclient
 
     describe 'initialize' do
       it 'initializes its links' do
-        LinkCollection.expects(:new).with({ 'self' => { 'href' => '/orders/523' } }, entry_point)
+        LinkCollection.expects(:new).with({ 'self' => { 'href' => '/orders/523' } }, nil, entry_point)
 
         Resource.new({ '_links' => { 'self' => { 'href' => '/orders/523' } } }, entry_point)
       end

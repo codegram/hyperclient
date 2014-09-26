@@ -10,7 +10,7 @@ module Hyperclient
     end
 
     let(:links) do
-      LinkCollection.new(representation['_links'], entry_point)
+      LinkCollection.new(representation['_links'], representation['_curies'], entry_point)
     end
 
     it 'is a collection' do
@@ -28,6 +28,27 @@ module Hyperclient
 
       links.gizmos.must_be_kind_of Array
       links['gizmos'].must_be_kind_of Array
+    end
+
+    describe 'plain link' do
+      let(:plain_link) { links.self }
+      it 'must be correct' do
+        plain_link._url.must_equal '/productions/1'
+      end
+    end
+
+    describe 'templated link' do
+      let(:templated_link) { links.filter }
+      it 'must expand' do
+        templated_link._expand(filter: 'gizmos')._url.must_equal '/productions/1?categories=gizmos'
+      end
+    end
+
+    describe 'curied link' do
+      let(:curied_link) { links['image:thumbnail'] }
+      it 'must expand' do
+        curied_link._expand(version: 'small')._url.must_equal '/images/thumbnails/small.jpg'
+      end
     end
 
     describe 'array of links' do

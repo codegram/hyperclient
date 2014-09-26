@@ -7,6 +7,7 @@
   * [#58](https://github.com/codegram/hyperclient/issues/58): Automatically follow redirects (by [@dblock](https://github.com/dblock)).
   * [#63](https://github.com/codegram/hyperclient/pull/63): You can omit the navigational elements, `api.links.products` is now equivalent to `api.products` (by @dblock).
   * Implemented Rubocop, Ruby-style linter (by @dblock).
+  * [#64](https://github.com/codegram/hyperclient/issues/64): Added support for curies (by [@dblock](https://github.com/dblock)).
 
 * bug fixes
   * Nothing.

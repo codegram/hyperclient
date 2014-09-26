@@ -58,10 +58,20 @@ end
 
 Actually, you can call any [Enumerable][enumerable] method :D
 
-If a Resource doesn't have friendly name you can always access it as a Hash:
+If a resource doesn't have friendly name you can always access it as a hash:
 
 ```ruby
 api._links['http://myapi.org/rels/post_categories']
+```
+
+### Curies
+
+Curies are named tokens that you can define in the document and use to express curie relation URIs in a friendlier, more compact fashion. Hyperclient handles curies automatically and resolves them into full links.
+
+Access and expand curied links like any other link:
+
+```ruby
+api._links['image:thumbnail'].expand(version: 'small')
 ```
 
 ### Embedded resources
@@ -178,17 +188,9 @@ api.connection.use :http_cache
 
 There's also a PHP library named [HyperClient](https://github.com/FoxyCart/HyperClient), if that's what you were looking for :)
 
-## TODO
-
-* Resource permissions: Using the `Allow` header Hyperclient should be able to
-  restrict the allowed method on a given `Resource`.
-* Curie syntax support for links (see http://tools.ietf.org/html/draft-kelly-json-hal-03#section-8.2)
-* Profile support for links
-
-
 ## Contributing
 
-* [List of hyperclient contributors][contributors]
+* [List of hyperclient contributors][contributors].
 
 * Fork the project.
 * Make your feature addition or bug fix.
