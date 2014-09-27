@@ -34,7 +34,7 @@ module Spinach
             "comments": [
               {
                 "title": "Some comment"
-              } 
+              }
             ]
           }
       }'

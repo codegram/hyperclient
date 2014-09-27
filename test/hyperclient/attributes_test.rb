@@ -4,7 +4,7 @@ require 'hyperclient/attributes'
 module Hyperclient
   describe Attributes do
     let(:representation) do
-      JSON.parse( File.read('test/fixtures/element.json'))
+      JSON.parse(File.read('test/fixtures/element.json'))
     end
 
     let(:attributes) do
@@ -24,7 +24,7 @@ module Hyperclient
       attributes.permitted.must_equal true
 
       attributes.must_respond_to :title
-      attributes.title.must_equal "Real World ASP.NET MVC3"
+      attributes.title.must_equal 'Real World ASP.NET MVC3'
     end
 
     # Underscores should be allowed per http://tools.ietf.org/html/draft-kelly-json-hal#appendix-B.4

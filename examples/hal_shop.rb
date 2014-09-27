@@ -4,17 +4,17 @@ require 'pp'
 def print_resources(resources)
   resources.each do |name, resource|
     begin
-      puts %{Found #{name} at #{resource.url}}
+      puts %(Found #{name} at #{resource.url})
     rescue
-      puts %{Found #{name}}
+      puts %(Found #{name})
     end
   end
 end
 
 def print_attributes(attributes)
-  puts "-----------------------------"
+  puts '-----------------------------'
   attributes.each do |attribute, value|
-    puts %{#{attribute}: #{value}}
+    puts %(#{attribute}: #{value})
   end
 end
 
@@ -31,9 +31,9 @@ puts
 puts "Let's see what stats we have:"
 print_attributes(api.embedded.stats.attributes)
 
-products = api.links["http://hal-shop.heroku.com/rels/products"].resource
+products = api.links['http://hal-shop.heroku.com/rels/products'].resource
 
-puts 
+puts
 puts "And what's the inventory of products?"
 puts products.attributes['inventory_size']
 

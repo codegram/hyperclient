@@ -3,10 +3,10 @@ require 'hyperclient/link_collection'
 
 module Hyperclient
   describe LinkCollection do
-    let(:entry_point) { stub('Entry point', config: {base_uri: '/'}) }
+    let(:entry_point) { stub('Entry point', config: { base_uri: '/' }) }
 
     let(:representation) do
-      JSON.parse( File.read('test/fixtures/element.json'))
+      JSON.parse(File.read('test/fixtures/element.json'))
     end
 
     let(:links) do
@@ -30,7 +30,7 @@ module Hyperclient
       links['gizmos'].must_be_kind_of Array
     end
 
-    describe "array of links" do
+    describe 'array of links' do
       let(:gizmos) { links.gizmos }
 
       it 'should have 2 items' do
@@ -44,7 +44,7 @@ module Hyperclient
       end
     end
 
-    describe "null link value" do
+    describe 'null link value' do
       let(:null_link) { links.null_link }
       it 'must be nil' do
         null_link.must_be_nil

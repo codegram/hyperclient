@@ -41,7 +41,7 @@ module Hyperclient
     # no uri variables to expand it.
     def url
       return @link['href'] unless templated?
-      raise MissingURITemplateVariablesException if @uri_variables == nil
+      fail MissingURITemplateVariablesException if @uri_variables.nil?
 
       @url ||= uri_template.expand(@uri_variables)
     end
@@ -101,45 +101,45 @@ module Hyperclient
     end
 
     def get
-      Futuroscope::Future.new{
+      Futuroscope::Future.new do
         connection.get(url)
-      }
+      end
     end
 
     def options
-      Futuroscope::Future.new{
+      Futuroscope::Future.new do
         connection.run_request(:options, url, nil, nil)
-      }
+      end
     end
 
     def head
-      Futuroscope::Future.new{
+      Futuroscope::Future.new do
         connection.head(url)
-      }
+      end
     end
 
     def delete
-      Futuroscope::Future.new{
+      Futuroscope::Future.new do
         connection.delete(url)
-      }
+      end
     end
 
     def post(params = {})
-      Futuroscope::Future.new{
+      Futuroscope::Future.new do
         connection.post(url, params)
-      }
+      end
     end
 
     def put(params = {})
-      Futuroscope::Future.new{
+      Futuroscope::Future.new do
         connection.put(url, params)
-      }
+      end
     end
 
     def patch(params = {})
-      Futuroscope::Future.new{
+      Futuroscope::Future.new do
         connection.patch(url, params)
-      }
+      end
     end
 
     def inspect
@@ -147,6 +147,7 @@ module Hyperclient
     end
 
     private
+
     # Internal: Delegate the method to the API if it exists.
     #
     # This allows `api.links.posts.embedded` instead of
@@ -161,7 +162,7 @@ module Hyperclient
 
     # Internal: Accessory method to allow the link respond to the
     # methods that will hit method_missing.
-    def respond_to_missing?(method, include_private = false)
+    def respond_to_missing?(method, _include_private = false)
       resource.respond_to?(method.to_s)
     end
 
@@ -182,10 +183,9 @@ module Hyperclient
   # Public: Exception that is raised when building a templated Link without uri
   # variables.
   class MissingURITemplateVariablesException < StandardError
-
     # Public: Returns a String with the exception message.
     def message
-      "The URL to this links is templated, but no variables where given."
+      'The URL to this links is templated, but no variables where given.'
     end
   end
 end

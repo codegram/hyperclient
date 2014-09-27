@@ -18,12 +18,13 @@ module Hyperclient
     #
     def initialize(collection, entry_point)
       @entry_point = entry_point
-      @collection = (collection || {}).inject({}) do |hash, (name, resource)|
+      @collection = (collection || {}).reduce({}) do |hash, (name, resource)|
         hash.update(name => build_resource(resource))
       end
     end
 
     private
+
     def build_resource(representation)
       return representation.map(&method(:build_resource)) if representation.is_a?(Array)
 

@@ -1,5 +1,5 @@
 require 'hyperclient/entry_point'
-require "hyperclient/version"
+require 'hyperclient/version'
 
 # Public: Hyperclient namespace.
 #

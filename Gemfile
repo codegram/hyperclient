@@ -11,5 +11,6 @@ gem 'pry'
 
 gem 'redcarpet'
 gem 'yard', '~> 0.8'
-gem 'yard-tomdoc', git: 'git://github.com/rubyworks/yard-tomdoc'
+gem 'yard-tomdoc'
 gem 'simplecov', require: false
+gem 'rubocop', '~> 0.26.0', require: false

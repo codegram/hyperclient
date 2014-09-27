@@ -6,12 +6,12 @@ class Spinach::Features::DefaultConfig < Spinach::FeatureSteps
   end
 
   step 'the request should have been sent with the correct JSON headers' do
-    assert_requested :get, 'api.example.org', headers: {'Content-Type' => 'application/json', 'Accept' => 'application/json'}
+    assert_requested :get, 'api.example.org', headers: { 'Content-Type' => 'application/json', 'Accept' => 'application/json' }
   end
 
   step 'I send some data to the API' do
-    stub_request(:post, "http://api.example.org/posts")
-    api.links.posts.post({title: 'My first blog post'})
+    stub_request(:post, 'http://api.example.org/posts')
+    assert_equal 200, api.links.posts.post(title: 'My first blog post').status
   end
 
   step 'it should have been encoded as JSON' do

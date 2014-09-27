@@ -1,4 +1,4 @@
-$: << 'lib'
+$LOAD_PATH << 'lib'
 gem 'minitest'
 
 require 'minitest/spec'

@@ -1,5 +1,5 @@
 require 'faraday'
-require_relative 'request/digest_authentication'
+require 'faraday/digestauth'
 
 module Faraday
   # Reopen Faraday::Connection to add a helper to set the digest auth data.
@@ -11,7 +11,7 @@ module Faraday
     # password - A String with the password.
     #
     def digest_auth(user, password)
-      self.builder.insert(0, Faraday::Request::DigestAuth, user, password)
+      builder.insert(0, Faraday::Request::DigestAuth, user, password)
     end
   end
 end
