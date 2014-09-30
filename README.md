@@ -26,7 +26,7 @@ By default, Hyperclient adds `application/json` as `Content-Type` and `Accept` h
 
 ## HAL
 
-Hyperclient only works with JSON HAL friendly APIs. [Learn about JSON HAL][hal].
+Hyperclient only works with JSON HAL friendly APIs. [Learn about JSON HAL](http://stateless.co/hal_specification.html).
 
 ## Resources
 
@@ -190,22 +190,12 @@ There's also a PHP library named [HyperClient](https://github.com/FoxyCart/Hyper
 
 ## Contributing
 
-* [List of hyperclient contributors][contributors].
-
-* Fork the project.
-* Make your feature addition or bug fix.
-* Add specs for it. This is important so we don't break it in a future
-  version unintentionally.
-* Commit, do not mess with rakefile, version, or history.
-  If you want to have your own version, that is fine but bump version
-  in a commit by itself I can ignore when I pull.
-* Send me a pull request. Bonus points for topic branches.
+HyperClient is work of [many people](https://github.com/codegram/hyperclient/graphs/contributors). You're encouraged to submit [pull requests](https://github.com/codegram/hyperclient/pulls), [propose features and discuss issues](https://github.com/codegram/hyperclient/issues). See [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## License
 
 MIT License, see [LICENSE](LICENSE) for details. Copyright 2012-2014 [Codegram Technologies][codegram]
 
-[hal]: http://stateless.co/hal_specification.html
 [contributors]: https://github.com/codegram/hyperclient/contributors
 [codegram]: http://codegram.com
 [documentup]: http://codegram.github.com/hyperclient
