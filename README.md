@@ -18,8 +18,6 @@ end
 
 By default, Hyperclient adds `application/json` as `Content-Type` and `Accept` headers. It will also sent requests as JSON and parse JSON responses.
 
-You will find more examples [here](examples).
-
 ## HAL
 
 Hyperclient only works with JSON HAL friendly APIs. [Learn about JSON HAL](http://stateless.co/hal_specification.html).
@@ -67,7 +65,7 @@ Curies are named tokens that you can define in the document and use to express c
 Access and expand curied links like any other link:
 
 ```ruby
-api._links['image:thumbnail'].expand(version: 'small')
+api._links['image:thumbnail']._expand(version: 'small')
 ```
 
 ### Embedded resources
