@@ -77,7 +77,7 @@ Go to https://github.com/contributor/hyperclient and select your feature branch.
 Update the [CHANGELOG](CHANGELOG.md) with the pull request number. A typical entry looks as follows.
 
 ```
-* [#123](https://github.com/intridea/grape/pull/123): Reticulated splines - [@contributor](https://github.com/contributor).
+* [#123](https://github.com/codegram/hyperclient/pull/123): Reticulated splines - [@contributor](https://github.com/contributor).
 ```
 
 We like neat commits. Amend your previous commit and force push the changes.

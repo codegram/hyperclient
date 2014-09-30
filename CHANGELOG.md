@@ -1,31 +1,36 @@
-== Next
+### Next
 
-* backwards incompatible changes
-  * All navigational structure methods, including `links`, `get` or `post`, have been renamed to `_link`, `_get`, or `_post` respectively (by @dblock).
+This version introduces several backwards incompatible changes. See [UPGRADING](UPGRADING.md) for details.
 
-* enhancements
-  * [#58](https://github.com/codegram/hyperclient/issues/58): Automatically follow redirects (by [@dblock](https://github.com/dblock)).
-  * [#63](https://github.com/codegram/hyperclient/pull/63): You can omit the navigational elements, `api.links.products` is now equivalent to `api.products` (by @dblock).
-  * Implemented Rubocop, Ruby-style linter (by @dblock).
-  * [#64](https://github.com/codegram/hyperclient/issues/64): Added support for curies (by [@dblock](https://github.com/dblock)).
+* [#63](https://github.com/codegram/hyperclient/pull/63): Navigational methods, including `links`, `get` or `post`, have been renamed to `_links`, `_get`, or `_post` respectively - [@dblock](https://github.com/dblock).
+* [#64](https://github.com/codegram/hyperclient/issues/64): Added support for curies - [@dblock](https://github.com/dblock).
+* [#58](https://github.com/codegram/hyperclient/issues/58): Automatically follow redirects - [@dblock](https://github.com/dblock).
+* [#63](https://github.com/codegram/hyperclient/pull/63): You can omit the navigational elements, `api.links.products` is now equivalent to `api.products` - [@dblock](https://github.com/dblock).
+* [#61](https://github.com/codegram/hyperclient/pull/61): Implemented Rubocop, Ruby-style linter - [@dblock](https://github.com/dblock).
 
-* bug fixes
-  * Nothing.
+### 0.4.0 (May 5, 2014)
 
-* deprecations
-  * Nothing.
+* [#54](https://github.com/codegram/hyperclient/pull/54): Support Faraday 0.9.0 - [@lucianapazos](https://github.com/lucianapazos).
+* [#30](https://github.com/codegram/hyperclient/pull/30): Use futuroscope to run API calls in the background - [@josepjaume](https://github.com/josepjaume).
 
-== 0.3.1
+### 0.3.2 (December 20, 2013)
 
-* backwards incompatible changes
-  * Nothing.
+* [#48](https://github.com/codegram/hyperclient/pull/48): Added support for fetch on the collection class - [@col](https://github.com/col).
+* [#50](https://github.com/codegram/hyperclient/pull/50): Fixed Resource/Attributes mutating the response body - [@col](https://github.com/col).
+* [#46](https://github.com/codegram/hyperclient/pull/46): Made response available inside Resource, provide access to status codes - [@benhamill](https://github.com/benhamill).
+* [#43](https://github.com/codegram/hyperclient/pull/43): Fixed LinkCollection#include? - [@benhamill](https://github.com/benhamill).
+* [#47](https://github.com/codegram/hyperclient/pull/47): Fixed uninitialized constant Hyperclient::Resource::Forwardable - [@benhamill](https://github.com/benhamill).
+* [#39](https://github.com/codegram/hyperclient/pull/39): Exposed templated link properties - [@txus](https://github.com/txus).
+* [#38](https://github.com/codegram/hyperclient/pull/38): Defaulted POST, PUT and PATCH parameters - [@bkeepers](https://github.com/bkeepers).
+* [#37](https://github.com/codegram/hyperclient/pull/37): Fixed calling #flatten on an array of links - [@bkeepers](https://github.com/bkeepers).
+* [#36](https://github.com/codegram/hyperclient/pull/36): Exposed link properties - [@bkeepers](https://github.com/bkeepers).
+* [#31](https://github.com/codegram/hyperclient/pull/31): Allowed underscored attribute names other than the ones reserved by the HAL spec - [@karlin](https://github.com/karlin).
+* [#29](https://github.com/codegram/hyperclient/pull/29): Handled JSON that includes a link with a null value - [@arbylee](https://github.com/arbylee).
 
-* enhancements
-  * Support arrays of Links (by @rehevkor5).
-  * Created the CHANGELOG.
+### 0.3.1 (April 3, 2013)
 
-* bug fixes
-  * Nothing.
+* [#27](https://github.com/codegram/hyperclient/pull/27): Added support for collections of links - [@rehevkor5](https://github.com/rehevkor5).
 
-* deprecations
-  * Nothing.
+### 0.3.0 (February 3, 2013)
+
+* Initial public release - [@oriolgual](https://github.com/oriolgual).

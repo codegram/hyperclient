@@ -5,10 +5,6 @@
 
 Hyperclient is a Ruby Hypermedia API client written in Ruby.
 
-## Documentation
-
-[Hyperclient API documentation on rdoc.info][rdoc]
-
 ## Usage
 
 Example API client:
@@ -22,7 +18,7 @@ end
 
 By default, Hyperclient adds `application/json` as `Content-Type` and `Accept` headers. It will also sent requests as JSON and parse JSON responses.
 
-[More examples][examples]
+You will find more examples [here](examples).
 
 ## HAL
 
@@ -56,7 +52,7 @@ api._links.each do |name, link|
 end
 ```
 
-Actually, you can call any [Enumerable][enumerable] method :D
+Actually, you can call any [Enumerable](http://ruby-doc.org/core-1.9.3/Enumerable.html) method :D
 
 If a resource doesn't have friendly name you can always access it as a hash:
 
@@ -149,7 +145,7 @@ api.embedded.posts.first.attributes.fetch('title')
 
 OK, navigating an API is really cool, but you may want to actually do something with it, right?
 
-Hyperclient uses [Faraday][faraday] under the hood to perform HTTP calls. You can call any valid HTTP method on any Resource:
+Hyperclient uses [Faraday](http://github.com/lostisland/faraday) under the hood to perform HTTP calls. You can call any valid HTTP method on any Resource:
 
 ```ruby
 post = api._embedded.posts.first
@@ -188,18 +184,14 @@ api.connection.use :http_cache
 
 There's also a PHP library named [HyperClient](https://github.com/FoxyCart/HyperClient), if that's what you were looking for :)
 
+## Documentation
+
+[Hyperclient API documentation on rdoc.info](http://rubydoc.org/github/codegram/hyperclient/master/frames).
+
 ## Contributing
 
 HyperClient is work of [many people](https://github.com/codegram/hyperclient/graphs/contributors). You're encouraged to submit [pull requests](https://github.com/codegram/hyperclient/pulls), [propose features and discuss issues](https://github.com/codegram/hyperclient/issues). See [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## License
 
-MIT License, see [LICENSE](LICENSE) for details. Copyright 2012-2014 [Codegram Technologies][codegram]
-
-[contributors]: https://github.com/codegram/hyperclient/contributors
-[codegram]: http://codegram.com
-[documentup]: http://codegram.github.com/hyperclient
-[faraday]: http://github.com/lostisland/faraday
-[examples]: http://github.com/codegram/hyperclient/tree/master/examples
-[enumerable]: http://ruby-doc.org/core-1.9.3/Enumerable.html
-[rdoc]: http://rubydoc.org/github/codegram/hyperclient/master/frames
+MIT License, see [LICENSE](LICENSE) for details. Copyright 2012-2014 [Codegram Technologies](http://codegram.com).
