@@ -19,6 +19,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'faraday_middleware', '~> 0.9'
   gem.add_dependency 'uri_template', '~> 0.5'
   gem.add_dependency 'net-http-digest_auth', '~> 1.2'
+  gem.add_dependency 'faraday-digestauth', '~> 0.2'
 
   gem.add_development_dependency 'minitest', '~> 3.4.0'
   gem.add_development_dependency 'turn', '~> 0.9'
@@ -26,5 +27,4 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'mocha', '~> 0.13'
   gem.add_development_dependency 'rack-test', '~> 0.6'
   gem.add_development_dependency 'spinach'
-  gem.add_development_dependency 'faraday-digestauth'
 end
