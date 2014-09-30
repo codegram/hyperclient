@@ -203,7 +203,7 @@ There's also a PHP library named [HyperClient](https://github.com/FoxyCart/Hyper
 
 ## License
 
-MIT License. Copyright 2012-2014 [Codegram Technologies][codegram]
+MIT License, see [LICENSE](LICENSE) for details. Copyright 2012-2014 [Codegram Technologies][codegram]
 
 [hal]: http://stateless.co/hal_specification.html
 [contributors]: https://github.com/codegram/hyperclient/contributors
