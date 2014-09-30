@@ -16,7 +16,7 @@ api = Hyperclient.new('http://myapp.com/api').tap do |api|
 end
 ```
 
-By default, Hyperclient adds `application/json` as `Content-Type` and `Accept` headers. It will also sent requests as JSON and parse JSON responses.
+By default, Hyperclient adds `application/json` as `Content-Type` and `Accept` headers. It will also send requests as JSON and parse JSON responses.
 
 ## HAL
 
