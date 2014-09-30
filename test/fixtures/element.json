@@ -1,4 +1,11 @@
 {
+    "_curies" : [
+        {
+          "name": "image",
+          "href": "/images/{rel}",
+          "templated": true
+        }
+    ],
     "_links": {
         "self": {
             "href": "/productions/1"
@@ -15,7 +22,11 @@
                 "href": "/gizmos/2"
             }
         ],
-        "null_link": null
+        "null_link": null,
+        "image:thumbnail": {
+          "href": "thumbnails/{version}.jpg",
+          "templated": true
+        }
     },
     "title": "Real World ASP.NET MVC3",
     "description": "In this advanced, somewhat-opinionated production you'll get your very own startup off the ground using ASP.NET MVC 3...",
