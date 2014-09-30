@@ -18,7 +18,7 @@ module Hyperclient
       fail "Invalid response for LinkCollection. The response was: #{collection.inspect}" if collection && !collection.respond_to?(:collect)
 
       @collection = (collection || {}).reduce({}) do |hash, (name, link)|
-        hash.update(name => build_link(link, entry_point))
+        hash.update(name => build_link(name, link, entry_point))
       end
     end
 
@@ -30,12 +30,12 @@ module Hyperclient
     # entry_point   - The EntryPoint object to inject the configuration.
     #
     # Returns a Link or an array of Links when given an Array.
-    def build_link(link_or_links, entry_point)
+    def build_link(name, link_or_links, entry_point)
       return unless link_or_links
-      return Link.new(link_or_links, entry_point) unless link_or_links.respond_to?(:to_ary)
+      return Link.new(name, link_or_links, entry_point) unless link_or_links.respond_to?(:to_ary)
 
       link_or_links.map do |link|
-        build_link(link, entry_point)
+        build_link(name, link, entry_point)
       end
     end
   end

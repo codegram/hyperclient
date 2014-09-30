@@ -28,7 +28,7 @@ module Hyperclient
 
     describe 'initialize' do
       it 'sets a Link with the entry point url' do
-        entry_point.url.must_equal 'http://my.api.org'
+        entry_point._url.must_equal 'http://my.api.org'
       end
     end
   end

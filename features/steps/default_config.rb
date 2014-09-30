@@ -11,7 +11,7 @@ class Spinach::Features::DefaultConfig < Spinach::FeatureSteps
 
   step 'I send some data to the API' do
     stub_request(:post, 'http://api.example.org/posts')
-    assert_equal 200, api.links.posts.post(title: 'My first blog post').status
+    assert_equal 200, api._links.posts._post(title: 'My first blog post').status
   end
 
   step 'it should have been encoded as JSON' do
@@ -19,11 +19,11 @@ class Spinach::Features::DefaultConfig < Spinach::FeatureSteps
   end
 
   step 'I get some data from the API' do
-    @posts = api.links.posts
+    @posts = api._links.posts
   end
 
   step 'it should have been parsed as JSON' do
-    @posts.attributes.total_posts.to_i.must_equal 9
-    @posts.attributes['total_posts'].to_i.must_equal 9
+    @posts._attributes.total_posts.to_i.must_equal 9
+    @posts._attributes['total_posts'].to_i.must_equal 9
   end
 end

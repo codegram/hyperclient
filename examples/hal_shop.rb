@@ -4,7 +4,7 @@ require 'pp'
 def print_resources(resources)
   resources.each do |name, resource|
     begin
-      puts %(Found #{name} at #{resource.url})
+      puts %(Found #{name} at #{resource._url})
     rescue
       puts %(Found #{name})
     end
