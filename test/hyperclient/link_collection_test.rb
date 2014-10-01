@@ -44,7 +44,7 @@ module Hyperclient
       end
     end
 
-    describe 'curied link' do
+    describe 'curied link collection' do
       let(:curied_link) { links['image:thumbnail'] }
       it 'must expand' do
         curied_link._expand(version: 'small')._url.must_equal '/images/thumbnails/small.jpg'

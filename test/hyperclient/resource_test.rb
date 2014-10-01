@@ -96,6 +96,11 @@ module Hyperclient
           resource._embedded.expects('respond_to?').with('foo').returns(false)
           lambda { resource.foo }.must_raise NoMethodError
         end
+
+        it 'delegates []' do
+          resource._attributes.expects(:foo).returns('bar')
+          resource['foo'].must_equal 'bar'
+        end
       end
     end
 

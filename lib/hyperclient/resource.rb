@@ -52,6 +52,10 @@ module Hyperclient
       _response && _response.status
     end
 
+    def [](name)
+      send(name) if respond_to?(name)
+    end
+
     private
 
     # Internal: Returns the self Link of the Resource. Used to handle the HTTP
@@ -59,8 +63,6 @@ module Hyperclient
     def _self_link
       @_links['self']
     end
-
-    private
 
     # Internal: Delegate the method to various elements of the resource.
     #
