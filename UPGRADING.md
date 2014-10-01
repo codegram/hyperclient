@@ -1,23 +1,37 @@
-Upgrading HyperClient
+Upgrading Hyperclient
 =====================
 
 ### Upgrading to >= 0.5.0
 
-#### Omit Navigational Structure
+#### Remove Navigational Elements
 
-You no longer need to specify `links`, `embed` or `resource` in most cases. Just remove them.
+You can, but no longer need to invoke `links`, `embedded`, `expand`, `attributes` or `resource` in most cases. Simply remove them. Navigational structures like `key.embedded.key` can also be collapsed.
 
 Here're a few examples:
 
-Instead Of                                | Write This
------------------------------------------ | -----------------------
-`api._links.posts_categories`             | `api.posts_categories`
-`api.links.posts.embedded.posts.first`    | `api.posts.first`
-`api._links.post._expand(id: 3).first`    | `api.post(id: 3).first`
+Instead Of                                      | Write This
+----------------------------------------------- | -----------------------
+`api.links.widgets`                             | `api.widgets`
+`api.links.widgets.embedded.widgets.first`      | `api.widgets.first`
+`api.links.widgets.embedded.comments`           | `api.widgets.comments`
+`api.links.widget.expand(id: 3)`                | `api.widget(id: 3)`
+`api.links.widget.expand(id: 3).resource.id`    | `api.widget(id: 3).id`
 
-#### Change any explicit calls to `links`, `get`, `post`, etc.
+If you prefer to specify the complete HAL navigational structure, you must rename the methods to their new underscore equivalents. See below.
 
-Navigational methods, including `links`, `get` or `post`, have been renamed to `_link`, `_get`, or `_post` respectively. These are now systematically prefixed with underscores and otherwise treated as attributes.
+#### Change Naviational Elements and HTTP Verbs to Underscore Versions
+
+Navigational methods and HTTP verbs have been renamed to their underscore versions and are otherwise treated as attributes.
+
+Instead Of                                              | Write This
+------------------------------------------------------- | ----------------------------------------------------------------
+`api.links`                                             | `api._links`
+`api.links.widgets.embedded.widgets.first`              | `api._links.widgets._embedded.first`
+`api.links.widget.expand(id: 3).resource`               | `api._links.widget._expand(id: 3)._resource`
+`api.get`                                               | `api._get`
+`api.links.widgets.widget(id: 3).delete`                | `api._links.widget._expand(id: 3)._delete`
+`api.links.widgets.post(name: 'a widget')`              | `api._links.widgets._post(name: 'a widget')
+`api.links.widget.expand(id: 3).put(name: 'updated`)    | `api._links.widget._expand(id: 3)._put(name: 'updated')`
 
 For more information see [#63](https://github.com/codegram/hyperclient/pull/63).
 
