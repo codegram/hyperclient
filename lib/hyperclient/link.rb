@@ -148,6 +148,10 @@ module Hyperclient
       "#<#{self.class.name}(#{@key}) #{@link}>"
     end
 
+    def to_s
+      _url
+    end
+
     private
 
     # Internal: Delegate the method to the API if it exists.

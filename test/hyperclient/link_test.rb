@@ -81,6 +81,12 @@ module Hyperclient
         link = Link.new('key', { 'href' => '/orders' }, entry_point)
         link._url.must_equal '/orders'
       end
+
+      it 'aliases to_s to _url' do
+        link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => true }, entry_point, id: 1)
+
+        link.to_s.must_equal '/orders?id=1'
+      end
     end
 
     describe '_resource' do

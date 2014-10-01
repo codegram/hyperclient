@@ -1,11 +1,4 @@
 {
-    "_curies" : [
-        {
-          "name": "image",
-          "href": "/images/{rel}",
-          "templated": true
-        }
-    ],
     "_links": {
         "self": {
             "href": "/productions/1"
@@ -20,6 +13,13 @@
             },
             {
                 "href": "/gizmos/2"
+            }
+        ],
+        "curies" : [
+            {
+              "name": "image",
+              "href": "/images/{rel}",
+              "templated": true
             }
         ],
         "null_link": null,
