@@ -33,7 +33,8 @@ module Hyperclient
     # entry_point    - The EntryPoint object to inject the configutation.
     def initialize(representation, entry_point, response = nil)
       representation = representation ? representation.dup : {}
-      @_links       = LinkCollection.new(representation['_links'], representation['_curies'], entry_point)
+      links = representation['_links'] || {}
+      @_links       = LinkCollection.new(links, links['curies'], entry_point)
       @_embedded    = ResourceCollection.new(representation['_embedded'], entry_point)
       @_attributes  = Attributes.new(representation)
       @_entry_point = entry_point

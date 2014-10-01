@@ -10,7 +10,7 @@ module Hyperclient
     end
 
     let(:links) do
-      LinkCollection.new(representation['_links'], representation['_curies'], entry_point)
+      LinkCollection.new(representation['_links'], representation['_links']['curies'], entry_point)
     end
 
     it 'is a collection' do
