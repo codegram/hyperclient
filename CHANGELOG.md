@@ -1,3 +1,7 @@
+### Next
+
+* Your contribution here.
+
 ### 0.5.0 (October 1, 2014)
 
 This version introduces several backwards incompatible changes. See [UPGRADING](UPGRADING.md) for details.
