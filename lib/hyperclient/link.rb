@@ -89,12 +89,7 @@ module Hyperclient
     def _resource
       @resource ||= begin
         response = _get
-
-        if response.success?
-          Resource.new(response.body, @entry_point, response)
-        else
-          Resource.new(nil, @entry_point, response)
-        end
+        Resource.new(response.body, @entry_point, response)
       end
     end
 

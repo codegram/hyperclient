@@ -1,6 +1,12 @@
 Upgrading Hyperclient
 =====================
 
+### Upgrading to Next
+
+#### Changes in HTTP Error Handling
+
+The default Faraday block now uses `Faraday::Response::RaiseError` and will cause HTTP errors to be raised as exceptions. Older versions of Hyperclient swallowed the error and returned an empty resource.
+
 ### Upgrading to >= 0.5.0
 
 #### Remove Navigational Elements

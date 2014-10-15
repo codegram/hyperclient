@@ -91,20 +91,9 @@ module Hyperclient
 
     describe '_resource' do
       it 'builds a resource with the link href representation' do
-        mock_response = mock(body: {}, success?: true)
+        mock_response = mock(body: {})
 
         Resource.expects(:new).with({}, entry_point, mock_response)
-
-        link = Link.new('key', { 'href' => '/' }, entry_point)
-        link.expects(:_get).returns(mock_response)
-
-        link._resource
-      end
-
-      it 'has an empty body when the response fails' do
-        mock_response = mock(success?: false)
-
-        Resource.expects(:new).with(nil, entry_point, mock_response)
 
         link = Link.new('key', { 'href' => '/' }, entry_point)
         link.expects(:_get).returns(mock_response)
