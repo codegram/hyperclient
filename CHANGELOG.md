@@ -1,5 +1,8 @@
 ### Next
 
+This version introduces several backwards incompatible changes. See [UPGRADING](UPGRADING.md) for details.
+
+* [#72](https://github.com/codegram/hyperclient/pull/72): The default Faraday block now uses `Faraday::Response::RaiseError` and will cause HTTP errors to be raised as exceptions - [@dblock](https://github.com/dblock).
 * Your contribution here.
 
 ### 0.5.0 (October 1, 2014)
