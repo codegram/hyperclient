@@ -94,6 +94,8 @@ puts "Spline #{spline.uuid} is #{spline.reticulated ? 'reticulated' : 'not retic
 
 Invoking `api.spline(uuid: 'uuid').reticulated` is equivalent to `api._links.spline._expand(uuid: 'uuid')._resource._attributes.reticulated`.
 
+The client is responsible for supplying all the necessary parameters. Templated links don't do any strict parameter name checking and don't support required vs. optional parameters. Parameters not declared by the API will be dropped and will not have any effect when passed to `_expand`.
+
 ### Curies
 
 Curies are named tokens that you can define in the document and use to express curie relation URIs in a friendlier, more compact fashion. For example, the demo API contains very long links to images that use an "images" curie. Hyperclient handles curies and resolves these into full links automatically.

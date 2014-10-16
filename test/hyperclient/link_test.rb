@@ -51,24 +51,38 @@ module Hyperclient
     end
 
     describe '_expand' do
-      it 'buils a Link with the templated URI representation' do
-        link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => true }, entry_point)
+      describe 'required argument' do
+        it 'builds a Link with the templated URI representation' do
+          link = Link.new('key', { 'href' => '/orders/{id}', 'templated' => true }, entry_point)
+          link._expand(id: '1')._url.must_equal '/orders/1'
+        end
 
-        Link.expects(:new).with('key', anything, entry_point, id: '1')
-        link._expand(id: '1')
+        it 'expands an uri template without variables' do
+          link = Link.new('key', { 'href' => '/orders/{id}', 'templated' => true }, entry_point)
+          link._expand._url.must_equal '/orders/'
+          link._url.must_equal '/orders/'
+        end
       end
 
-      it 'raises if no uri variables are given' do
-        link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => true }, entry_point)
-        lambda { link._expand }.must_raise ArgumentError
+      describe 'query string argument' do
+        it 'builds a Link with the templated URI representation' do
+          link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => true }, entry_point)
+          link._expand(id: '1')._url.must_equal '/orders?id=1'
+        end
+
+        it 'expands an uri template without variables' do
+          link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => true }, entry_point)
+          link._expand._url.must_equal '/orders'
+          link._url.must_equal '/orders'
+        end
       end
     end
 
     describe '_url' do
-      it 'raises when missing required uri_variables' do
+      it 'expands an uri template without variables' do
         link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => true }, entry_point)
 
-        lambda { link._url }.must_raise MissingURITemplateVariablesException
+        link._url.must_equal '/orders'
       end
 
       it 'expands an uri template with variables' do

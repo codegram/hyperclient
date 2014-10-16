@@ -11,6 +11,10 @@ The default Faraday block now uses `Faraday::Response::RaiseError` and will caus
 
 The `Link#_get` method has been aliased to `_resource`. All HTTP methods, including `_post`, `_put`, `_delete`, `_patch`, `_options` and `_head` now return instances of Resource. Older versions returned a `Faraday::Response`.
 
+#### Changes in URI Template Expansion
+
+A `MissingURITemplateVariablesException` exception will no longer be raised when expanding a link with no arguments. The `Link#_expand` method will now also accept zero arguments and default the variables to `{}`. This enables support for templated links with all optional arguments.
+
 ### Upgrading to >= 0.5.0
 
 #### Remove Navigational Elements

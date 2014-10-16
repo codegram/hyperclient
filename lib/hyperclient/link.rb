@@ -33,19 +33,14 @@ module Hyperclient
     # uri_variables - The Hash with the variables to expand the URITemplate.
     #
     # Returns a new Link with the expanded variables.
-    def _expand(uri_variables)
+    def _expand(uri_variables = {})
       self.class.new(@key, @link, @entry_point, uri_variables)
     end
 
     # Public: Returns the url of the Link.
-    #
-    # Raises MissingURITemplateVariables if the Link is templated but there are
-    # no uri variables to expand it.
     def _url
       return @link['href'] unless _templated?
-      fail MissingURITemplateVariablesException if @uri_variables.nil?
-
-      @url ||= _uri_template.expand(@uri_variables)
+      @url ||= _uri_template.expand(@uri_variables || {})
     end
 
     # Public: Returns an array of variables from the URITemplate.
@@ -200,15 +195,6 @@ module Hyperclient
     # Internal: Memoization for a URITemplate instance
     def _uri_template
       @uri_template ||= URITemplate.new(@link['href'])
-    end
-  end
-
-  # Public: Exception that is raised when building a templated Link without uri
-  # variables.
-  class MissingURITemplateVariablesException < StandardError
-    # Public: Returns a String with the exception message.
-    def message
-      'The URL to this links is templated, but no variables where given.'
     end
   end
 end
