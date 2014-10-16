@@ -155,6 +155,33 @@ spline._delete
 
 HTTP methods always return a new instance of Resource.
 
+## Testing Using Hyperclient
+
+You can combine RSpec, Faraday::Adapter::Rack and Hyperclient to test your HAL API without having to ever examine the raw JSON response.
+
+```ruby
+describe Acme::Api do
+  def app
+    Acme::App.instance
+  end
+
+  let(:client) do
+    Hyperclient.new('http://example.org/api') do |client|
+      client.connection(default: false) do |conn|
+        conn.response :json
+        conn.use Faraday::Adapter::Rack, app
+      end
+    end
+  end
+
+  it 'splines returns 3 splines by default' do
+    expect(client.splines.count).to eq 3
+  end
+end
+```
+
+For a complete example refer to [this Splines Demo API test](https://github.com/dblock/grape-with-roar/blob/master/spec/api/splines_endpoint_with_hyperclient_spec.rb).
+
 ## Reference
 
 [Hyperclient API Reference](http://rubydoc.org/github/codegram/hyperclient/master/frames).
