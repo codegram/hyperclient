@@ -2,7 +2,8 @@
 
 This version introduces several backwards incompatible changes. See [UPGRADING](UPGRADING.md) for details.
 
-* [#41](https://github.com/codegram/hyperclient/issues/41): All Link HTTP methods now return a Resource, including `_get`, which has been aliased to `_resource`, `_post`, `_put`, `_patch`, `_head` and `_options` - [@dblock](https://github.com/dblock).
+* [#51](https://github.com/codegram/hyperclient/issues/51), [#75](https://github.com/codegram/hyperclient/pull/75): Added support for setting headers and overriding or extending the default Faraday connection block before a connection is constructed - [@dblock](https://github.com/dblock).
+* [#41](https://github.com/codegram/hyperclient/issues/41), [#73](https://github.com/codegram/hyperclient/pull/73): All Link HTTP methods now return a Resource, including `_get`, which has been aliased to `_resource`, `_post`, `_put`, `_patch`, `_head` and `_options` - [@dblock](https://github.com/dblock).
 * [#72](https://github.com/codegram/hyperclient/pull/72): The default Faraday block now uses `Faraday::Response::RaiseError` and will cause HTTP errors to be raised as exceptions - [@dblock](https://github.com/dblock).
 * Your contribution here.
 
