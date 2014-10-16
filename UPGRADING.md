@@ -5,7 +5,11 @@ Upgrading Hyperclient
 
 #### Changes in HTTP Error Handling
 
-The default Faraday block now uses `Faraday::Response::RaiseError` and will cause HTTP errors to be raised as exceptions. Older versions of Hyperclient swallowed the error and returned an empty resource.
+The default Faraday block now uses `Faraday::Response::RaiseError` and will cause HTTP errors to be raised as exceptions. Older versions of Hyperclient swallowed the error and returned an empty resource. If you relied on checking for an HTTP response `status`, rescue `Faraday::ClientError`.
+
+#### Changes in Values Returned from HTTP Methods
+
+The `Link#_get` method has been aliased to `_resource`. All HTTP methods, including `_post`, `_put`, `_delete`, `_patch`, `_options` and `_head` now return instances of Resource. Older versions returned a `Faraday::Response`.
 
 ### Upgrading to >= 0.5.0
 

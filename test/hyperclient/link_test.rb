@@ -91,12 +91,10 @@ module Hyperclient
 
     describe '_resource' do
       it 'builds a resource with the link href representation' do
-        mock_response = mock(body: {})
-
-        Resource.expects(:new).with({}, entry_point, mock_response)
+        Resource.expects(:new)
 
         link = Link.new('key', { 'href' => '/' }, entry_point)
-        link.expects(:_get).returns(mock_response)
+        stub_request(:get, 'http://api.example.org/').to_return(body: {})
 
         link._resource
       end
@@ -112,8 +110,15 @@ module Hyperclient
       it 'sends a GET request with the link url' do
         link = Link.new('key', { 'href' => '/productions/1' }, entry_point)
 
-        entry_point.connection.expects(:get).with('/productions/1')
-        link._get.inspect
+        stub_request(:get, 'http://api.example.org/productions/1').to_return(body: nil)
+        link._get.must_be_kind_of Resource
+      end
+
+      it 'raises exceptions by default' do
+        link = Link.new('key', { 'href' => '/productions/1' }, entry_point)
+
+        stub_request(:get, 'http://api.example.org/productions/1').to_return(status: 400)
+        lambda { link._get }.must_raise Faraday::ClientError
       end
     end
 
@@ -121,26 +126,24 @@ module Hyperclient
       it 'sends a OPTIONS request with the link url' do
         link = Link.new('key', { 'href' => '/productions/1' }, entry_point)
 
-        entry_point.connection.expects(:run_request).with(:options, '/productions/1', nil, nil)
-        link._options.inspect
+        stub_request(:options, 'http://api.example.org/productions/1').to_return(body: nil)
+        link._options.must_be_kind_of Resource
       end
     end
 
     describe '_head' do
       it 'sends a HEAD request with the link url' do
         link = Link.new('key', { 'href' => '/productions/1' }, entry_point)
-
-        entry_point.connection.expects(:head).with('/productions/1')
-        link._head.inspect
+        stub_request(:head, 'http://api.example.org/productions/1').to_return(body: nil)
+        link._head.must_be_kind_of Resource
       end
     end
 
     describe '_delete' do
       it 'sends a DELETE request with the link url' do
         link = Link.new('key', { 'href' => '/productions/1' }, entry_point)
-
-        entry_point.connection.expects(:delete).with('/productions/1')
-        link._delete.inspect
+        stub_request(:delete, 'http://api.example.org/productions/1').to_return(body: nil)
+        link._delete.must_be_kind_of Resource
       end
     end
 
@@ -148,13 +151,13 @@ module Hyperclient
       let(:link) { Link.new('key', { 'href' => '/productions/1' }, entry_point) }
 
       it 'sends a POST request with the link url and params' do
-        entry_point.connection.expects(:post).with('/productions/1', 'foo' => 'bar')
-        link._post('foo' => 'bar').inspect
+        stub_request(:post, 'http://api.example.org/productions/1').to_return(body: nil)
+        link._post('foo' => 'bar').must_be_kind_of Resource
       end
 
       it 'defaults params to an empty hash' do
-        entry_point.connection.expects(:post).with('/productions/1', {})
-        link._post.inspect
+        stub_request(:post, 'http://api.example.org/productions/1').to_return(body: nil)
+        link._post.must_be_kind_of Resource
       end
     end
 
@@ -162,13 +165,13 @@ module Hyperclient
       let(:link) { Link.new('key', { 'href' => '/productions/1' }, entry_point) }
 
       it 'sends a PUT request with the link url and params' do
-        entry_point.connection.expects(:put).with('/productions/1', 'foo' => 'bar')
-        link._put('foo' => 'bar').inspect
+        stub_request(:put, 'http://api.example.org/productions/1').with(body: '{"foo":"bar"}').to_return(body: nil)
+        link._put('foo' => 'bar').must_be_kind_of Resource
       end
 
       it 'defaults params to an empty hash' do
-        entry_point.connection.expects(:put).with('/productions/1', {})
-        link._put.inspect
+        stub_request(:put, 'http://api.example.org/productions/1').to_return(body: nil)
+        link._put.must_be_kind_of Resource
       end
     end
 
@@ -176,13 +179,13 @@ module Hyperclient
       let(:link) { Link.new('key', { 'href' => '/productions/1' }, entry_point) }
 
       it 'sends a PATCH request with the link url and params' do
-        entry_point.connection.expects(:patch).with('/productions/1', 'foo' => 'bar')
-        link._patch('foo' => 'bar').inspect
+        stub_request(:patch, 'http://api.example.org/productions/1').with(body: '{"foo":"bar"}').to_return(body: nil)
+        link._patch('foo' => 'bar').must_be_kind_of Resource
       end
 
       it 'defaults params to an empty hash' do
-        entry_point.connection.expects(:patch).with('/productions/1', {})
-        link._patch.inspect
+        stub_request(:patch, 'http://api.example.org/productions/1').to_return(body: nil)
+        link._patch.must_be_kind_of Resource
       end
     end
 

@@ -86,56 +86,72 @@ module Hyperclient
     end
 
     # Public: Returns the Resource which the Link is pointing to.
-    def _resource
+    def _get
       @resource ||= begin
-        response = _get
+        response = Futuroscope::Future.new do
+          _connection.get(_url)
+        end
         Resource.new(response.body, @entry_point, response)
       end
     end
+
+    alias_method :_resource, :_get
 
     def _connection
       @entry_point.connection
     end
 
-    def _get
-      Futuroscope::Future.new do
-        _connection.get(_url)
-      end
-    end
-
     def _options
-      Futuroscope::Future.new do
-        _connection.run_request(:options, _url, nil, nil)
+      @resource ||= begin
+        response = Futuroscope::Future.new do
+          _connection.run_request(:options, _url, nil, nil)
+        end
+        Resource.new(response.body, @entry_point, response)
       end
     end
 
     def _head
-      Futuroscope::Future.new do
-        _connection.head(_url)
+      @resource ||= begin
+        response = Futuroscope::Future.new do
+          _connection.head(_url)
+        end
+        Resource.new(response.body, @entry_point, response)
       end
     end
 
     def _delete
-      Futuroscope::Future.new do
-        _connection.delete(_url)
+      @resource ||= begin
+        response = Futuroscope::Future.new do
+          _connection.delete(_url)
+        end
+        Resource.new(response.body, @entry_point, response)
       end
     end
 
     def _post(params = {})
-      Futuroscope::Future.new do
-        _connection.post(_url, params)
+      @resource ||= begin
+        response = Futuroscope::Future.new do
+          _connection.post(_url, params)
+        end
+        Resource.new(response.body, @entry_point, response)
       end
     end
 
     def _put(params = {})
-      Futuroscope::Future.new do
-        _connection.put(_url, params)
+      @resource ||= begin
+        response = Futuroscope::Future.new do
+          _connection.put(_url, params)
+        end
+        Resource.new(response.body, @entry_point, response)
       end
     end
 
     def _patch(params = {})
-      Futuroscope::Future.new do
-        _connection.patch(_url, params)
+      @resource ||= begin
+        response = Futuroscope::Future.new do
+          _connection.patch(_url, params)
+        end
+        Resource.new(response.body, @entry_point, response)
       end
     end
 

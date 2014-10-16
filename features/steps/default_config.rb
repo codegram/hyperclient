@@ -11,7 +11,7 @@ class Spinach::Features::DefaultConfig < Spinach::FeatureSteps
 
   step 'I send some data to the API' do
     stub_request(:post, 'http://api.example.org/posts')
-    assert_equal 200, api._links.posts._post(title: 'My first blog post').status
+    assert_equal 200, api._links.posts._post(title: 'My first blog post')._response.status
   end
 
   step 'it should have been encoded as JSON' do
