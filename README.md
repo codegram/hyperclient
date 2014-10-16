@@ -20,13 +20,49 @@ require 'hyperclient'
 api = Hyperclient.new('https://grape-with-roar.herokuapp.com/api')
 ```
 
-By default, Hyperclient adds `application/json` as `Content-Type` and `Accept` headers. It will also send requests as JSON and parse JSON responses. Specify additional headers or authentication if necessary. Hyperclient supports Basic, Token or Digest auth as well as many other [Faraday](http://github.com/lostisland/faraday) extensions.
+By default, Hyperclient adds `application/json` as `Content-Type` and `Accept` headers. It will also send requests as JSON and parse JSON responses. Specify additional headers or authentication if necessary.
 
 ```ruby
-api = Hyperclient.new('https://grape-with-roar.herokuapp.com/api').tap do |api|
-  api.digest_auth('username', 'password')
-  api.headers.update('Accept-Encoding' => 'deflate, gzip')
+api = Hyperclient.new('https://grape-with-roar.herokuapp.com/api') do |client|
+  client.headers['Access-Token'] = 'token'
 end
+```
+
+Hyperclient constructs a connection using typical [Faraday](http://github.com/lostisland/faraday) middleware for handling JSON requests and responses. You can specify additional Faraday middleware if necessary.
+
+```ruby
+api = Hyperclient.new('https://grape-with-roar.herokuapp.com/api') do |client|
+  client.connection do |conn|
+    conn.use Faraday::Request::OAuth
+  end
+end
+```
+
+You can build a new Faraday connection block without inheriting default middleware by specifying `default: false` in the `connection` block.
+
+```ruby
+api = Hyperclient.new('https://grape-with-roar.herokuapp.com/api') do |client|
+  client.connection(default: false) do |conn|
+    conn.request :json
+    conn.response :json, content_type: /\bjson$/
+    conn.adapter :net_http
+  end
+end
+```
+
+You can modify headers or specify authentication after a connection has been created. Hyperclient supports Basic, Token or Digest auth as well as many other Faraday extensions.
+
+```ruby
+api = Hyperclient.new('https://grape-with-roar.herokuapp.com/api')
+api.digest_auth('username', 'password')
+api.headers.update('Accept-Encoding' => 'deflate, gzip')
+```
+
+You can access the Faraday connection directly after it has been created and add middleware to it. As an example, you could use the [faraday-http-cache-middleware](https://github.com/plataformatec/faraday-http-cache).
+
+```ruby
+api = Hyperclient.new('https://grape-with-roar.herokuapp.com/api')
+api.connection.use :http_cache
 ```
 
 ### Resources and Attributes
@@ -117,13 +153,7 @@ spline = api.spline(uuid: 'uuid')
 spline._delete
 ```
 
-### Faraday Connection
-
-You can access the Faraday connection directly to add middleware by calling `connection` on the entry point. As an example, you could use the [faraday-http-cache-middleware](https://github.com/plataformatec/faraday-http-cache).
-
-```ruby
-api.connection.use :http_cache
-```
+HTTP methods always return a new instance of Resource.
 
 ## Reference
 
