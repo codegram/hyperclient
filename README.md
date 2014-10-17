@@ -170,6 +170,7 @@ describe Acme::Api do
   let(:client) do
     Hyperclient.new('http://example.org/api') do |client|
       client.connection(default: false) do |conn|
+        conn.request :json
         conn.response :json
         conn.use Faraday::Adapter::Rack, app
       end
