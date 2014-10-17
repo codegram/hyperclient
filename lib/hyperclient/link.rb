@@ -82,7 +82,7 @@ module Hyperclient
 
     # Public: Returns the Resource which the Link is pointing to.
     def _get
-      @resource ||= begin
+      @resource = begin
         response = Futuroscope::Future.new do
           _connection.get(_url)
         end
@@ -90,14 +90,16 @@ module Hyperclient
       end
     end
 
-    alias_method :_resource, :_get
+    def _resource
+      @resource || _get
+    end
 
     def _connection
       @entry_point.connection
     end
 
     def _options
-      @resource ||= begin
+      @resource = begin
         response = Futuroscope::Future.new do
           _connection.run_request(:options, _url, nil, nil)
         end
@@ -106,7 +108,7 @@ module Hyperclient
     end
 
     def _head
-      @resource ||= begin
+      @resource = begin
         response = Futuroscope::Future.new do
           _connection.head(_url)
         end
@@ -115,7 +117,7 @@ module Hyperclient
     end
 
     def _delete
-      @resource ||= begin
+      @resource = begin
         response = Futuroscope::Future.new do
           _connection.delete(_url)
         end
@@ -124,7 +126,7 @@ module Hyperclient
     end
 
     def _post(params = {})
-      @resource ||= begin
+      @resource = begin
         response = Futuroscope::Future.new do
           _connection.post(_url, params)
         end
@@ -133,7 +135,7 @@ module Hyperclient
     end
 
     def _put(params = {})
-      @resource ||= begin
+      @resource = begin
         response = Futuroscope::Future.new do
           _connection.put(_url, params)
         end
@@ -142,7 +144,7 @@ module Hyperclient
     end
 
     def _patch(params = {})
-      @resource ||= begin
+      @resource = begin
         response = Futuroscope::Future.new do
           _connection.patch(_url, params)
         end
