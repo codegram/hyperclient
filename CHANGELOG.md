@@ -1,4 +1,4 @@
-### Next
+### 0.6.0 (October 17, 2014)
 
 This version introduces several backwards incompatible changes. See [UPGRADING](UPGRADING.md) for details.
 

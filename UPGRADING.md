@@ -1,7 +1,7 @@
 Upgrading Hyperclient
 =====================
 
-### Upgrading to Next
+### Upgrading to >= 0.6.0
 
 #### Changes in HTTP Error Handling
 
