@@ -108,7 +108,7 @@ module Hyperclient
         Resource.expects(:new)
 
         link = Link.new('key', { 'href' => '/' }, entry_point)
-        stub_request(:get, 'http://api.example.org/').to_return(body: {})
+        stub_request(:get, 'http://api.example.org/').to_return(body: {}.to_json)
 
         link._resource
       end
@@ -216,14 +216,14 @@ module Hyperclient
       describe 'delegation' do
         it 'delegates when link key matches' do
           resource = Resource.new({ '_links' => { 'orders' => { 'href' => '/orders' } } }, entry_point)
-          stub_request(:get, 'http://api.example.org/orders').to_return(body: { '_embedded' => { 'orders' => [{ 'id' => 1 }] } })
+          stub_request(:get, 'http://api.example.org/orders').to_return(body: { '_embedded' => { 'orders' => [{ 'id' => 1 }] } }.to_json)
           resource.orders._embedded.orders.first.id.must_equal 1
           resource.orders.first.id.must_equal 1
         end
 
         it "doesn't delegate when link key doesn't match" do
           resource = Resource.new({ '_links' => { 'foos' => { 'href' => '/orders' } } }, entry_point)
-          stub_request(:get, 'http://api.example.org/orders').to_return(body: { '_embedded' => { 'orders' => [{ 'id' => 1 }] } })
+          stub_request(:get, 'http://api.example.org/orders').to_return(body: { '_embedded' => { 'orders' => [{ 'id' => 1 }] } }.to_json)
           resource.foos._embedded.orders.first.id.must_equal 1
           resource.foos.first.must_equal nil
         end
