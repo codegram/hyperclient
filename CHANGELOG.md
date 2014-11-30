@@ -2,6 +2,12 @@
 
 * Your contribution here.
 
+### 0.7.0-pre (December 1, 2014)
+
+This version introduces several backwards incompatible changes. See [UPGRADING](UPGRADING.md) for details.
+
+* [#81](https://github.com/codegram/hyperclient/pull/81): The default Content-Type is now `application/hal+json` - [@koenpunt](https://github.com/koenpunt).
+
 ### 0.6.1 (October 17, 2014)
 
 This version introduces several backwards incompatible changes. See [UPGRADING](UPGRADING.md) for details.

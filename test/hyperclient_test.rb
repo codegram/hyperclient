@@ -20,8 +20,8 @@ describe Hyperclient do
       end
 
       it 'creates a Faraday connection with the default and additional headers' do
-        client.headers['Content-Type'].must_equal 'application/json'
-        client.headers['Accept'].must_equal 'application/json'
+        client.headers['Content-Type'].must_equal 'application/hal+json'
+        client.headers['Accept'].must_equal 'application/hal+json,application/json'
         client.headers['Access-Token'].must_equal 'token'
       end
 
@@ -34,8 +34,8 @@ describe Hyperclient do
         handlers.must_include Faraday::Request::OAuth
         handlers.must_include Faraday::Response::RaiseError
         handlers.must_include FaradayMiddleware::FollowRedirects
-        handlers.must_include FaradayMiddleware::EncodeJson
-        handlers.must_include FaradayMiddleware::ParseJson
+        handlers.must_include FaradayMiddleware::EncodeHalJson
+        handlers.must_include FaradayMiddleware::ParseHalJson
         handlers.must_include Faraday::Adapter::NetHttp
       end
     end

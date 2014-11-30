@@ -1,6 +1,19 @@
 Upgrading Hyperclient
 =====================
 
+### Upgrading to >= 0.7.0
+
+#### Changes in default headers
+
+The default `Content-Type` is now `application/hal+json` and the `Accept` header includes `application/hal+json` as well.
+If your API only accepts `application/json` as Content-Type, you can override the default headers in the client initialization block as such:
+
+```rb
+Hyperclient.new('https://api.example.org/') do |client|
+  client.headers = { 'Content-Type' => 'application/json', 'Accept' => 'application/json,application/hal+json' }
+end
+```
+
 ### Upgrading to >= 0.6.0
 
 #### Changes in HTTP Error Handling

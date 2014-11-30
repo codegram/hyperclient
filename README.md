@@ -20,7 +20,7 @@ require 'hyperclient'
 api = Hyperclient.new('https://grape-with-roar.herokuapp.com/api')
 ```
 
-By default, Hyperclient adds `application/json` as `Content-Type` and `Accept` headers. It will also send requests as JSON and parse JSON responses. Specify additional headers or authentication if necessary.
+By default, Hyperclient adds `application/hal+json` as `Content-Type` and `Accept` headers. It will also send requests as JSON and parse JSON responses. Specify additional headers or authentication if necessary.
 
 ```ruby
 api = Hyperclient.new('https://grape-with-roar.herokuapp.com/api') do |client|
