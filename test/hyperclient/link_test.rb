@@ -108,7 +108,10 @@ module Hyperclient
         Resource.expects(:new)
 
         link = Link.new('key', { 'href' => '/' }, entry_point)
-        stub_request(:get, 'http://api.example.org/').to_return(body: {})
+
+        stub_request(entry_point.connection) do |stub|
+          stub.get('http://api.example.org/') { [200, {}, nil] }
+        end
 
         link._resource
       end
@@ -124,14 +127,20 @@ module Hyperclient
       it 'sends a GET request with the link url' do
         link = Link.new('key', { 'href' => '/productions/1' }, entry_point)
 
-        stub_request(:get, 'http://api.example.org/productions/1').to_return(body: nil)
+        stub_request(entry_point.connection) do |stub|
+          stub.get('http://api.example.org/productions/1') { [200, {}, nil] }
+        end
+
         link._get.must_be_kind_of Resource
       end
 
       it 'raises exceptions by default' do
         link = Link.new('key', { 'href' => '/productions/1' }, entry_point)
 
-        stub_request(:get, 'http://api.example.org/productions/1').to_return(status: 400)
+        stub_request(entry_point.connection) do |stub|
+          stub.get('http://api.example.org/productions/1') { [400, {}, nil] }
+        end
+
         lambda { link._get }.must_raise Faraday::ClientError
       end
     end
@@ -140,7 +149,10 @@ module Hyperclient
       it 'sends a OPTIONS request with the link url' do
         link = Link.new('key', { 'href' => '/productions/1' }, entry_point)
 
-        stub_request(:options, 'http://api.example.org/productions/1').to_return(body: nil)
+        stub_request(entry_point.connection) do |stub|
+          stub.options('http://api.example.org/productions/1') { [200, {}, nil] }
+        end
+
         link._options.must_be_kind_of Resource
       end
     end
@@ -148,7 +160,11 @@ module Hyperclient
     describe '_head' do
       it 'sends a HEAD request with the link url' do
         link = Link.new('key', { 'href' => '/productions/1' }, entry_point)
-        stub_request(:head, 'http://api.example.org/productions/1').to_return(body: nil)
+
+        stub_request(entry_point.connection) do |stub|
+          stub.head('http://api.example.org/productions/1') { [200, {}, nil] }
+        end
+
         link._head.must_be_kind_of Resource
       end
     end
@@ -156,7 +172,11 @@ module Hyperclient
     describe '_delete' do
       it 'sends a DELETE request with the link url' do
         link = Link.new('key', { 'href' => '/productions/1' }, entry_point)
-        stub_request(:delete, 'http://api.example.org/productions/1').to_return(body: nil)
+
+        stub_request(entry_point.connection) do |stub|
+          stub.delete('http://api.example.org/productions/1') { [200, {}, nil] }
+        end
+
         link._delete.must_be_kind_of Resource
       end
     end
@@ -165,12 +185,20 @@ module Hyperclient
       let(:link) { Link.new('key', { 'href' => '/productions/1' }, entry_point) }
 
       it 'sends a POST request with the link url and params' do
-        stub_request(:post, 'http://api.example.org/productions/1').to_return(body: nil)
+
+        stub_request(entry_point.connection) do |stub|
+          stub.post('http://api.example.org/productions/1') { [200, {}, nil] }
+        end
+
         link._post('foo' => 'bar').must_be_kind_of Resource
       end
 
       it 'defaults params to an empty hash' do
-        stub_request(:post, 'http://api.example.org/productions/1').to_return(body: nil)
+
+        stub_request(entry_point.connection) do |stub|
+          stub.post('http://api.example.org/productions/1') { [200, {}, nil] }
+        end
+
         link._post.must_be_kind_of Resource
       end
     end
@@ -179,12 +207,20 @@ module Hyperclient
       let(:link) { Link.new('key', { 'href' => '/productions/1' }, entry_point) }
 
       it 'sends a PUT request with the link url and params' do
-        stub_request(:put, 'http://api.example.org/productions/1').with(body: '{"foo":"bar"}').to_return(body: nil)
+
+        stub_request(entry_point.connection) do |stub|
+          stub.put('http://api.example.org/productions/1', '{"foo":"bar"}') { [200, {}, nil] }
+        end
+
         link._put('foo' => 'bar').must_be_kind_of Resource
       end
 
       it 'defaults params to an empty hash' do
-        stub_request(:put, 'http://api.example.org/productions/1').to_return(body: nil)
+
+        stub_request(entry_point.connection) do |stub|
+          stub.put('http://api.example.org/productions/1') { [200, {}, nil] }
+        end
+
         link._put.must_be_kind_of Resource
       end
     end
@@ -193,12 +229,19 @@ module Hyperclient
       let(:link) { Link.new('key', { 'href' => '/productions/1' }, entry_point) }
 
       it 'sends a PATCH request with the link url and params' do
-        stub_request(:patch, 'http://api.example.org/productions/1').with(body: '{"foo":"bar"}').to_return(body: nil)
+
+        stub_request(entry_point.connection) do |stub|
+          stub.patch('http://api.example.org/productions/1', '{"foo":"bar"}') { [200, {}, nil] }
+        end
+
         link._patch('foo' => 'bar').must_be_kind_of Resource
       end
 
       it 'defaults params to an empty hash' do
-        stub_request(:patch, 'http://api.example.org/productions/1').to_return(body: nil)
+        stub_request(entry_point.connection) do |stub|
+          stub.patch('http://api.example.org/productions/1') { [200, {}, nil] }
+        end
+
         link._patch.must_be_kind_of Resource
       end
     end
@@ -216,14 +259,22 @@ module Hyperclient
       describe 'delegation' do
         it 'delegates when link key matches' do
           resource = Resource.new({ '_links' => { 'orders' => { 'href' => '/orders' } } }, entry_point)
-          stub_request(:get, 'http://api.example.org/orders').to_return(body: { '_embedded' => { 'orders' => [{ 'id' => 1 }] } })
+
+          stub_request(entry_point.connection) do |stub|
+            stub.get('http://api.example.org/orders') { [200, {}, { '_embedded' => { 'orders' => [{ 'id' => 1 }] } }] }
+          end
+
           resource.orders._embedded.orders.first.id.must_equal 1
           resource.orders.first.id.must_equal 1
         end
 
         it "doesn't delegate when link key doesn't match" do
           resource = Resource.new({ '_links' => { 'foos' => { 'href' => '/orders' } } }, entry_point)
-          stub_request(:get, 'http://api.example.org/orders').to_return(body: { '_embedded' => { 'orders' => [{ 'id' => 1 }] } })
+
+          stub_request(entry_point.connection) do |stub|
+            stub.get('http://api.example.org/orders') { [200, {}, { '_embedded' => { 'orders' => [{ 'id' => 1 }] } }] }
+          end
+
           resource.foos._embedded.orders.first.id.must_equal 1
           resource.foos.first.must_equal nil
         end
@@ -231,8 +282,11 @@ module Hyperclient
 
       describe 'resource' do
         before do
-          stub_request(:get, 'http://myapi.org/orders')
-            .to_return(body: '{"resource": "This is the resource"}')
+
+          stub_request(entry_point.connection) do |stub|
+            stub.get('http://myapi.org/orders') { [200, {}, '{"resource": "This is the resource"}'] }
+          end
+
           Resource.stubs(:new).returns(resource)
         end
 
