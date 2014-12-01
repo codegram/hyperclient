@@ -5,9 +5,9 @@ module API
   include Spinach::Fixtures
 
   before do
-    stub_request(:any, %r{api.example.org*}).to_return(body: root_response, headers: { 'Content-Type' => 'application/json' })
-    stub_request(:get, 'api.example.org/posts').to_return(body: posts_response, headers: { 'Content-Type' => 'application/json' })
-    stub_request(:get, 'api.example.org/posts/1').to_return(body: post_response, headers: { 'Content-Type' => 'application/json' })
+    stub_request(:any, %r{api.example.org*}).to_return(body: root_response, headers: { 'Content-Type' => 'application/hal+json' })
+    stub_request(:get, 'api.example.org/posts').to_return(body: posts_response, headers: { 'Content-Type' => 'application/hal+json' })
+    stub_request(:get, 'api.example.org/posts/1').to_return(body: post_response, headers: { 'Content-Type' => 'application/hal+json' })
   end
 
   def api

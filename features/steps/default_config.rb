@@ -6,7 +6,9 @@ class Spinach::Features::DefaultConfig < Spinach::FeatureSteps
   end
 
   step 'the request should have been sent with the correct JSON headers' do
-    assert_requested :get, 'api.example.org', headers: { 'Content-Type' => 'application/json', 'Accept' => 'application/json' }
+    assert_requested :get, 'api.example.org', headers: {
+      'Content-Type' => 'application/hal+json', 'Accept' => 'application/hal+json,application/json'
+    }
   end
 
   step 'I send some data to the API' do

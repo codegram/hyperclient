@@ -17,6 +17,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'faraday', '~> 0.8'
   gem.add_dependency 'futuroscope', '>= 0.0.10'
   gem.add_dependency 'faraday_middleware', '~> 0.9'
+  gem.add_dependency 'faraday_hal_middleware', '~> 0.0.1'
   gem.add_dependency 'uri_template', '~> 0.5'
   gem.add_dependency 'net-http-digest_auth', '~> 1.2'
   gem.add_dependency 'faraday-digestauth', '~> 0.2'

@@ -1,5 +1,6 @@
 require 'hyperclient/link'
 require 'faraday_middleware'
+require 'faraday_hal_middleware'
 require_relative '../faraday/connection'
 
 module Hyperclient
@@ -109,8 +110,8 @@ module Hyperclient
       lambda do |conn|
         conn.use Faraday::Response::RaiseError
         conn.use FaradayMiddleware::FollowRedirects
-        conn.request :json
-        conn.response :json, content_type: /\bjson$/
+        conn.request :hal_json
+        conn.response :hal_json, content_type: /\bjson$/
         conn.adapter :net_http
       end
     end
@@ -120,7 +121,7 @@ module Hyperclient
     #
     # Returns a Hash.
     def default_headers
-      { 'Content-Type' => 'application/json', 'Accept' => 'application/json' }
+      { 'Content-Type' => 'application/hal+json', 'Accept' => 'application/hal+json,application/json' }
     end
   end
 end

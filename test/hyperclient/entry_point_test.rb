@@ -14,8 +14,8 @@ module Hyperclient
         end
 
         it 'creates a Faraday connection with the default headers' do
-          entry_point.headers['Content-Type'].must_equal 'application/json'
-          entry_point.headers['Accept'].must_equal 'application/json'
+          entry_point.headers['Content-Type'].must_equal 'application/hal+json'
+          entry_point.headers['Accept'].must_equal 'application/hal+json,application/json'
         end
 
         it 'can update headers after a connection has been constructed' do
@@ -35,8 +35,8 @@ module Hyperclient
           handlers = entry_point.connection.builder.handlers
           handlers.must_include Faraday::Response::RaiseError
           handlers.must_include FaradayMiddleware::FollowRedirects
-          handlers.must_include FaradayMiddleware::EncodeJson
-          handlers.must_include FaradayMiddleware::ParseJson
+          handlers.must_include FaradayMiddleware::EncodeHalJson
+          handlers.must_include FaradayMiddleware::ParseHalJson
           handlers.must_include Faraday::Adapter::NetHttp
         end
 
@@ -108,8 +108,8 @@ module Hyperclient
 
     describe 'connection' do
       it 'creates a Faraday connection with the default and additional headers' do
-        entry_point.headers['Content-Type'].must_equal 'application/json'
-        entry_point.headers['Accept'].must_equal 'application/json'
+        entry_point.headers['Content-Type'].must_equal 'application/hal+json'
+        entry_point.headers['Accept'].must_equal 'application/hal+json,application/json'
         entry_point.headers['Access-Token'].must_equal 'token'
       end
 
@@ -122,8 +122,8 @@ module Hyperclient
         handlers.must_include Faraday::Request::OAuth
         handlers.must_include Faraday::Response::RaiseError
         handlers.must_include FaradayMiddleware::FollowRedirects
-        handlers.must_include FaradayMiddleware::EncodeJson
-        handlers.must_include FaradayMiddleware::ParseJson
+        handlers.must_include FaradayMiddleware::EncodeHalJson
+        handlers.must_include FaradayMiddleware::ParseHalJson
         handlers.must_include Faraday::Adapter::NetHttp
       end
     end
