@@ -1,8 +1,8 @@
 # Hyperclient
 
-[![Build Status](https://secure.travis-ci.org/codegram/hyperclient.png)](http://travis-ci.org/codegram/hyperclient)
-[![Dependency Status](https://gemnasium.com/codegram/hyperclient.png)](http://gemnasium.com/codegram/hyperclient)
-[![Code Climate](https://codeclimate.com/github/codegram/hyperclient.png)](https://codeclimate.com/github/codegram/hyperclient)
+[![Build Status](https://secure.travis-ci.org/codegram/hyperclient.svg)](http://travis-ci.org/codegram/hyperclient)
+[![Dependency Status](https://gemnasium.com/codegram/hyperclient.svg)](http://gemnasium.com/codegram/hyperclient)
+[![Code Climate](https://codeclimate.com/github/codegram/hyperclient.svg)](https://codeclimate.com/github/codegram/hyperclient)
 
 Hyperclient is a Hypermedia API client written in Ruby. It fully supports [JSON HAL](http://stateless.co/hal_specification.html).
 
@@ -35,6 +35,24 @@ api = Hyperclient.new('https://grape-with-roar.herokuapp.com/api') do |client|
   client.connection do |conn|
     conn.use Faraday::Request::OAuth
   end
+end
+```
+
+You can pass options to the Faraday connection block in the `connection` block:
+
+```ruby
+api = Hyperclient.new('https://grape-with-roar.herokuapp.com/api') do |client|
+  client.connection(ssl: { verify: false }) do |conn|
+    conn.use Faraday::Request::OAuth
+  end
+end
+```
+
+Or when using the default connection configuration you can use `faraday_options`:
+
+```ruby
+api = Hyperclient.new('https://grape-with-roar.herokuapp.com/api') do |client|
+  client.faraday_options = { ssl: { verify: false } }
 end
 ```
 

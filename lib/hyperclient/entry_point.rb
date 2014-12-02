@@ -21,7 +21,7 @@ module Hyperclient
   #  client = Hyperclient::EntryPoint.new('http://my.api.org')
   #
   #  client = Hyperclient::EntryPoint.new('http://my.api.org') do |entry_point|
-  #    entry_point.connection(default: true) do |conn|
+  #    entry_point.connection do |conn|
   #      conn.use Faraday::Request::OAuth
   #    end
   #    entry_point.headers['Access-Token'] = 'token'
@@ -48,20 +48,29 @@ module Hyperclient
     #  default   - Set to true to reuse default Faraday connection options.
     #
     # Returns a Faraday::Connection.
-    def connection(options = { default: true }, &block)
+    def connection(options = {}, &block)
+      @faraday_options ||= options.dup
       if block_given?
         fail ConnectionAlreadyInitializedError if @connection
-        if options[:default]
+        if @faraday_options.delete(:default) == false
+          @faraday_block = block
+        else
           @faraday_block = lambda do |conn|
             default_faraday_block.call conn
             block.call conn
           end
-        else
-          @faraday_block = block
         end
       else
-        @connection ||= Faraday.new(_url, { headers: headers }, &faraday_block)
+        @connection ||= Faraday.new(_url, faraday_options, &faraday_block)
       end
+    end
+
+    # Public: Headers included with every API request.
+    #
+    # Returns a Hash.
+    def headers
+      return @connection.headers if @connection
+      @headers ||= default_headers
     end
 
     # Public: Set headers.
@@ -72,12 +81,19 @@ module Hyperclient
       @headers = value
     end
 
-    # Public: Headers included with every API request.
+    # Public: Options passed to Faraday
     #
     # Returns a Hash.
-    def headers
-      return @connection.headers if @connection
-      @headers ||= default_headers
+    def faraday_options
+      (@faraday_options ||= {}).merge(headers: headers)
+    end
+
+    # Public: Set Faraday connection options.
+    #
+    # value    - A Hash containing options to pass to Faraday
+    def faraday_options=(value)
+      fail ConnectionAlreadyInitializedError if @connection
+      @faraday_options = value
     end
 
     # Public: Faraday block used with every API request.
