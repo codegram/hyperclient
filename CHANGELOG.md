@@ -1,3 +1,7 @@
+### 0.7.1 (Next)
+
+* Your contribution here.
+
 ### 0.7.0 (February 23, 2015)
 
 This version introduces several backwards incompatible changes. See [UPGRADING](UPGRADING.md) for details.
