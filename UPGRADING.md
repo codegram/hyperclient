@@ -14,6 +14,32 @@ Hyperclient.new('https://api.example.org/') do |client|
 end
 ```
 
+#### Changes to default headers may impact Hyperclient in test
+
+If you are using Hyperclient to test an API as [described in README.md](https://github.com/codegram/hyperclient#testing-using-hyperclient) and if the API expects 'application/hal+json' as the content_type for requests, you may need to update how you set up Hyperclient in your specs.  [As defined in the ```default_faraday_block``` method in ```Hyperclient::EntryPoint```](https://github.com/codegram/hyperclient/blob/9f908854395523b38e0d4fc834d6db1f8b6dfb22/lib/hyperclient/entry_point.rb#L129), you can specify that you are encoding requests via faraday as ```:hal_json```.
+
+```ruby
+Hyperclient.new('http://example.org/api') do |client|
+  client.connection(default: false) do |conn|
+    conn.request :hal_json
+    conn.response :json
+    conn.use Faraday::Adapter::Rack, app
+  end
+end
+```
+
+instead of:
+
+```ruby
+Hyperclient.new('http://example.org/api') do |client|
+  client.connection(default: false) do |conn|
+    conn.request :json
+    conn.response :json
+    conn.use Faraday::Adapter::Rack, app
+  end
+end
+```
+
 ### Upgrading to >= 0.6.0
 
 #### Changes in HTTP Error Handling
@@ -61,4 +87,3 @@ Instead Of                                              | Write This
 `api.links.widget.expand(id: 3).put(name: 'updated`)    | `api._links.widget._expand(id: 3)._put(name: 'updated')`
 
 For more information see [#63](https://github.com/codegram/hyperclient/pull/63).
-
