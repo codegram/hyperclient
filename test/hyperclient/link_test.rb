@@ -117,12 +117,6 @@ module Hyperclient
       end
     end
 
-    describe '_connection' do
-      it 'returns the entry point connection' do
-        Link.new('key', {}, entry_point)._connection.must_equal entry_point.connection
-      end
-    end
-
     describe 'get' do
       it 'sends a GET request with the link url' do
         link = Link.new('key', { 'href' => '/productions/1' }, entry_point)

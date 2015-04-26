@@ -7,8 +7,8 @@ module Hyperclient
   class Curie
     # Public: Initializes a new Curie.
     #
-    # curie          - The String with the URI of the curie.
-    # entry_point   - The EntryPoint object to inject the cofnigutation.
+    # curie_hash  - The String with the URI of the curie.
+    # entry_point - The EntryPoint object to inject the configuration.
     def initialize(curie_hash, entry_point)
       @curie_hash = curie_hash
       @entry_point = entry_point
@@ -22,12 +22,12 @@ module Hyperclient
       !!@curie_hash['templated']
     end
 
-    # Public: Returns the name property of the Curie
+    # Public: Returns the name property of the Curie.
     def name
       @curie_hash['name']
     end
 
-    # Public: Returns the href property of the Curie
+    # Public: Returns the href property of the Curie.
     def href
       @curie_hash['href']
     end
@@ -38,7 +38,7 @@ module Hyperclient
 
     # Public: Expands the Curie when is templated with the given variables.
     #
-    # rel - The rel to expand.
+    # rel - The String rel to expand.
     #
     # Returns a new expanded url.
     def expand(rel)
