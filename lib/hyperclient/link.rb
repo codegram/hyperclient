@@ -80,76 +80,37 @@ module Hyperclient
       @link['hreflang']
     end
 
-    # Public: Returns the Resource which the Link is pointing to.
-    def _get
-      @resource = begin
-        response = Futuroscope::Future.new do
-          _connection.get(_url)
-        end
-        Resource.new(response.body, @entry_point, response)
-      end
-    end
-
     def _resource
       @resource || _get
     end
 
-    def _connection
-      @entry_point.connection
+    # Public: Returns the Resource which the Link is pointing to.
+    def _get
+      http_method(:get)
     end
 
     def _options
-      @resource = begin
-        response = Futuroscope::Future.new do
-          _connection.run_request(:options, _url, nil, nil)
-        end
-        Resource.new(response.body, @entry_point, response)
-      end
+      http_method(:options)
     end
 
     def _head
-      @resource = begin
-        response = Futuroscope::Future.new do
-          _connection.head(_url)
-        end
-        Resource.new(response.body, @entry_point, response)
-      end
+      http_method(:head)
     end
 
     def _delete
-      @resource = begin
-        response = Futuroscope::Future.new do
-          _connection.delete(_url)
-        end
-        Resource.new(response.body, @entry_point, response)
-      end
+      http_method(:delete)
     end
 
     def _post(params = {})
-      @resource = begin
-        response = Futuroscope::Future.new do
-          _connection.post(_url, params)
-        end
-        Resource.new(response.body, @entry_point, response)
-      end
+      http_method(:post, params)
     end
 
     def _put(params = {})
-      @resource = begin
-        response = Futuroscope::Future.new do
-          _connection.put(_url, params)
-        end
-        Resource.new(response.body, @entry_point, response)
-      end
+      http_method(:put, params)
     end
 
     def _patch(params = {})
-      @resource = begin
-        response = Futuroscope::Future.new do
-          _connection.patch(_url, params)
-        end
-        Resource.new(response.body, @entry_point, response)
-      end
+      http_method(:patch, params)
     end
 
     def inspect
@@ -197,6 +158,15 @@ module Hyperclient
     # Internal: Memoization for a URITemplate instance
     def _uri_template
       @uri_template ||= URITemplate.new(@link['href'])
+    end
+
+    def http_method(method, body = nil)
+      @resource = begin
+        response = Futuroscope::Future.new do
+          @entry_point.connection.run_request(method, _url, body, nil)
+        end
+        Resource.new(response.body, @entry_point, response)
+      end
     end
   end
 end
