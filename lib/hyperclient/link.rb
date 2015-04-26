@@ -10,7 +10,7 @@ module Hyperclient
     #
     # key           - The key or name of the link.
     # link          - The String with the URI of the link.
-    # entry_point   - The EntryPoint object to inject the cofnigutation.
+    # entry_point   - The EntryPoint object to inject the configuration.
     # uri_variables - The optional Hash with the variables to expand the link
     #                 if it is templated.
     def initialize(key, link, entry_point, uri_variables = nil)

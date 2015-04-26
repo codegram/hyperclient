@@ -43,9 +43,9 @@ module Hyperclient
 
     # Public: A Faraday connection to use as a HTTP client.
     #
-    # options    - A Hash containing additional options.
-    #
-    #  default   - Set to true to reuse default Faraday connection options.
+    # options - A Hash containing additional options to pass to Farday. Use
+    # {default: false} if you want to skip using default Faraday options set by
+    # Hyperclient.
     #
     # Returns a Faraday::Connection.
     def connection(options = {}, &block)
@@ -123,12 +123,12 @@ module Hyperclient
     #
     # Returns a block.
     def default_faraday_block
-      lambda do |conn|
-        conn.use Faraday::Response::RaiseError
-        conn.use FaradayMiddleware::FollowRedirects
-        conn.request :hal_json
-        conn.response :hal_json, content_type: /\bjson$/
-        conn.adapter :net_http
+      lambda do |connection|
+        connection.use Faraday::Response::RaiseError
+        connection.use FaradayMiddleware::FollowRedirects
+        connection.request :hal_json
+        connection.response :hal_json, content_type: /\bjson$/
+        connection.adapter :net_http
       end
     end
 
