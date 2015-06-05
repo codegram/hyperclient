@@ -21,3 +21,7 @@ Feature: API navigation
     Given I connect to the API
     When I load a single post
     Then I should also be able to access it's embedded comments
+
+  Scenario: Navigation links
+    When I connect to the API
+    Then I should be able to navigate to next page
