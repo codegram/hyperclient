@@ -8,7 +8,8 @@ module Spinach
               "self": { "href": "/" },
               "posts": { "href": "/posts" },
               "search": { "href": "/search{?q}", "templated": true },
-              "api:authors": { "href": "/authors" }
+              "api:authors": { "href": "/authors" },
+              "next": { "href": "/page2" }
           }
       }'
     end
@@ -36,6 +37,26 @@ module Spinach
                 "title": "Some comment"
               }
             ]
+          }
+      }'
+    end
+
+    def page2_response
+      '{
+          "_links": {
+              "self": { "href": "/page2" },
+              "posts": { "href": "/posts_of_page2" },
+              "next": { "href": "/page3" }
+          }
+      }'
+    end
+
+    def page3_response
+      '{
+          "_links": {
+              "self": { "href": "/page3" },
+              "posts": { "href": "/posts_of_page3" },
+              "api:authors": { "href": "/authors" }
           }
       }'
     end
