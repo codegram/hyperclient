@@ -272,6 +272,16 @@ module Hyperclient
           resource.foos._embedded.orders.first.id.must_equal 1
           resource.foos.first.must_equal nil
         end
+
+        it 'backtracks when navigating links' do
+          resource = Resource.new({ '_links' => { 'next' => { 'href' => '/page2' } } }, entry_point)
+
+          stub_request(entry_point.connection) do |stub|
+            stub.get('http://api.example.org/page2') { [200, {}, { '_links' => { 'next' => { 'href' => 'http://api.example.org/page3' } } }] }
+          end
+
+          resource.next._links.next._url.must_equal 'http://api.example.org/page3'
+        end
       end
 
       describe 'resource' do
