@@ -1,5 +1,6 @@
 ### 0.7.1 (Next)
 
+* [#87](https://github.com/codegram/hyperclient/pull/87): Fix: eager delegation causes link skipping - [@dblock](https://github.com/dblock).
 * Your contribution here.
 
 ### 0.7.0 (February 23, 2015)

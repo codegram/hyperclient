@@ -30,4 +30,12 @@ class Spinach::Features::ApiNavigation < Spinach::FeatureSteps
     comment = @post._embedded.comments.first
     comment._attributes.title.wont_equal nil
   end
+
+  step 'I should be able to navigate to next page' do
+    assert_equal '/posts_of_page2', api._links.next._links.posts._url
+  end
+
+  step 'I should be able to navigate to next page without links' do
+    assert_equal '/posts_of_page2', api.next.posts._url
+  end
 end

@@ -123,18 +123,23 @@ module Hyperclient
 
     private
 
-    # Internal: Delegate the method to the API if it exists.
-    #
-    # This allows `api.posts` instead of `api.links.posts.embedded`
+    # Internal: Delegate the method further down the API if the resource cannot serve it.
     def method_missing(method, *args, &block)
-      if @key && _resource.respond_to?(@key) && (delegate = _resource.send(@key)) && delegate.respond_to?(method.to_s)
-        # named.named becomes named
-        delegate.send(method, *args, &block)
-      elsif _resource.respond_to?(method.to_s)
-        _resource.send(method, *args, &block)
+      if _resource.respond_to?(method.to_s)
+        _resource.send(method, *args, &block) || delegate_method(method, *args, &block)
       else
         super
       end
+    end
+
+    # Internal: Delegate the method to the API if the resource cannot serve it.
+    #
+    # This allows `api.posts` instead of `api._links.posts.embedded.posts`
+    def delegate_method(method, *args, &block)
+      return unless @key && _resource.respond_to?(@key)
+      @delegate ||= _resource.send(@key)
+      return unless @delegate && @delegate.respond_to?(method.to_s)
+      @delegate.send(method, *args, &block)
     end
 
     # Internal: Accessory method to allow the link respond to the
