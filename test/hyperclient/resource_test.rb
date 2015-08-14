@@ -101,6 +101,44 @@ module Hyperclient
           resource._attributes.expects(:foo).returns('bar')
           resource['foo'].must_equal 'bar'
         end
+
+        describe '#fetch' do
+          it 'returns the value for keys that exist' do
+            resource._attributes.expects(:foo).returns('bar')
+
+            resource.fetch('foo').must_equal 'bar'
+          end
+
+          it 'raises an error for missing keys' do
+            proc { resource.fetch('missing key') }.must_raise KeyError
+          end
+
+          describe 'with a default value' do
+            it 'returns the value for keys that exist' do
+              resource._attributes.expects(:foo).returns('bar')
+              resource.fetch('foo', 'default value').must_equal 'bar'
+            end
+
+            it 'returns the default value for missing keys' do
+              resource.fetch('missing key', 'default value').must_equal 'default value'
+            end
+          end
+
+          describe 'with a block' do
+            it 'returns the value for keys that exist' do
+              resource._attributes.expects(:foo).returns('bar')
+              resource.fetch('foo') { 'default value' }.must_equal 'bar'
+            end
+
+            it 'returns the value from the block' do
+              resource.fetch('z') { 'go fish!' }.must_equal 'go fish!'
+            end
+
+            it 'returns the value with args from the block' do
+              resource.fetch('z') { |el| "go fish, #{el}" }.must_equal 'go fish, z'
+            end
+          end
+        end
       end
     end
 

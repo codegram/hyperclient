@@ -95,6 +95,15 @@ api.splines.each do |spline|
 end
 ```
 
+Other methods, including `[]` and `fetch` are also available
+
+```ruby
+api.splines.each do |spline|
+  puts "A spline with ID #{spline[:uuid]}."
+  puts "Maybe with reticulated: #{spline.fetch(:reticulated, '-- no reticulated')}"
+end
+```
+
 ### Links and Embedded Resources
 
 The splines example above followed a link called "splines". While you can, you do not need to specify the HAL navigational structure, including links or embedded resources. Hyperclient will resolve these for you.  If you prefer, you can explicitly navigate the link structure via `_links`. In the following example the "splines" link leads to a collection of embedded splines. Invoking `api.splines` is equivalent to `api._links.splines._embedded.splines`.
