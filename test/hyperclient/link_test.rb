@@ -75,6 +75,21 @@ module Hyperclient
           link._expand._url.must_equal '/orders'
           link._url.must_equal '/orders'
         end
+
+        it 'does not expand unknown variables' do
+          link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => true }, entry_point)
+          link._expand(unknown: '1')._url.must_equal '/orders'
+        end
+
+        it 'only expands known variables' do
+          link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => true }, entry_point)
+          link._expand(unknown: '1', id: '2')._url.must_equal '/orders?id=2'
+        end
+
+        it 'only expands templated links' do
+          link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => false }, entry_point)
+          link._expand(id: '1')._url.must_equal '/orders{?id}'
+        end
       end
     end
 
@@ -89,6 +104,18 @@ module Hyperclient
         link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => true }, entry_point, id: 1)
 
         link._url.must_equal '/orders?id=1'
+      end
+
+      it 'does not expand an uri template with unknown variables' do
+        link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => true }, entry_point, unknown: 1)
+
+        link._url.must_equal '/orders'
+      end
+
+      it 'only expands known variables in a uri template' do
+        link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => true }, entry_point, unknown: 1, id: 2)
+
+        link._url.must_equal '/orders?id=2'
       end
 
       it 'returns the link when no uri template' do
