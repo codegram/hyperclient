@@ -70,6 +70,5 @@ module Hyperclient
         end
       end
     end
-
   end
 end

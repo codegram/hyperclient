@@ -179,7 +179,6 @@ module Hyperclient
       let(:link) { Link.new('key', { 'href' => '/productions/1' }, entry_point) }
 
       it 'sends a POST request with the link url and params' do
-
         stub_request(entry_point.connection) do |stub|
           stub.post('http://api.example.org/productions/1') { [200, {}, nil] }
         end
@@ -188,7 +187,6 @@ module Hyperclient
       end
 
       it 'defaults params to an empty hash' do
-
         stub_request(entry_point.connection) do |stub|
           stub.post('http://api.example.org/productions/1') { [200, {}, nil] }
         end
@@ -201,7 +199,6 @@ module Hyperclient
       let(:link) { Link.new('key', { 'href' => '/productions/1' }, entry_point) }
 
       it 'sends a PUT request with the link url and params' do
-
         stub_request(entry_point.connection) do |stub|
           stub.put('http://api.example.org/productions/1', '{"foo":"bar"}') { [200, {}, nil] }
         end
@@ -210,7 +207,6 @@ module Hyperclient
       end
 
       it 'defaults params to an empty hash' do
-
         stub_request(entry_point.connection) do |stub|
           stub.put('http://api.example.org/productions/1') { [200, {}, nil] }
         end
@@ -223,7 +219,6 @@ module Hyperclient
       let(:link) { Link.new('key', { 'href' => '/productions/1' }, entry_point) }
 
       it 'sends a PATCH request with the link url and params' do
-
         stub_request(entry_point.connection) do |stub|
           stub.patch('http://api.example.org/productions/1', '{"foo":"bar"}') { [200, {}, nil] }
         end
@@ -286,7 +281,6 @@ module Hyperclient
 
       describe 'resource' do
         before do
-
           stub_request(entry_point.connection) do |stub|
             stub.get('http://myapi.org/orders') { [200, {}, '{"resource": "This is the resource"}'] }
           end

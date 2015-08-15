@@ -75,7 +75,7 @@ module Hyperclient
     #
     # Returns an Object.
     def method_missing(method_name, *_args, &_block)
-      @collection.fetch(method_name.to_s)  do
+      @collection.fetch(method_name.to_s) do
         fail "Could not find `#{method_name}` in #{self.class.name}"
       end
     end
