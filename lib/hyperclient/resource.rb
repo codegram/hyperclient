@@ -57,6 +57,18 @@ module Hyperclient
       send(name) if respond_to?(name)
     end
 
+    def fetch(key, *args)
+      return self[key] if respond_to?(key)
+
+      if args.any?
+        args.first
+      elsif block_given?
+        yield key
+      else
+        fail KeyError
+      end
+    end
+
     private
 
     # Internal: Returns the self Link of the Resource. Used to handle the HTTP

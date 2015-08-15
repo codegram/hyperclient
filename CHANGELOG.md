@@ -1,6 +1,7 @@
 ### 0.7.1 (Next)
 
 * [#87](https://github.com/codegram/hyperclient/pull/87): Fix: eager delegation causes link skipping - [@dblock](https://github.com/dblock).
+* [#89](https://github.com/codegram/hyperclient/issues/89): Add method fetch for Hyperclient::Resource - [@alabeduarte](https://github.com/alabeduarte).
 * Your contribution here.
 
 ### 0.7.0 (February 23, 2015)
