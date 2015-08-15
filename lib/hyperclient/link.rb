@@ -1,6 +1,7 @@
 require 'hyperclient/resource'
 require 'uri_template'
 require 'futuroscope'
+require_relative '../uri_template/rfc6570/expression'
 
 module Hyperclient
   # Internal: The Link is used to let a Resource interact with the API.
