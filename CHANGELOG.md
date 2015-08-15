@@ -1,3 +1,7 @@
+### 0.7.2 (Next)
+
+* Your contribution here.
+
 ### 0.7.1 (August 15, 2015)
 
 * [#89](https://github.com/codegram/hyperclient/issues/89): Added `Hyperclient::Resource#fetch` - [@alabeduarte](https://github.com/alabeduarte).
