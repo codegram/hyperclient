@@ -154,7 +154,7 @@ module Hyperclient
 
     # Internal: avoid delegating to resource
     #
-    # #to_ary is called for implicit array coersion (such as parallel assignment
+    # #to_ary is called for implicit array coercion (such as parallel assignment
     # or Array#flatten). Returning nil tells Ruby that this record is not Array-like.
     def to_ary
       nil
