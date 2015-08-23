@@ -1,3 +1,7 @@
+### 0.7.3 (Next)
+
+* Your contribution here.
+
 ### 0.7.2 (August 23, 2015)
 
 * [#95](https://github.com/codegram/hyperclient/issues/95): Fix: re-add eager delegation for `resource.x._embeddded.x` - [@dblock](https://github.com/dblock).
