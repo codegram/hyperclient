@@ -26,3 +26,7 @@ Feature: API navigation
     When I connect to the API
     Then I should be able to navigate to next page
     Then I should be able to navigate to next page without links
+
+  Scenario: Counts
+    When I connect to the API
+    Then I should be able to count embedded items

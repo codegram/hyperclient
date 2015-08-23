@@ -20,7 +20,25 @@ module Spinach
             "self": { "href": "/posts" },
             "last_post": {"href": "/posts/1"}
           },
-          "total_posts": "9"
+          "total_posts": "2",
+          "_embedded": {
+            "posts": [
+              {
+                "title": "My first blog post",
+                "body":  "Lorem ipsum dolor sit amet",
+                "_links": {
+                  "self": { "href": "/posts/1" }
+                }
+              },
+              {
+                "title": "My second blog post",
+                "body":  "Lorem ipsum dolor sit amet",
+                "_links": {
+                  "self": { "href": "/posts/2" }
+                }
+              }
+            ]
+          }
       }'
     end
 

@@ -38,4 +38,10 @@ class Spinach::Features::ApiNavigation < Spinach::FeatureSteps
   step 'I should be able to navigate to next page without links' do
     assert_equal '/posts_of_page2', api.next.posts._url
   end
+
+  step 'I should be able to count embedded items' do
+    assert_equal 2, api._links.posts._resource._embedded.posts.count
+    assert_equal 2, api.posts._embedded.posts.count
+    assert_equal 2, api.posts.count
+  end
 end
