@@ -1,6 +1,50 @@
 Upgrading Hyperclient
 =====================
 
+### Upgrading to >= 0.8.0
+
+### Changes in curies
+
+Previous versions of Hyperclient misinterpreted the HAL RFC and used curies as if they were designed to enable compact URIs. Curies in HAL are provided for documentation purposes.
+
+Since version 0.8.0 they are no longer expanded. Consider the following example.
+
+```json
+{
+  "_links": {
+    "self": { "href": "/orders" },
+    "curies": [{
+      "name": "acme",
+      "href": "http://docs.acme.com/relations/{rel}",
+      "templated": true
+    }],
+    "acme:widgets": { "href": "/widgets" }
+  }
+}
+```
+
+```rb
+client = Hyperclient.new('http://example.org/api')
+
+client._links["acme:widgets"]
+
+# before
+# => "http://docs.acme.com/relations/widgets"
+
+# after
+# => "http://example.org/api/widgets"
+```
+
+In addition, you can now access and expand the curie.
+
+```rb
+curie = client._links._curies["acme"]
+curie.expand('widgets')
+# => "http://docs.acme.com/relations/widgets"
+```
+
+See [#97](https://github.com/codegram/hyperclient/issues/97) for more information.
+
 ### Upgrading to >= 0.7.0
 
 #### Changes in default headers

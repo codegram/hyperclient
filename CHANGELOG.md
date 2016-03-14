@@ -1,4 +1,6 @@
-### 0.7.3 (Next)
+### 0.8.0 (Next)
+
+* [#97](https://github.com/codegram/hyperclient/issues/97): Fix: curies are no longer used as link shorteners - [@joshco](https://github.com/joshco), [@dblock](https://github.com/dblock).
 
 * Your contribution here.
 

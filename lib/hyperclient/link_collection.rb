@@ -11,6 +11,8 @@ module Hyperclient
   #   resource.links.author
   #
   class LinkCollection < Collection
+    attr_reader :_curies
+
     # Public: Initializes a LinkCollection.
     #
     # collection  - The Hash with the links.
@@ -19,13 +21,13 @@ module Hyperclient
     def initialize(collection, curies, entry_point)
       fail "Invalid response for LinkCollection. The response was: #{collection.inspect}" if collection && !collection.respond_to?(:collect)
 
-      @curies = (curies || {}).reduce({}) do |hash, curie_hash|
+      @_curies = (curies || {}).reduce({}) do |hash, curie_hash|
         curie = build_curie(curie_hash, entry_point)
         hash.update(curie.name => curie)
       end
 
       @collection = (collection || {}).reduce({}) do |hash, (name, link)|
-        hash.update(name => build_link(name, link, @curies, entry_point))
+        hash.update(name => build_link(name, link, @_curies, entry_point))
       end
     end
 
@@ -46,10 +48,6 @@ module Hyperclient
         link_or_links.map do |link|
           build_link(name, link, curies, entry_point)
         end
-      elsif (curie_parts = /(?<ns>[^:]+):(?<short_name>.+)/.match(name))
-        curie = curies[curie_parts[:ns]]
-        link_or_links['href'] = curie.expand(link_or_links['href']) if curie
-        Link.new(name, link_or_links, entry_point)
       else
         Link.new(name, link_or_links, entry_point)
       end
