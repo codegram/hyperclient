@@ -46,10 +46,6 @@ module Hyperclient
         link_or_links.map do |link|
           build_link(name, link, curies, entry_point)
         end
-      elsif (curie_parts = /(?<ns>[^:]+):(?<short_name>.+)/.match(name))
-        curie = curies[curie_parts[:ns]]
-        link_or_links['href'] = curie.expand(link_or_links['href']) if curie
-        Link.new(name, link_or_links, entry_point)
       else
         Link.new(name, link_or_links, entry_point)
       end
