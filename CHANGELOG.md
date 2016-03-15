@@ -1,4 +1,8 @@
-### 0.8.1 (MArch 15, 2016)
+### 0.8.2 (Next)
+
+Your contribution here.
+
+### 0.8.1 (March 15, 2016)
 
 * [#97](https://github.com/codegram/hyperclient/issues/97): Fix: curies are no longer used as link shorteners - [@joshco](https://github.com/joshco), [@dblock](https://github.com/dblock).
 * [#95](https://github.com/codegram/hyperclient/issues/95): Fix: re-add eager delegation for `resource.each` - [@dblock](https://github.com/dblock).
