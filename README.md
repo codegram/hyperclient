@@ -10,7 +10,7 @@ Hyperclient is a Hypermedia API client written in Ruby. It fully supports [JSON 
 
 ## Usage
 
-The examples in this README use the [Splines Demo API](https://github.com/dblock/grape-with-roar) running [here](https://grape-with-roar.herokuapp.com/api). If you're upgrading from a previous version, please make sure to read [UPGRADING](UPGRADING.md).
+The examples in this README use the [Splines Demo API](https://github.com/ruby-grape/grape-with-roar) running [here](https://grape-with-roar.herokuapp.com/api). If you're upgrading from a previous version, please make sure to read [UPGRADING](UPGRADING.md).
 
 ### API Client
 
@@ -199,6 +199,7 @@ describe Acme::Api do
 
   let(:client) do
     Hyperclient.new('http://example.org/api') do |client|
+      client.headers['Content-Type'] = 'application/json'
       client.connection(default: false) do |conn|
         conn.request :json
         conn.response :json
@@ -213,7 +214,7 @@ describe Acme::Api do
 end
 ```
 
-For a complete example refer to [this Splines Demo API test](https://github.com/dblock/grape-with-roar/blob/master/spec/api/splines_endpoint_with_hyperclient_spec.rb).
+For a complete example refer to [this Splines Demo API test](https://github.com/ruby-grape/grape-with-roar/blob/master/spec/api/splines_endpoint_with_hyperclient_spec.rb).
 
 ## Reference
 
