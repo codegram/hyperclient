@@ -30,3 +30,4 @@ Feature: API navigation
   Scenario: Counts
     When I connect to the API
     Then I should be able to count embedded items
+    Then I should be able to iterate over embedded items

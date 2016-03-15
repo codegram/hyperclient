@@ -1,5 +1,6 @@
 ### 0.8.1 (Next)
 
+* [#95](https://github.com/codegram/hyperclient/issues/95): Fix: re-add eager delegation for `resource.each` - [@dblock](https://github.com/dblock).
 * Your contribution here.
 
 ### 0.8.0 (March 15, 2015)

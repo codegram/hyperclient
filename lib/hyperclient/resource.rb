@@ -84,7 +84,7 @@ module Hyperclient
     def method_missing(method, *args, &block)
       if args.any? && args.first.is_a?(Hash)
         _links.send(method, [], &block)._expand(*args)
-      elsif !Enumerable.method_defined?(method)
+      elsif !Array.method_defined?(method)
         [:_attributes, :_embedded, :_links].each do |target|
           target = send(target)
           return target.send(method, *args, &block) if target.respond_to?(method.to_s)

@@ -43,5 +43,14 @@ class Spinach::Features::ApiNavigation < Spinach::FeatureSteps
     assert_equal 2, api._links.posts._resource._embedded.posts.count
     assert_equal 2, api.posts._embedded.posts.count
     assert_equal 2, api.posts.count
+    assert_equal 2, api.posts.map.count
+  end
+
+  step 'I should be able to iterate over embedded items' do
+    count = 0
+    api.posts.each do |_post|
+      count += 1
+    end
+    assert_equal 2, count
   end
 end
