@@ -127,10 +127,11 @@ The client is responsible for supplying all the necessary parameters. Templated 
 
 ### Curies
 
-Curies are named tokens that you can define in the document and use to express curie relation URIs in a friendlier, more compact fashion. For example, the demo API contains very long links to images that use an "images" curie. Hyperclient handles curies and resolves these into full links automatically.
+Curies are a suggested means by which to link documentation of a given resource. For example, the demo API contains very long links to images that use an "images" curie.
 
 ```ruby
 puts spline['image:thumbnail'] # => https://grape-with-roar.herokuapp.com/api/splines/uuid/images/thumbnail.jpg
+puts spline.links._curies['image'].expand('thumbnail') # => /docs/images/thumbnail
 ```
 
 ### Attributes

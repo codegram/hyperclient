@@ -23,11 +23,16 @@ module Hyperclient
     end
 
     let(:curie) do
-      Curie.new({ 'name' => 'image', 'href' => '/images/{?rel}', 'templated' => true }, entry_point)
+      Curie.new({ 'name' => 'image', 'href' => '/images/{rel}', 'templated' => true }, entry_point)
     end
     describe '_name' do
       it 'returns curie name' do
         curie.name.must_equal 'image'
+      end
+    end
+    describe 'expand' do
+      it 'expands link' do
+        curie.expand('thumbnail').must_equal '/images/thumbnail'
       end
     end
   end
