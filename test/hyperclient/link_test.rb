@@ -75,6 +75,21 @@ module Hyperclient
           link._expand._url.must_equal '/orders'
           link._url.must_equal '/orders'
         end
+
+        it 'does not expand unknown variables' do
+          link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => true }, entry_point)
+          link._expand(unknown: '1')._url.must_equal '/orders'
+        end
+
+        it 'only expands known variables' do
+          link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => true }, entry_point)
+          link._expand(unknown: '1', id: '2')._url.must_equal '/orders?id=2'
+        end
+
+        it 'only expands templated links' do
+          link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => false }, entry_point)
+          link._expand(id: '1')._url.must_equal '/orders{?id}'
+        end
       end
     end
 
@@ -89,6 +104,18 @@ module Hyperclient
         link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => true }, entry_point, id: 1)
 
         link._url.must_equal '/orders?id=1'
+      end
+
+      it 'does not expand an uri template with unknown variables' do
+        link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => true }, entry_point, unknown: 1)
+
+        link._url.must_equal '/orders'
+      end
+
+      it 'only expands known variables in a uri template' do
+        link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => true }, entry_point, unknown: 1, id: 2)
+
+        link._url.must_equal '/orders?id=2'
       end
 
       it 'returns the link when no uri template' do
@@ -114,12 +141,6 @@ module Hyperclient
         end
 
         link._resource
-      end
-    end
-
-    describe '_connection' do
-      it 'returns the entry point connection' do
-        Link.new('key', {}, entry_point)._connection.must_equal entry_point.connection
       end
     end
 
@@ -185,7 +206,6 @@ module Hyperclient
       let(:link) { Link.new('key', { 'href' => '/productions/1' }, entry_point) }
 
       it 'sends a POST request with the link url and params' do
-
         stub_request(entry_point.connection) do |stub|
           stub.post('http://api.example.org/productions/1') { [200, {}, nil] }
         end
@@ -194,7 +214,6 @@ module Hyperclient
       end
 
       it 'defaults params to an empty hash' do
-
         stub_request(entry_point.connection) do |stub|
           stub.post('http://api.example.org/productions/1') { [200, {}, nil] }
         end
@@ -207,7 +226,6 @@ module Hyperclient
       let(:link) { Link.new('key', { 'href' => '/productions/1' }, entry_point) }
 
       it 'sends a PUT request with the link url and params' do
-
         stub_request(entry_point.connection) do |stub|
           stub.put('http://api.example.org/productions/1', '{"foo":"bar"}') { [200, {}, nil] }
         end
@@ -216,7 +234,6 @@ module Hyperclient
       end
 
       it 'defaults params to an empty hash' do
-
         stub_request(entry_point.connection) do |stub|
           stub.put('http://api.example.org/productions/1') { [200, {}, nil] }
         end
@@ -229,7 +246,6 @@ module Hyperclient
       let(:link) { Link.new('key', { 'href' => '/productions/1' }, entry_point) }
 
       it 'sends a PATCH request with the link url and params' do
-
         stub_request(entry_point.connection) do |stub|
           stub.patch('http://api.example.org/productions/1', '{"foo":"bar"}') { [200, {}, nil] }
         end
@@ -278,11 +294,20 @@ module Hyperclient
           resource.foos._embedded.orders.first.id.must_equal 1
           resource.foos.first.must_equal nil
         end
+
+        it 'backtracks when navigating links' do
+          resource = Resource.new({ '_links' => { 'next' => { 'href' => '/page2' } } }, entry_point)
+
+          stub_request(entry_point.connection) do |stub|
+            stub.get('http://api.example.org/page2') { [200, {}, { '_links' => { 'next' => { 'href' => 'http://api.example.org/page3' } } }] }
+          end
+
+          resource.next._links.next._url.must_equal 'http://api.example.org/page3'
+        end
       end
 
       describe 'resource' do
         before do
-
           stub_request(entry_point.connection) do |stub|
             stub.get('http://myapi.org/orders') { [200, {}, '{"resource": "This is the resource"}'] }
           end

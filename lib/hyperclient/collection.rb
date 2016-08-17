@@ -1,5 +1,5 @@
 module Hyperclient
-  # Public: A helper class to wrapp a collection of elements and provide
+  # Public: A helper class to wrap a collection of elements and provide
   # Hash-like access or via a method call.
   #
   # Examples
@@ -25,8 +25,13 @@ module Hyperclient
       @collection.each(&block)
     end
 
-    def include?(obj)
-      @collection.include?(obj)
+    # Public: Checks if this collection includes a given key.
+    #
+    # key - A String or Symbol to check for existance.
+    #
+    # Returns True/False.
+    def include?(key)
+      @collection.include?(key)
     end
 
     # Public: Returns a value from the collection for the given key.
@@ -51,7 +56,7 @@ module Hyperclient
       @collection[name.to_s]
     end
 
-    # Public: Returns the wrapped collection as a hash.
+    # Public: Returns the wrapped collection as a Hash.
     #
     # Returns a Hash.
     def to_h
@@ -70,7 +75,7 @@ module Hyperclient
     #
     # Returns an Object.
     def method_missing(method_name, *_args, &_block)
-      @collection.fetch(method_name.to_s)  do
+      @collection.fetch(method_name.to_s) do
         fail "Could not find `#{method_name}` in #{self.class.name}"
       end
     end

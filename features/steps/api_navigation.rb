@@ -30,4 +30,27 @@ class Spinach::Features::ApiNavigation < Spinach::FeatureSteps
     comment = @post._embedded.comments.first
     comment._attributes.title.wont_equal nil
   end
+
+  step 'I should be able to navigate to next page' do
+    assert_equal '/posts_of_page2', api._links.next._links.posts._url
+  end
+
+  step 'I should be able to navigate to next page without links' do
+    assert_equal '/posts_of_page2', api.next.posts._url
+  end
+
+  step 'I should be able to count embedded items' do
+    assert_equal 2, api._links.posts._resource._embedded.posts.count
+    assert_equal 2, api.posts._embedded.posts.count
+    assert_equal 2, api.posts.count
+    assert_equal 2, api.posts.map.count
+  end
+
+  step 'I should be able to iterate over embedded items' do
+    count = 0
+    api.posts.each do |_post|
+      count += 1
+    end
+    assert_equal 2, count
+  end
 end

@@ -57,6 +57,18 @@ module Hyperclient
       send(name) if respond_to?(name)
     end
 
+    def fetch(key, *args)
+      return self[key] if respond_to?(key)
+
+      if args.any?
+        args.first
+      elsif block_given?
+        yield key
+      else
+        fail KeyError
+      end
+    end
+
     private
 
     # Internal: Returns the self Link of the Resource. Used to handle the HTTP
@@ -72,7 +84,7 @@ module Hyperclient
     def method_missing(method, *args, &block)
       if args.any? && args.first.is_a?(Hash)
         _links.send(method, [], &block)._expand(*args)
-      else
+      elsif !Array.method_defined?(method)
         [:_attributes, :_embedded, :_links].each do |target|
           target = send(target)
           return target.send(method, *args, &block) if target.respond_to?(method.to_s)

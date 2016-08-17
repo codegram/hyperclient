@@ -14,7 +14,7 @@ module Hyperclient
     # Public: Initializes a ResourceCollection.
     #
     # collection  - The Hash with the embedded resources.
-    # entry_point - The EntryPoint object to inject the cofnigutation.
+    # entry_point - The EntryPoint object to inject the configuration.
     #
     def initialize(collection, entry_point)
       @entry_point = entry_point

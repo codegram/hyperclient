@@ -18,13 +18,13 @@
         "curies" : [
             {
               "name": "image",
-              "href": "/images/{rel}",
+              "href": "/docs/images/{rel}",
               "templated": true
             }
         ],
         "null_link": null,
         "image:thumbnail": {
-          "href": "thumbnails/{version}.jpg",
+          "href": "/images/thumbnails/{version}.jpg",
           "templated": true
         }
     },

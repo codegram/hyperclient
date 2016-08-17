@@ -10,7 +10,7 @@ Hyperclient is a Hypermedia API client written in Ruby. It fully supports [JSON 
 
 ## Usage
 
-The examples in this README use the [Splines Demo API](https://github.com/dblock/grape-with-roar) running [here](https://grape-with-roar.herokuapp.com/api). If you're upgrading from a previous version, please make sure to read [UPGRADING](UPGRADING.md).
+The examples in this README use the [Splines Demo API](https://github.com/ruby-grape/grape-with-roar) running [here](https://grape-with-roar.herokuapp.com/api). If you're upgrading from a previous version, please make sure to read [UPGRADING](UPGRADING.md).
 
 ### API Client
 
@@ -95,6 +95,15 @@ api.splines.each do |spline|
 end
 ```
 
+Other methods, including `[]` and `fetch` are also available
+
+```ruby
+api.splines.each do |spline|
+  puts "A spline with ID #{spline[:uuid]}."
+  puts "Maybe with reticulated: #{spline.fetch(:reticulated, '-- no reticulated')}"
+end
+```
+
 ### Links and Embedded Resources
 
 The splines example above followed a link called "splines". While you can, you do not need to specify the HAL navigational structure, including links or embedded resources. Hyperclient will resolve these for you.  If you prefer, you can explicitly navigate the link structure via `_links`. In the following example the "splines" link leads to a collection of embedded splines. Invoking `api.splines` is equivalent to `api._links.splines._embedded.splines`.
@@ -118,10 +127,11 @@ The client is responsible for supplying all the necessary parameters. Templated 
 
 ### Curies
 
-Curies are named tokens that you can define in the document and use to express curie relation URIs in a friendlier, more compact fashion. For example, the demo API contains very long links to images that use an "images" curie. Hyperclient handles curies and resolves these into full links automatically.
+Curies are a suggested means by which to link documentation of a given resource. For example, the demo API contains very long links to images that use an "images" curie.
 
 ```ruby
 puts spline['image:thumbnail'] # => https://grape-with-roar.herokuapp.com/api/splines/uuid/images/thumbnail.jpg
+puts spline.links._curies['image'].expand('thumbnail') # => /docs/images/thumbnail
 ```
 
 ### Attributes
@@ -189,6 +199,7 @@ describe Acme::Api do
 
   let(:client) do
     Hyperclient.new('http://example.org/api') do |client|
+      client.headers['Content-Type'] = 'application/json'
       client.connection(default: false) do |conn|
         conn.request :json
         conn.response :json
@@ -203,7 +214,7 @@ describe Acme::Api do
 end
 ```
 
-For a complete example refer to [this Splines Demo API test](https://github.com/dblock/grape-with-roar/blob/master/spec/api/splines_endpoint_with_hyperclient_spec.rb).
+For a complete example refer to [this Splines Demo API test](https://github.com/ruby-grape/grape-with-roar/blob/master/spec/api/splines_endpoint_with_hyperclient_spec.rb).
 
 ## Reference
 
