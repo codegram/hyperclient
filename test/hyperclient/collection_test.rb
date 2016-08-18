@@ -43,7 +43,7 @@ module Hyperclient
 
     describe '#to_h' do
       it 'returns the wrapped collection as a hash' do
-        collection.to_hash.must_be_kind_of Hash
+        collection.to_h.must_be_kind_of Hash
       end
     end
 
