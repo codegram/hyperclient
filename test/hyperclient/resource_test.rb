@@ -102,6 +102,18 @@ module Hyperclient
           resource['foo'].must_equal 'bar'
         end
 
+        describe '#to_h' do
+          it 'returns the resource attributes as a hash' do
+            resource.to_hash.must_be_kind_of Hash
+          end
+        end
+
+        describe '#to_hash' do
+          it 'returns the resource attributes as a hash' do
+            resource.to_hash.must_be_kind_of Hash
+          end
+        end
+
         describe '#fetch' do
           it 'returns the value for keys that exist' do
             resource._attributes.expects(:foo).returns('bar')
