@@ -1,6 +1,6 @@
 ### 0.8.2 (Next)
 
-Your contribution here.
+* [#104](https://github.com/codegram/hyperclient/pull/104): fix #to_h and #to_hash on Hyperclient::Resource - [@jufemaiz](https://github.com/jufemaiz)
 
 ### 0.8.1 (March 15, 2016)
 

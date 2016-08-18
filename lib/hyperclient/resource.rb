@@ -87,7 +87,6 @@ module Hyperclient
       else
         [:_attributes, :_embedded, :_links].each do |target|
           target = send(target)
-          puts target.inspect
           return target.send(method, *args, &block) if target.respond_to?(method.to_s)
         end
         super
