@@ -104,13 +104,13 @@ module Hyperclient
 
         describe '#to_h' do
           it 'returns the resource attributes as a hash' do
-            resource.to_hash.must_be_kind_of Hash
+            resource.to_h.must_be_kind_of Hash
           end
         end
 
         describe '#to_hash' do
           it 'returns the resource attributes as a hash' do
-            resource.to_h.must_be_kind_of Hash
+            resource.to_hash.must_be_kind_of Hash
           end
         end
 
