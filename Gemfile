@@ -2,14 +2,29 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'rake'
-gem 'growl'
-gem 'guard'
-gem 'guard-minitest'
-gem 'guard-spinach'
-gem 'pry'
+group :development do
+  gem 'growl'
+  gem 'guard'
+  gem 'guard-minitest'
+  gem 'guard-spinach'
+  gem 'pry'
+end
 
-gem 'yard', '~> 0.8'
-gem 'yard-tomdoc'
-gem 'simplecov', require: false
-gem 'rubocop', '~> 0.33.0', require: false
+group :development, :test do
+  gem 'yard', '~> 0.8'
+  gem 'yard-tomdoc'
+  gem 'rake'
+  gem 'simplecov', require: false
+  gem 'rubocop', '~> 0.42.0', require: false
+end
+
+group :test do
+  gem 'futuroscope', github: 'codegram/futuroscope'
+  gem 'danger', '~> 2.1', require: false
+  gem 'minitest'
+  gem 'turn'
+  gem 'webmock'
+  gem 'mocha'
+  gem 'rack-test'
+  gem 'spinach'
+end
