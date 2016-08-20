@@ -1,9 +1,9 @@
 #!/usr/bin/env rake
-begin
-  require 'bundler/setup'
-rescue LoadError
-  puts 'You must `gem install bundler` and `bundle install` to run rake tasks'
-end
+require 'rubygems'
+require 'bundler'
+Bundler.setup :default, :test, :development
+
+Bundler::GemHelper.install_tasks
 
 if ENV['COVERAGE']
   require 'simplecov'

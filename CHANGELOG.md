@@ -1,6 +1,9 @@
 ### 0.8.2 (Next)
 
-Your contribution here.
+This version is no longer tested with Ruby < 2.2.
+
+* [#105](https://github.com/codegram/hyperclient/pull/105): Added Danger, PR linter - [@dblock](https://github.com/dblock).
+* Your contribution here.
 
 ### 0.8.1 (March 15, 2016)
 
