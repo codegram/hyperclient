@@ -9,7 +9,7 @@ module Hyperclient
   #   resource.attributes.title
   #
   class Attributes < Collection
-    RESERVED_PROPERTIES = [/^_links$/, /^_embedded$/] # http://tools.ietf.org/html/draft-kelly-json-hal#section-4.1
+    RESERVED_PROPERTIES = [/^_links$/, /^_embedded$/].freeze # http://tools.ietf.org/html/draft-kelly-json-hal#section-4.1
 
     # Public: Initializes the Attributes of a Resource.
     #

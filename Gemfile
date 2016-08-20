@@ -15,7 +15,7 @@ group :development, :test do
   gem 'yard-tomdoc'
   gem 'rake'
   gem 'simplecov', require: false
-  gem 'rubocop', '~> 0.33.0', require: false
+  gem 'rubocop', '~> 0.42.0', require: false
 end
 
 group :test do

@@ -65,7 +65,7 @@ module Hyperclient
       elsif block_given?
         yield key
       else
-        fail KeyError
+        raise KeyError
       end
     end
 
