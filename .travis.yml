@@ -1,19 +1,21 @@
-rvm:
-  - 1.9.3
-  - 2.0.0
-  - 2.1
-  - 2.2
-  - 2.3.0
-  - rbx-2
-  - jruby-19mode
-  - ruby-head
-  - jruby-head
+language: ruby
+
+sudo: false
 
 matrix:
+  include:
+    - rvm: 2.3.1
+      script:
+        - bundle exec danger
+    - rvm: 2.3.1
+    - rvm: 2.3.0
+    - rvm: 2.2.5
+    - rvm: rbx-2
+    - rvm: ruby-head
+    - rvm: jruby-head
   allow_failures:
     - rvm: ruby-head
     - rvm: jruby-head
     - rvm: rbx-2
 
-before_install:
-  - gem install bundler
+bundler_args: --without development
