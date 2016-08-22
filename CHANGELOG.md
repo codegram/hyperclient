@@ -1,13 +1,9 @@
 ### 0.8.2 (Next)
 
-<<<<<<< HEAD
-* [#104](https://github.com/codegram/hyperclient/pull/104): fix #to_h and #to_hash on Hyperclient::Resource - [@jufemaiz](https://github.com/jufemaiz)
-=======
 This version is no longer tested with Ruby < 2.2.
 
 * [#105](https://github.com/codegram/hyperclient/pull/105): Added Danger, PR linter - [@dblock](https://github.com/dblock).
-* Your contribution here.
->>>>>>> d448da40f8a3a90c271b7c8db40a437597585fe1
+* [#104](https://github.com/codegram/hyperclient/pull/104): fix #to_h and #to_hash on Hyperclient::Resource - [@jufemaiz](https://github.com/jufemaiz)
 
 ### 0.8.1 (March 15, 2016)
 
