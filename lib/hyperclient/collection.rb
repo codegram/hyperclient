@@ -62,7 +62,7 @@ module Hyperclient
     def to_h
       @collection.to_hash
     end
-    alias_method :to_hash, :to_h
+    alias to_hash to_h
 
     def to_s
       to_hash
@@ -76,7 +76,7 @@ module Hyperclient
     # Returns an Object.
     def method_missing(method_name, *_args, &_block)
       @collection.fetch(method_name.to_s) do
-        fail "Could not find `#{method_name}` in #{self.class.name}"
+        raise "Could not find `#{method_name}` in #{self.class.name}"
       end
     end
 

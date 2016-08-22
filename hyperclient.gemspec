@@ -21,11 +21,4 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'uri_template'
   gem.add_dependency 'net-http-digest_auth'
   gem.add_dependency 'faraday-digestauth'
-
-  gem.add_development_dependency 'minitest'
-  gem.add_development_dependency 'turn'
-  gem.add_development_dependency 'webmock'
-  gem.add_development_dependency 'mocha'
-  gem.add_development_dependency 'rack-test'
-  gem.add_development_dependency 'spinach'
 end

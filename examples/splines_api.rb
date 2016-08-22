@@ -7,7 +7,7 @@ api = Hyperclient.new('https://grape-with-roar.herokuapp.com/api')
 
 # enumerate splines
 api.splines.each do |spline|
-  puts "#{spline.uuid}"
+  puts spline.uuid.to_s
   puts " reticulated: #{spline.reticulated ? 'yes' : 'no'}"
   puts " thumbnail: #{spline['images:thumbnail']}"
 end

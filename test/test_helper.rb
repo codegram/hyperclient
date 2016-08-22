@@ -1,12 +1,10 @@
 $LOAD_PATH << 'lib'
-gem 'minitest'
 
 require 'minitest/spec'
 require 'minitest/autorun'
 require 'mocha/setup'
 require 'turn'
 require 'json'
-require 'pry'
 
 MiniTest::Unit::TestCase.class_eval do
   def stub_request(conn, adapter_class = Faraday::Adapter::Test, &stubs_block)
@@ -14,3 +12,7 @@ MiniTest::Unit::TestCase.class_eval do
     conn.builder.swap(adapter_handler, adapter_class, &stubs_block)
   end
 end
+
+require 'futuroscope'
+require 'futuroscope/pools/no_pool'
+Futuroscope.default_pool = Futuroscope::Pools::NoPool.new
