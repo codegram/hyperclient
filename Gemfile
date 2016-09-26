@@ -20,7 +20,7 @@ end
 
 group :test do
   gem 'futuroscope', github: 'codegram/futuroscope'
-  gem 'danger', '~> 2.1', require: false
+  gem 'danger-changelog', '~> 0.1'
   gem 'minitest'
   gem 'turn'
   gem 'webmock'
