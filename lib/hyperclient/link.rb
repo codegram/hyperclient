@@ -6,6 +6,7 @@ module Hyperclient
   # Internal: The Link is used to let a Resource interact with the API.
   #
   class Link
+    attr_accessor :query_params
     # Public: Initializes a new Link.
     #
     # key           - The key or name of the link.
@@ -18,6 +19,7 @@ module Hyperclient
       @link          = link
       @entry_point   = entry_point
       @uri_variables = uri_variables
+      @query_params={}
     end
 
     # Public: Indicates if the link is an URITemplate or a regular URI.
@@ -165,10 +167,24 @@ module Hyperclient
       @uri_template ||= URITemplate.new(@link['href'])
     end
 
+
+    def add_query_params(old_url, new_params)
+      new_query_array= new_params.keys.map { |qi| [qi,new_params[qi]]}
+      uri=URI(old_url)
+      query_array=URI.decode_www_form(uri.query || []).concat(new_query_array)
+      uri.query=URI.encode_www_form(query_array)
+      return uri.to_s
+    end
+
     def http_method(method, body = nil)
+      unless @query_params.empty?
+        new_url=add_query_params(_url, @query_params)
+      else
+        new_url=_url
+      end
       @resource = begin
         response = Futuroscope::Future.new do
-          @entry_point.connection.run_request(method, _url, body, nil)
+          @entry_point.connection.run_request(method, new_url, body, nil)
         end
         Resource.new(response.body, @entry_point, response)
       end
