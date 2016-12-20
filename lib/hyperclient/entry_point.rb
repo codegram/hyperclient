@@ -39,6 +39,7 @@ module Hyperclient
     def initialize(url, &_block)
       @link = { 'href' => url }
       @entry_point = self
+      @options = { async: true }
       yield self if block_given?
     end
 
@@ -111,6 +112,18 @@ module Hyperclient
       raise ConnectionAlreadyInitializedError if @connection
       @faraday_block = value
     end
+
+    # Public: Set options.
+    #
+    # value    - A Hash containing the client options. Use { async: false } to
+    # to disable the default behavior of performing requests asynchronously
+    # using futures.
+    attr_writer :options
+
+    # Public: Read options.
+    #
+    # Returns a Hash.
+    attr_reader :options
 
     private
 
