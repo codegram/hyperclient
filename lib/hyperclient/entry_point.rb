@@ -31,7 +31,7 @@ module Hyperclient
     extend Forwardable
 
     # Public: Delegates common methods to be used with the Faraday connection.
-    def_delegators :connection, :basic_auth, :digest_auth, :token_auth, :headers, :headers=, :params, :params=
+    def_delegators :connection, :basic_auth, :digest_auth, :token_auth, :headers=, :params, :params=
 
     # Public: Initializes an EntryPoint.
     #
