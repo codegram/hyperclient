@@ -1,4 +1,3 @@
-require 'hyperclient/resource'
 require 'uri_template'
 require 'futuroscope'
 

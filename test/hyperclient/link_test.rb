@@ -1,6 +1,5 @@
 require_relative '../test_helper'
-require 'hyperclient/link'
-require 'hyperclient/entry_point'
+require 'hyperclient'
 
 module Hyperclient
   describe Link do

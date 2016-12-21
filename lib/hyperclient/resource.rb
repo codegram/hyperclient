@@ -1,7 +1,4 @@
 require 'forwardable'
-require 'hyperclient/attributes'
-require 'hyperclient/link_collection'
-require 'hyperclient/resource_collection'
 
 module Hyperclient
   # Public: Represents a resource from your API. Its responsability is to
