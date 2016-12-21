@@ -113,17 +113,12 @@ module Hyperclient
       @faraday_block = value
     end
 
-    # Public: Set options.
+    # Public: Read/Set options.
     #
     # value    - A Hash containing the client options. Use { async: false } to
     # to disable the default behavior of performing requests asynchronously
     # using futures.
-    attr_writer :options
-
-    # Public: Read options.
-    #
-    # Returns a Hash.
-    attr_reader :options
+    attr_accessor :options
 
     private
 
