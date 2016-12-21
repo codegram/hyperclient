@@ -187,6 +187,23 @@ spline._delete
 
 HTTP methods always return a new instance of Resource.
 
+### Asynchronous requests
+
+By default, Hyperclient requests are performed asynchronously in a background thread pool via the [Futuroscope](https://github.com/codegram/futuroscope) gem. You can control the size of this pool by setting the `min_workers` and `max_workers` settings:
+
+```ruby
+Futuroscope.default_pool.min_workers = 10
+Futuroscope.default_pool.max_workers = 20
+```
+
+If you want to disable this behavior and have all requests performed synchronously, you can use the client `options` to disable this behavior:
+
+```ruby
+api = Hyperclient.new('https://grape-with-roar.herokuapp.com/api') do |client|
+  client.options.merge!(async: false)
+end
+```
+
 ## Testing Using Hyperclient
 
 You can combine RSpec, Faraday::Adapter::Rack and Hyperclient to test your HAL API without having to ever examine the raw JSON response.

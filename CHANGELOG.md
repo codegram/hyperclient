@@ -1,8 +1,9 @@
 ### 0.8.2 (Next)
 
-This version is no longer tested with Ruby < 2.2.
+#### This version is no longer tested with Ruby < 2.2.
 
 * [#105](https://github.com/codegram/hyperclient/pull/105), [#108](https://github.com/codegram/hyperclient/pull/108): Added Danger, PR linter - [@dblock](https://github.com/dblock).
+* [#109](https://github.com/codegram/hyperclient/pull/109): Allow disabling asynchronous behavior per-instance - [@Talkdesk](https://github.com/Talkdesk).
 * Your contribution here.
 
 ### 0.8.1 (March 15, 2016)
@@ -21,14 +22,14 @@ This version is no longer tested with Ruby < 2.2.
 
 ### 0.7.0 (February 23, 2015)
 
-This version introduces several backwards incompatible changes. See [UPGRADING](UPGRADING.md) for details.
+#### This version introduces several backwards incompatible changes. See [UPGRADING](UPGRADING.md) for details.
 
 * [#80](https://github.com/codegram/hyperclient/pull/80): Faraday options can be passed to the connection on initialization - [@koenpunt](https://github.com/koenpunt).
 * [#81](https://github.com/codegram/hyperclient/pull/81): The default Content-Type is now `application/hal+json` - [@koenpunt](https://github.com/koenpunt).
 
 ### 0.6.1 (October 17, 2014)
 
-This version introduces several backwards incompatible changes. See [UPGRADING](UPGRADING.md) for details.
+#### This version introduces several backwards incompatible changes. See [UPGRADING](UPGRADING.md) for details.
 
 * [#51](https://github.com/codegram/hyperclient/issues/51), [#75](https://github.com/codegram/hyperclient/pull/75): Added support for setting headers and overriding or extending the default Faraday connection block before a connection is constructed - [@dblock](https://github.com/dblock).
 * [#41](https://github.com/codegram/hyperclient/issues/41), [#73](https://github.com/codegram/hyperclient/pull/73): All Link HTTP methods now return a Resource, including `_get`, which has been aliased to `_resource`, `_post`, `_put`, `_patch`, `_head` and `_options` - [@dblock](https://github.com/dblock).
@@ -37,7 +38,7 @@ This version introduces several backwards incompatible changes. See [UPGRADING](
 
 ### 0.5.0 (October 1, 2014)
 
-This version introduces several backwards incompatible changes. See [UPGRADING](UPGRADING.md) for details.
+#### This version introduces several backwards incompatible changes. See [UPGRADING](UPGRADING.md) for details.
 
 * [#63](https://github.com/codegram/hyperclient/pull/63): Navigational methods, including `links`, `get` or `post`, have been renamed to `_links`, `_get`, or `_post` respectively - [@dblock](https://github.com/dblock).
 * [#64](https://github.com/codegram/hyperclient/issues/64): Added support for curies - [@dblock](https://github.com/dblock).

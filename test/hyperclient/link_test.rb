@@ -164,6 +164,34 @@ module Hyperclient
 
         lambda { link._get }.must_raise Faraday::ClientError
       end
+
+      it 'executes requests asynchronously using futuroscope' do
+        link = Link.new('key', { 'href' => '/productions/1' }, entry_point)
+
+        stub_request(entry_point.connection) do |stub|
+          stub.get('http://api.example.org/productions/1') { [200, {}, nil] }
+        end
+
+        Futuroscope::Future.expects(:new).returns(stub(body: nil))
+
+        link._get
+      end
+
+      describe 'when entry_point.options is set to { async: false }' do
+        it 'executes requests synchronously without futuroscope' do
+          entry_point.options = { async: false }
+
+          link = Link.new('key', { 'href' => '/productions/1' }, entry_point)
+
+          stub_request(entry_point.connection) do |stub|
+            stub.get('http://api.example.org/productions/1') { [200, {}, nil] }
+          end
+
+          Futuroscope::Future.expects(:new).never
+
+          link._get
+        end
+      end
     end
 
     describe '_options' do
@@ -175,6 +203,34 @@ module Hyperclient
         end
 
         link._options.must_be_kind_of Resource
+      end
+
+      it 'executes requests asynchronously using futuroscope' do
+        link = Link.new('key', { 'href' => '/productions/1' }, entry_point)
+
+        stub_request(entry_point.connection) do |stub|
+          stub.options('http://api.example.org/productions/1') { [200, {}, nil] }
+        end
+
+        Futuroscope::Future.expects(:new).returns(stub(body: nil))
+
+        link._options
+      end
+
+      describe 'when entry_point.options is set to { async: false }' do
+        it 'executes requests synchronously without futuroscope' do
+          entry_point.options = { async: false }
+
+          link = Link.new('key', { 'href' => '/productions/1' }, entry_point)
+
+          stub_request(entry_point.connection) do |stub|
+            stub.options('http://api.example.org/productions/1') { [200, {}, nil] }
+          end
+
+          Futuroscope::Future.expects(:new).never
+
+          link._options
+        end
       end
     end
 
@@ -188,6 +244,34 @@ module Hyperclient
 
         link._head.must_be_kind_of Resource
       end
+
+      it 'executes requests asynchronously using futuroscope' do
+        link = Link.new('key', { 'href' => '/productions/1' }, entry_point)
+
+        stub_request(entry_point.connection) do |stub|
+          stub.head('http://api.example.org/productions/1') { [200, {}, nil] }
+        end
+
+        Futuroscope::Future.expects(:new).returns(stub(body: nil))
+
+        link._head
+      end
+
+      describe 'when entry_point.options is set to { async: false }' do
+        it 'executes requests synchronously without futuroscope' do
+          entry_point.options = { async: false }
+
+          link = Link.new('key', { 'href' => '/productions/1' }, entry_point)
+
+          stub_request(entry_point.connection) do |stub|
+            stub.head('http://api.example.org/productions/1') { [200, {}, nil] }
+          end
+
+          Futuroscope::Future.expects(:new).never
+
+          link._head
+        end
+      end
     end
 
     describe '_delete' do
@@ -199,6 +283,34 @@ module Hyperclient
         end
 
         link._delete.must_be_kind_of Resource
+      end
+
+      it 'executes requests asynchronously using futuroscope' do
+        link = Link.new('key', { 'href' => '/productions/1' }, entry_point)
+
+        stub_request(entry_point.connection) do |stub|
+          stub.delete('http://api.example.org/productions/1') { [200, {}, nil] }
+        end
+
+        Futuroscope::Future.expects(:new).returns(stub(body: nil))
+
+        link._delete
+      end
+
+      describe 'when entry_point.options is set to { async: false }' do
+        it 'executes requests synchronously without futuroscope' do
+          entry_point.options = { async: false }
+
+          link = Link.new('key', { 'href' => '/productions/1' }, entry_point)
+
+          stub_request(entry_point.connection) do |stub|
+            stub.delete('http://api.example.org/productions/1') { [200, {}, nil] }
+          end
+
+          Futuroscope::Future.expects(:new).never
+
+          link._delete
+        end
       end
     end
 
@@ -220,6 +332,34 @@ module Hyperclient
 
         link._post.must_be_kind_of Resource
       end
+
+      it 'executes requests asynchronously using futuroscope' do
+        link = Link.new('key', { 'href' => '/productions/1' }, entry_point)
+
+        stub_request(entry_point.connection) do |stub|
+          stub.post('http://api.example.org/productions/1') { [200, {}, nil] }
+        end
+
+        Futuroscope::Future.expects(:new).returns(stub(body: nil))
+
+        link._post
+      end
+
+      describe 'when entry_point.options is set to { async: false }' do
+        it 'executes requests synchronously without futuroscope' do
+          entry_point.options = { async: false }
+
+          link = Link.new('key', { 'href' => '/productions/1' }, entry_point)
+
+          stub_request(entry_point.connection) do |stub|
+            stub.post('http://api.example.org/productions/1') { [200, {}, nil] }
+          end
+
+          Futuroscope::Future.expects(:new).never
+
+          link._post
+        end
+      end
     end
 
     describe '_put' do
@@ -240,6 +380,34 @@ module Hyperclient
 
         link._put.must_be_kind_of Resource
       end
+
+      it 'executes requests asynchronously using futuroscope' do
+        link = Link.new('key', { 'href' => '/productions/1' }, entry_point)
+
+        stub_request(entry_point.connection) do |stub|
+          stub.put('http://api.example.org/productions/1') { [200, {}, nil] }
+        end
+
+        Futuroscope::Future.expects(:new).returns(stub(body: nil))
+
+        link._put
+      end
+
+      describe 'when entry_point.options is set to { async: false }' do
+        it 'executes requests synchronously without futuroscope' do
+          entry_point.options = { async: false }
+
+          link = Link.new('key', { 'href' => '/productions/1' }, entry_point)
+
+          stub_request(entry_point.connection) do |stub|
+            stub.put('http://api.example.org/productions/1') { [200, {}, nil] }
+          end
+
+          Futuroscope::Future.expects(:new).never
+
+          link._put
+        end
+      end
     end
 
     describe '_patch' do
@@ -259,6 +427,34 @@ module Hyperclient
         end
 
         link._patch.must_be_kind_of Resource
+      end
+
+      it 'executes requests asynchronously using futuroscope' do
+        link = Link.new('key', { 'href' => '/productions/1' }, entry_point)
+
+        stub_request(entry_point.connection) do |stub|
+          stub.patch('http://api.example.org/productions/1') { [200, {}, nil] }
+        end
+
+        Futuroscope::Future.expects(:new).returns(stub(body: nil))
+
+        link._patch
+      end
+
+      describe 'when entry_point.options is set to { async: false }' do
+        it 'executes requests synchronously without futuroscope' do
+          entry_point.options = { async: false }
+
+          link = Link.new('key', { 'href' => '/productions/1' }, entry_point)
+
+          stub_request(entry_point.connection) do |stub|
+            stub.patch('http://api.example.org/productions/1') { [200, {}, nil] }
+          end
+
+          Futuroscope::Future.expects(:new).never
+
+          link._patch
+        end
       end
     end
 
