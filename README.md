@@ -200,7 +200,7 @@ If you want to disable this behavior and have all requests performed synchronous
 
 ```ruby
 api = Hyperclient.new('https://grape-with-roar.herokuapp.com/api') do |client|
-  client.options.merge!(async: false)
+  client.options[:async] = false
 end
 ```
 
