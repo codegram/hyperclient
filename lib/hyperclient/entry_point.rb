@@ -40,6 +40,7 @@ module Hyperclient
       @link = { 'href' => url }
       @entry_point = self
       @options = { async: true }
+      @connection = nil
       yield self if block_given?
     end
 
