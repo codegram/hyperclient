@@ -29,6 +29,7 @@ Rake::TestTask.new(:test) do |t|
   t.libs << 'test'
   t.pattern = 'test/**/*_test.rb'
   t.verbose = false
+  t.warning = true
 end
 
 desc 'runs the whole spinach suite'

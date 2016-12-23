@@ -1,5 +1,5 @@
 require_relative '../test_helper'
-require 'hyperclient/attributes'
+require 'hyperclient'
 
 module Hyperclient
   describe Attributes do

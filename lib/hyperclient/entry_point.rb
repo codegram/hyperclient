@@ -1,4 +1,3 @@
-require 'hyperclient/link'
 require 'faraday_middleware'
 require 'faraday_hal_middleware'
 require_relative '../faraday/connection'
@@ -31,7 +30,7 @@ module Hyperclient
     extend Forwardable
 
     # Public: Delegates common methods to be used with the Faraday connection.
-    def_delegators :connection, :basic_auth, :digest_auth, :token_auth, :headers, :headers=, :params, :params=
+    def_delegators :connection, :basic_auth, :digest_auth, :token_auth, :params, :params=
 
     # Public: Initializes an EntryPoint.
     #
@@ -40,6 +39,7 @@ module Hyperclient
       @link = { 'href' => url }
       @entry_point = self
       @options = { async: true }
+      @connection = nil
       yield self if block_given?
     end
 

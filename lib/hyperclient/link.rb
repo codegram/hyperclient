@@ -1,4 +1,3 @@
-require 'hyperclient/resource'
 require 'uri_template'
 require 'futuroscope'
 
@@ -18,6 +17,7 @@ module Hyperclient
       @link          = link
       @entry_point   = entry_point
       @uri_variables = uri_variables
+      @resource      = nil
     end
 
     # Public: Indicates if the link is an URITemplate or a regular URI.
