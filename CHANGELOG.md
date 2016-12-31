@@ -1,11 +1,10 @@
-### 0.8.2 (Next)
+### 0.8.2 (December 31, 2016)
 
 #### This version is no longer tested with Ruby < 2.2.
 
 * [#105](https://github.com/codegram/hyperclient/pull/105), [#108](https://github.com/codegram/hyperclient/pull/108): Added Danger, PR linter - [@dblock](https://github.com/dblock).
 * [#109](https://github.com/codegram/hyperclient/pull/109): Allow disabling asynchronous behavior per-instance - [@Talkdesk](https://github.com/Talkdesk).
 * [#110](https://github.com/codegram/hyperclient/pull/110): Fixed ruby warnings - [@ivoanjo](https://github.com/ivoanjo).
-* Your contribution here.
 
 ### 0.8.1 (March 15, 2016)
 
