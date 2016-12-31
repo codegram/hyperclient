@@ -1,3 +1,7 @@
+### 0.8.3 (Next)
+
+* Your contribution here.
+
 ### 0.8.2 (December 31, 2016)
 
 #### This version is no longer tested with Ruby < 2.2.

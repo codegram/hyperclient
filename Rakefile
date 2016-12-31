@@ -20,8 +20,6 @@ YARD::Rake::YardocTask.new do |t|
   t.options = %w(-r README.md)
 end
 
-Bundler::GemHelper.install_tasks
-
 require 'rake/testtask'
 
 Rake::TestTask.new(:test) do |t|
