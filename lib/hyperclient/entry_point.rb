@@ -40,6 +40,7 @@ module Hyperclient
       @entry_point = self
       @options = { async: true }
       @connection = nil
+      @resource = nil
       yield self if block_given?
     end
 
