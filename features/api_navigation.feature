@@ -12,6 +12,11 @@ Feature: API navigation
     When I search for a post with a templated link
     Then the API should receive the request with all the params
 
+  Scenario: Templated links with multiple values
+    Given I connect to the API
+    When I search for posts by tag with a templated link
+    Then the API should receive the request for posts by tag with all the params
+
   Scenario: Attributes
     Given I connect to the API
     When I load a single post

@@ -8,6 +8,7 @@ module Spinach
               "self": { "href": "/" },
               "posts": { "href": "/posts" },
               "search": { "href": "/search{?q}", "templated": true },
+              "tagged": { "href": "/search{?tags*}", "templated": true },
               "api:authors": { "href": "/authors" },
               "next": { "href": "/page2" }
           }
