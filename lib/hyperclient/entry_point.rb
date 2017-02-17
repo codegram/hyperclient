@@ -40,6 +40,7 @@ module Hyperclient
       @entry_point = self
       @options = { async: true }
       @connection = nil
+      @resource = nil
       yield self if block_given?
     end
 
@@ -138,6 +139,7 @@ module Hyperclient
         connection.request :hal_json
         connection.response :hal_json, content_type: /\bjson$/
         connection.adapter :net_http
+        connection.options.params_encoder = Faraday::FlatParamsEncoder
       end
     end
 
