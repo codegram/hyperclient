@@ -1,3 +1,3 @@
 module Hyperclient
-  VERSION = '0.8.3'.freeze
+  VERSION = '0.8.4'.freeze
 end

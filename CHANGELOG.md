@@ -1,3 +1,7 @@
+### 0.8.4 (Next)
+
+* Your contribution here.
+
 ### 0.8.3 (March 30, 2017)
 
 * [#115](https://github.com/codegram/hyperclient/pull/115): Fix dropped values from queries by using FlatParamsEncoder - [@ivoanjo](https://github.com/ivoanjo).
