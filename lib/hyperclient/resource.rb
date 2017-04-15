@@ -38,6 +38,13 @@ module Hyperclient
       @_response    = response
     end
 
+    # Public: Get a link or embed from the Resource
+    #
+    # name - The name of the link relation
+    def rel(name)
+      @embedded[name] || @links[name]
+    end
+
     def inspect
       "#<#{self.class.name} self_link:#{_self_link.inspect} attributes:#{@_attributes.inspect}>"
     end

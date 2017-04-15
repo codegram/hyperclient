@@ -142,6 +142,25 @@ module Hyperclient
       end
     end
 
+    describe 'rel' do
+      let(:resource) { Resource.new({}, entry_point) }
+      let(:orders) { mock('Orders') }
+
+      it 'returns resource if relation is embedded' do
+        resource.embedded.expects(:[]).with(:orders).returns(orders)
+        resource.links.expects(:[]).never
+
+        resource.rel(:orders).must_equal orders
+      end
+
+      it 'returns link if relation is not embedded' do
+        resource.embedded.expects(:[]).returns(nil)
+        resource.links.expects(:[]).with(:orders).returns(orders)
+
+        resource.rel(:orders).must_equal orders
+      end
+    end
+
     it 'uses its self Link to handle HTTP connections' do
       self_link = mock('Self Link')
       self_link.expects(:_get)
