@@ -38,8 +38,9 @@ module Hyperclient
     #
     # rel - The String rel to expand.
     #
-    # Returns a new expanded url.
+    # Returns a new expanded url unless the url already starts with http[s]:
     def expand(rel)
+      return rel if /^http[s]?:/i.match(rel)
       return rel unless rel && templated?
       href.gsub('{rel}', rel) if href
     end
