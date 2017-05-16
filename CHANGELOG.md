@@ -1,7 +1,6 @@
-### 0.8.4 (Next)
+### 0.8.4 (May 16, 2017)
 
 * [#117](https://github.com/codegram/hyperclient/issues/117): Require Faraday >= 0.9.0 in gemspec - [@ivoanjo](https://github.com/ivoanjo).
-* Your contribution here.
 
 ### 0.8.3 (March 30, 2017)
 
