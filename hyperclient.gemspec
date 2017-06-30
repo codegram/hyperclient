@@ -6,7 +6,7 @@ Gem::Specification.new do |gem|
   gem.email         = ['oriol.gual@gmail.com']
   gem.description   = 'HyperClient is a Ruby Hypermedia API client.'
   gem.summary       = ''
-  gem.homepage      = 'http://codegram.github.com/hyperclient/'
+  gem.homepage      = 'https://github.com/codegram/hyperclient/'
   gem.executables   = `git ls-files -- bin/*`.split("\n").map { |f| File.basename(f) }
   gem.files         = `git ls-files`.split("\n")
   gem.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
