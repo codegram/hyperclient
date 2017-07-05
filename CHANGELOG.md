@@ -1,7 +1,6 @@
-### 0.8.5 (Next)
+### 0.8.5 (July 5, 2017)
 
 * [#120](https://github.com/codegram/hyperclient/pull/120): Replace non-working homepage link in gemspec - [@ivoanjo](https://github.com/ivoanjo).
-* Your contribution here.
 
 ### 0.8.4 (May 16, 2017)
 
