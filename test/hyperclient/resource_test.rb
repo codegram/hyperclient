@@ -40,6 +40,12 @@ module Hyperclient
 
         resource._response.body.must_equal body
       end
+
+      describe 'with an invalid representation' do
+        it 'raises an InvalidRepresentationError' do
+          proc { Resource.new('invalid representation data', entry_point) }.must_raise InvalidRepresentationError
+        end
+      end
     end
 
     describe '_links' do

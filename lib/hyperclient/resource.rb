@@ -1,6 +1,17 @@
 require 'forwardable'
 
 module Hyperclient
+  # Public: Exception that is raised when passing in invalid representation data
+  # for the resource.
+  class InvalidRepresentationError < ArgumentError
+    attr_reader :representation
+
+    def initialize(error_description, representation)
+      super(error_description)
+      @representation = representation
+    end
+  end
+
   # Public: Represents a resource from your API. Its responsability is to
   # ease the way you access its  attributes, links and embedded resources.
   class Resource
@@ -29,8 +40,9 @@ module Hyperclient
     # representation - The hash with the HAL representation of the Resource.
     # entry_point    - The EntryPoint object to inject the configutation.
     def initialize(representation, entry_point, response = nil)
-      representation = representation ? representation.dup : {}
+      representation = validate(representation)
       links = representation['_links'] || {}
+
       @_links       = LinkCollection.new(links, links['curies'], entry_point)
       @_embedded    = ResourceCollection.new(representation['_embedded'], entry_point)
       @_attributes  = Attributes.new(representation)
@@ -67,6 +79,21 @@ module Hyperclient
     end
 
     private
+
+    # Internal: Ensures the received representation is a valid Hash-lookalike.
+    def validate(representation)
+      return {} unless representation
+
+      if representation.respond_to?(:to_hash)
+        representation.to_hash.dup
+      else
+        raise InvalidRepresentationError.new(
+          "Invalid representation for resource (got #{representation.class}, expected Hash). " \
+          "Is your web server returning JSON HAL data with a 'Content-Type: application/hal+json' header?",
+          representation
+        )
+      end
+    end
 
     # Internal: Returns the self Link of the Resource. Used to handle the HTTP
     # methods.

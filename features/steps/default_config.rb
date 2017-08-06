@@ -12,7 +12,7 @@ class Spinach::Features::DefaultConfig < Spinach::FeatureSteps
   end
 
   step 'I send some data to the API' do
-    stub_request(:post, 'http://api.example.org/posts')
+    stub_request(:post, 'http://api.example.org/posts').to_return(headers: { 'Content-Type' => 'application/hal+json' })
     assert_equal 200, api._links.posts._post(title: 'My first blog post')._response.status
   end
 
