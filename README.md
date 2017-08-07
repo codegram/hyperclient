@@ -20,6 +20,7 @@ Hyperclient is a Hypermedia API client written in Ruby. It fully supports [JSON 
   * [Asynchronous requests](#asynchronous-requests)
 * [Testing Using Hyperclient](#testing-using-hyperclient)
 * [Reference](#reference)
+* [Hyperclient Users](#hyperclient-users)
 * [Contributing](#contributing)
 * [License](#license)
 
@@ -253,6 +254,10 @@ For a complete example refer to [this Splines Demo API test](https://github.com/
 # Reference
 
 [Hyperclient API Reference](http://rubydoc.org/github/codegram/hyperclient/master/frames).
+
+# Hyperclient Users
+
+Using Hyperclient? Add your project to our wiki, please: <https://github.com/codegram/hyperclient/wiki>.
 
 # Contributing
 
