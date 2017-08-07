@@ -8,11 +8,29 @@
 
 Hyperclient is a Hypermedia API client written in Ruby. It fully supports [JSON HAL](http://stateless.co/hal_specification.html).
 
-## Usage
+* [Hyperclient](#hyperclient)
+* [Usage](#usage)
+  * [API Client](#api-client)
+  * [Resources and Attributes](#resources-and-attributes)
+  * [Links and Embedded Resources](#links-and-embedded-resources)
+  * [Templated Links](#templated-links)
+  * [Curies](#curies)
+  * [Attributes](#attributes)
+  * [HTTP](#http)
+  * [Asynchronous requests](#asynchronous-requests)
+* [Testing Using Hyperclient](#testing-using-hyperclient)
+* [Reference](#reference)
+* [Hyperclient Users](#hyperclient-users)
+* [Contributing](#contributing)
+* [License](#license)
+
+<sub><sup>ToC created with [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)</sup></sub>
+
+# Usage
 
 The examples in this README use the [Splines Demo API](https://github.com/ruby-grape/grape-with-roar) running [here](https://grape-with-roar.herokuapp.com/api). If you're upgrading from a previous version, please make sure to read [UPGRADING](UPGRADING.md).
 
-### API Client
+## API Client
 
 Create an API client.
 
@@ -85,7 +103,7 @@ api = Hyperclient.new('https://grape-with-roar.herokuapp.com/api')
 api.connection.use :http_cache
 ```
 
-### Resources and Attributes
+## Resources and Attributes
 
 Hyperclient will fetch and discover the resources from your API.
 
@@ -104,7 +122,7 @@ api.splines.each do |spline|
 end
 ```
 
-### Links and Embedded Resources
+## Links and Embedded Resources
 
 The splines example above followed a link called "splines". While you can, you do not need to specify the HAL navigational structure, including links or embedded resources. Hyperclient will resolve these for you.  If you prefer, you can explicitly navigate the link structure via `_links`. In the following example the "splines" link leads to a collection of embedded splines. Invoking `api.splines` is equivalent to `api._links.splines._embedded.splines`.
 
@@ -112,7 +130,7 @@ The splines example above followed a link called "splines". While you can, you d
 api._links.splines
 ```
 
-### Templated Links
+## Templated Links
 
 Templated links require variables to be expanded. For example, the demo API has a link called "spline" that requires a spline "uuid".
 
@@ -125,7 +143,7 @@ Invoking `api.spline(uuid: 'uuid').reticulated` is equivalent to `api._links.spl
 
 The client is responsible for supplying all the necessary parameters. Templated links don't do any strict parameter name checking and don't support required vs. optional parameters. Parameters not declared by the API will be dropped and will not have any effect when passed to `_expand`.
 
-### Curies
+## Curies
 
 Curies are a suggested means by which to link documentation of a given resource. For example, the demo API contains very long links to images that use an "images" curie.
 
@@ -134,7 +152,7 @@ puts spline['image:thumbnail'] # => https://grape-with-roar.herokuapp.com/api/sp
 puts spline.links._curies['image'].expand('thumbnail') # => /docs/images/thumbnail
 ```
 
-### Attributes
+## Attributes
 
 Resource attributes can also be accessed as a hash.
 
@@ -144,7 +162,7 @@ puts spline.to_h # => {"uuid" => "uuid", "reticulated" => true}
 
 The above is equivalent to `spline._attributes.to_h`.
 
-### HTTP
+## HTTP
 
 Hyperclient uses [Faraday](http://github.com/lostisland/faraday) under the hood to perform HTTP calls. You can call any valid HTTP method on any resource.
 
@@ -187,7 +205,7 @@ spline._delete
 
 HTTP methods always return a new instance of Resource.
 
-### Asynchronous requests
+## Asynchronous requests
 
 By default, Hyperclient requests are performed asynchronously in a background thread pool via the [Futuroscope](https://github.com/codegram/futuroscope) gem. You can control the size of this pool by setting the `min_workers` and `max_workers` settings:
 
@@ -204,7 +222,7 @@ api = Hyperclient.new('https://grape-with-roar.herokuapp.com/api') do |client|
 end
 ```
 
-## Testing Using Hyperclient
+# Testing Using Hyperclient
 
 You can combine RSpec, Faraday::Adapter::Rack and Hyperclient to test your HAL API without having to ever examine the raw JSON response.
 
@@ -233,14 +251,18 @@ end
 
 For a complete example refer to [this Splines Demo API test](https://github.com/ruby-grape/grape-with-roar/blob/master/spec/api/splines_endpoint_with_hyperclient_spec.rb).
 
-## Reference
+# Reference
 
 [Hyperclient API Reference](http://rubydoc.org/github/codegram/hyperclient/master/frames).
 
-## Contributing
+# Hyperclient Users
+
+Using Hyperclient? Add your project to our wiki, please: <https://github.com/codegram/hyperclient/wiki>.
+
+# Contributing
 
 Hyperclient is work of [many people](https://github.com/codegram/hyperclient/graphs/contributors). You're encouraged to submit [pull requests](https://github.com/codegram/hyperclient/pulls), [propose features and discuss issues](https://github.com/codegram/hyperclient/issues). See [CONTRIBUTING](CONTRIBUTING.md) for details.
 
-## License
+# License
 
 MIT License, see [LICENSE](LICENSE) for details. Copyright 2012-2014 [Codegram Technologies](http://codegram.com).
