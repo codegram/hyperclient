@@ -4,7 +4,7 @@ require File.expand_path('../lib/hyperclient/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.authors       = ['Oriol Gual']
   gem.email         = ['oriol.gual@gmail.com']
-  gem.description   = 'HyperClient is a Ruby Hypermedia API client.'
+  gem.description   = 'Hyperclient is a Ruby Hypermedia API client.'
   gem.summary       = ''
   gem.homepage      = 'https://github.com/codegram/hyperclient/'
   gem.executables   = `git ls-files -- bin/*`.split("\n").map { |f| File.basename(f) }
