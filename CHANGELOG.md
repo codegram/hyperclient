@@ -1,6 +1,7 @@
 ### 0.8.6 (Next)
 
 * [#122](https://github.com/codegram/hyperclient/pull/122): Improve error message when server returns invalid data - [@ivoanjo](https://github.com/ivoanjo).
+* [#125](https://github.com/codegram/hyperclient/pull/125): Add table of contents to readme and add note asking users to add their projects to the wiki - [@ivoanjo](https://github.com/ivoanjo).
 * Your contribution here.
 
 ### 0.8.5 (July 5, 2017)
