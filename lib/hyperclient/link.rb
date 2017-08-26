@@ -126,7 +126,8 @@ module Hyperclient
     # Internal: Delegate the method further down the API if the resource cannot serve it.
     def method_missing(method, *args, &block)
       if _resource.respond_to?(method.to_s)
-        _resource.send(method, *args, &block) || delegate_method(method, *args, &block)
+        result = _resource.send(method, *args, &block)
+        result.nil? ? delegate_method(method, *args, &block) : result
       else
         super
       end

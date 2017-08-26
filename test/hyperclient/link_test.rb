@@ -479,6 +479,16 @@ module Hyperclient
           resource.orders.first.id.must_equal 1
         end
 
+        it 'can handle false values in the response' do
+          resource = Resource.new({ '_links' => { 'orders' => { 'href' => '/orders' } } }, entry_point)
+
+          stub_request(entry_point.connection) do |stub|
+            stub.get('http://api.example.org/orders') { [200, {}, { 'any' => false }] }
+          end
+
+          resource.orders.any.must_equal false
+        end
+
         it "doesn't delegate when link key doesn't match" do
           resource = Resource.new({ '_links' => { 'foos' => { 'href' => '/orders' } } }, entry_point)
 
