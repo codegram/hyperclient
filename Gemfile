@@ -8,6 +8,7 @@ group :development do
   gem 'guard-minitest'
   gem 'guard-spinach'
   gem 'pry'
+  gem 'pry-byebug', platforms: :ruby
 end
 
 group :development, :test do
