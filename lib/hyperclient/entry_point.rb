@@ -41,6 +41,8 @@ module Hyperclient
       @options = { async: true }
       @connection = nil
       @resource = nil
+      @key = nil
+      @uri_variables = nil
       yield self if block_given?
     end
 
