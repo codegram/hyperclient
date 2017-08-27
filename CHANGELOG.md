@@ -1,3 +1,7 @@
+### 0.8.7 (Next)
+
+* Your contribution here.
+
 ### 0.8.6 (August 27, 2017)
 
 * [#122](https://github.com/codegram/hyperclient/pull/122): Improve error message when server returns invalid data - [@ivoanjo](https://github.com/ivoanjo).
