@@ -45,12 +45,12 @@ module Hyperclient
 
         it 'raises a  ConnectionAlreadyInitializedError if attempting to modify headers' do
           entry_point.connection.must_be_kind_of Faraday::Connection
-          lambda { entry_point.headers = {} }.must_raise ConnectionAlreadyInitializedError
+          -> { entry_point.headers = {} }.must_raise ConnectionAlreadyInitializedError
         end
 
         it 'raises a  ConnectionAlreadyInitializedError if attempting to modify the faraday block' do
           entry_point.connection.must_be_kind_of Faraday::Connection
-          lambda { entry_point.connection {} }.must_raise ConnectionAlreadyInitializedError
+          -> { entry_point.connection {} }.must_raise ConnectionAlreadyInitializedError
         end
       end
 

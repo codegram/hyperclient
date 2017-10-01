@@ -100,7 +100,7 @@ module Hyperclient
           resource._attributes.expects('respond_to?').with('foo').returns(false)
           resource._links.expects('respond_to?').with('foo').returns(false)
           resource._embedded.expects('respond_to?').with('foo').returns(false)
-          lambda { resource.foo }.must_raise NoMethodError
+          -> { resource.foo }.must_raise NoMethodError
         end
 
         it 'delegates []' do
