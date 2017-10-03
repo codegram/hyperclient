@@ -18,7 +18,7 @@ class Spinach::Features::ApiNavigation < Spinach::FeatureSteps
   end
 
   step 'I search for posts by tag with a templated link' do
-    api._links.tagged._expand(tags: %w(foo bar))._resource
+    api._links.tagged._expand(tags: %w[foo bar])._resource
   end
 
   step 'the API should receive the request for posts by tag with all the params' do

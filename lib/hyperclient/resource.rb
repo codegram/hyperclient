@@ -109,7 +109,7 @@ module Hyperclient
       if args.any? && args.first.is_a?(Hash)
         _links.send(method, [], &block)._expand(*args)
       elsif !Array.method_defined?(method)
-        [:_attributes, :_embedded, :_links].each do |target|
+        %i[_attributes _embedded _links].each do |target|
           target = send(target)
           return target.send(method, *args, &block) if target.respond_to?(method.to_s)
         end
@@ -120,7 +120,7 @@ module Hyperclient
     # Internal: Accessory method to allow the resource respond to
     # methods that will hit method_missing.
     def respond_to_missing?(method, include_private = false)
-      [:_attributes, :_embedded, :_links].each do |target|
+      %i[_attributes _embedded _links].each do |target|
         return true if send(target).respond_to?(method, include_private)
       end
       false

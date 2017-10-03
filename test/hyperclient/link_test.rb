@@ -7,7 +7,7 @@ module Hyperclient
       EntryPoint.new('http://api.example.org/')
     end
 
-    %w(type deprecation name profile title hreflang).each do |prop|
+    %w[type deprecation name profile title hreflang].each do |prop|
       describe prop do
         it 'returns the property value' do
           link = Link.new('key', { prop => 'value' }, entry_point)
@@ -39,7 +39,7 @@ module Hyperclient
       it 'returns a list of required variables' do
         link = Link.new('key', { 'href' => '/orders{?id,owner}', 'templated' => true }, entry_point)
 
-        link._variables.must_equal %w(id owner)
+        link._variables.must_equal %w[id owner]
       end
 
       it 'returns an empty array for untemplated links' do
@@ -161,7 +161,7 @@ module Hyperclient
           stub.get('http://api.example.org/productions/1') { [400, {}, nil] }
         end
 
-        lambda { link._get }.must_raise Faraday::ClientError
+        -> { link._get }.must_raise Faraday::ClientError
       end
 
       it 'executes requests asynchronously using futuroscope' do
@@ -531,7 +531,7 @@ module Hyperclient
         end
 
         it 'raises an error when the method does not exist in the resource' do
-          lambda { link.this_method_does_not_exist }.must_raise NoMethodError
+          -> { link.this_method_does_not_exist }.must_raise NoMethodError
         end
 
         it 'responds to missing methods' do

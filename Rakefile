@@ -17,7 +17,7 @@ require 'yard'
 YARD::Config.load_plugin('yard-tomdoc')
 YARD::Rake::YardocTask.new do |t|
   t.files   = ['lib/**/*.rb']
-  t.options = %w(-r README.md)
+  t.options = %w[-r README.md]
 end
 
 require 'rake/testtask'
@@ -38,4 +38,4 @@ end
 require 'rubocop/rake_task'
 RuboCop::RakeTask.new(:rubocop)
 
-task default: [:test, :spinach, :rubocop]
+task default: %i[test spinach rubocop]

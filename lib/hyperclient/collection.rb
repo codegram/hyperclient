@@ -35,7 +35,7 @@ module Hyperclient
     end
 
     # Public: Returns a value from the collection for the given key.
-    # If the key can’t be found, there are several options:
+    # If the key can't be found, there are several options:
     # With no other arguments, it will raise an KeyError exception;
     # if default is given, then that will be returned;
     #
