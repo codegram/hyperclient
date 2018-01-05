@@ -1,5 +1,4 @@
 require 'uri_template'
-require 'futuroscope'
 
 module Hyperclient
   # Internal: The Link is used to let a Resource interact with the API.
@@ -168,15 +167,7 @@ module Hyperclient
 
     def http_method(method, body = nil)
       @resource = begin
-        response =
-          if @entry_point.options[:async]
-            Futuroscope::Future.new do
-              @entry_point.connection.run_request(method, _url, body, nil)
-            end
-          else
-            @entry_point.connection.run_request(method, _url, body, nil)
-          end
-
+        response = @entry_point.connection.run_request(method, _url, body, nil)
         Resource.new(response.body, @entry_point, response)
       end
     end

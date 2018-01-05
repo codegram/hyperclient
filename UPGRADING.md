@@ -1,6 +1,22 @@
 Upgrading Hyperclient
 =====================
 
+### Upgrading to >= 0.9.0
+
+Previous versions of Hyperclient performed asynchronous requests using [futuroscope](https://github.com/codegram/futuroscope) by default, which could be disabled by providing the `:async` option to each Hyperclient instance. This has been removed and you can remove any such code.
+
+```ruby
+api = Hyperclient.new('https://grape-with-roar.herokuapp.com/api') do |client|
+  client.options[:async] = false
+end
+```
+
+The default new behavior is synchronous. We recommend [concurrent-ruby](https://github.com/ruby-concurrency/concurrent-ruby) for your asynchronous needs.
+
+Include [futuroscope](https://github.com/codegram/futuroscope) in your `Gemfile` and wrap Hyperclient requests into `Futuroscope::Future.new` blocks to get the old behavior.
+
+See [#133](https://github.com/codegram/hyperclient/pull/133) and [#123](https://github.com/codegram/hyperclient/issues/123) for more information.
+
 ### Upgrading to >= 0.8.0
 
 ### Changes in curies

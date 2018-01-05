@@ -15,7 +15,6 @@ Gem::Specification.new do |gem|
   gem.version       = Hyperclient::VERSION
 
   gem.add_dependency 'faraday', '>= 0.9.0'
-  gem.add_dependency 'futuroscope'
   gem.add_dependency 'faraday_middleware'
   gem.add_dependency 'faraday_hal_middleware'
   gem.add_dependency 'uri_template'
