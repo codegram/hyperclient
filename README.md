@@ -8,23 +8,22 @@
 
 Hyperclient is a Hypermedia API client written in Ruby. It fully supports [JSON HAL](http://stateless.co/hal_specification.html).
 
-* [Hyperclient](#hyperclient)
-* [Usage](#usage)
-  * [API Client](#api-client)
-  * [Resources and Attributes](#resources-and-attributes)
-  * [Links and Embedded Resources](#links-and-embedded-resources)
-  * [Templated Links](#templated-links)
-  * [Curies](#curies)
-  * [Attributes](#attributes)
-  * [HTTP](#http)
-  * [Asynchronous requests](#asynchronous-requests)
-* [Testing Using Hyperclient](#testing-using-hyperclient)
-* [Reference](#reference)
-* [Hyperclient Users](#hyperclient-users)
-* [Contributing](#contributing)
-* [License](#license)
+# Table of Contents
 
-<sub><sup>ToC created with [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)</sup></sub>
+- [Usage](#usage)
+  - [API Client](#api-client)
+  - [Resources and Attributes](#resources-and-attributes)
+  - [Links and Embedded Resources](#links-and-embedded-resources)
+  - [Templated Links](#templated-links)
+  - [Curies](#curies)
+  - [Attributes](#attributes)
+  - [HTTP](#http)
+  - [Asynchronous requests](#asynchronous-requests)
+- [Testing Using Hyperclient](#testing-using-hyperclient)
+- [Reference](#reference)
+- [Hyperclient Users](#hyperclient-users)
+- [Contributing](#contributing)
+- [License](#license)
 
 # Usage
 
