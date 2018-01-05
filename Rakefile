@@ -13,13 +13,6 @@ if ENV['COVERAGE']
   end
 end
 
-require 'yard'
-YARD::Config.load_plugin('yard-tomdoc')
-YARD::Rake::YardocTask.new do |t|
-  t.files   = ['lib/**/*.rb']
-  t.options = %w[-r README.md]
-end
-
 require 'rake/testtask'
 
 Rake::TestTask.new(:test) do |t|

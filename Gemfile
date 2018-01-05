@@ -18,12 +18,11 @@ group :development, :test do
   gem 'rake'
   gem 'rubocop', '~> 0.50.0', require: false
   gem 'simplecov', require: false
-  gem 'yard', '~> 0.8'
-  gem 'yard-tomdoc'
 end
 
 group :test do
   gem 'danger-changelog', '~> 0.1'
+  gem 'danger-toc', '~> 0.1'
   gem 'futuroscope', github: 'codegram/futuroscope'
   gem 'minitest'
   gem 'mocha'

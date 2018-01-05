@@ -1,6 +1,7 @@
 ### 0.8.7 (Next)
 
 * [#131](https://github.com/codegram/hyperclient/pull/131): Upgrade to Rubocop 0.50.0, fix Bundler's insecure git source warning - [@nebolsin](https://github.com/nebolsin).
+* [#132](https://github.com/codegram/hyperclient/pull/132): Swapped yard dependency for danger-toc - [@dblock](https://github.com/dblock).
 * Your contribution here.
 
 ### 0.8.6 (August 27, 2017)
