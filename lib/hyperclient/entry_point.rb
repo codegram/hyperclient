@@ -38,7 +38,7 @@ module Hyperclient
     def initialize(url, &_block)
       @link = { 'href' => url }
       @entry_point = self
-      @options = { async: true }
+      @options = {}
       @connection = nil
       @resource = nil
       @key = nil
@@ -118,9 +118,7 @@ module Hyperclient
 
     # Public: Read/Set options.
     #
-    # value    - A Hash containing the client options. Use { async: false } to
-    # to disable the default behavior of performing requests asynchronously
-    # using futures.
+    # value    - A Hash containing the client options.
     attr_accessor :options
 
     private

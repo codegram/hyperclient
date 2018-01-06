@@ -12,7 +12,3 @@ MiniTest::Unit::TestCase.class_eval do
     conn.builder.swap(adapter_handler, adapter_class, &stubs_block)
   end
 end
-
-require 'futuroscope'
-require 'futuroscope/pools/no_pool'
-Futuroscope.default_pool = Futuroscope::Pools::NoPool.new

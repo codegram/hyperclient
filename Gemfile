@@ -23,7 +23,6 @@ end
 group :test do
   gem 'danger-changelog', '~> 0.1'
   gem 'danger-toc', '~> 0.1'
-  gem 'futuroscope', github: 'codegram/futuroscope'
   gem 'minitest'
   gem 'mocha'
   gem 'rack-test'
