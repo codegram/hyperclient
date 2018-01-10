@@ -246,4 +246,6 @@ Hyperclient is work of [many people](https://github.com/codegram/hyperclient/gra
 
 # License
 
-MIT License, see [LICENSE](LICENSE) for details. Copyright 2012-2014 [Codegram Technologies](http://codegram.com).
+MIT License, see [LICENSE](LICENSE) for details.
+
+Copyright (c) 2012-2018 Oriol Gual, [Codegram Technologies](http://codegram.com) and Contributors
