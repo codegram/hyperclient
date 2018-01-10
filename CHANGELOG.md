@@ -1,9 +1,8 @@
-### 0.9.0 (Next)
+### 0.9.0 (January 10, 2018)
 
 * [#133](https://github.com/codegram/hyperclient/pull/133): Removed futuroscope - [@dblock](https://github.com/dblock).
 * [#131](https://github.com/codegram/hyperclient/pull/131): Upgrade to Rubocop 0.50.0, fix Bundler's insecure git source warning - [@nebolsin](https://github.com/nebolsin).
 * [#132](https://github.com/codegram/hyperclient/pull/132): Swapped yard dependency for danger-toc - [@dblock](https://github.com/dblock).
-* Your contribution here.
 
 ### 0.8.6 (August 27, 2017)
 
