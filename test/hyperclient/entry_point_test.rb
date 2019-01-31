@@ -1,5 +1,5 @@
 require_relative '../test_helper'
-require 'hyperclient/entry_point'
+require 'hyperclient'
 
 module Hyperclient
   describe EntryPoint do
@@ -33,21 +33,24 @@ module Hyperclient
 
         it 'creates a Faraday connection with the default block' do
           handlers = entry_point.connection.builder.handlers
+
           handlers.must_include Faraday::Response::RaiseError
           handlers.must_include FaradayMiddleware::FollowRedirects
           handlers.must_include FaradayMiddleware::EncodeHalJson
           handlers.must_include FaradayMiddleware::ParseHalJson
           handlers.must_include Faraday::Adapter::NetHttp
+
+          entry_point.connection.options.params_encoder.must_equal Faraday::FlatParamsEncoder
         end
 
         it 'raises a  ConnectionAlreadyInitializedError if attempting to modify headers' do
           entry_point.connection.must_be_kind_of Faraday::Connection
-          lambda { entry_point.headers = {} }.must_raise ConnectionAlreadyInitializedError
+          -> { entry_point.headers = {} }.must_raise ConnectionAlreadyInitializedError
         end
 
         it 'raises a  ConnectionAlreadyInitializedError if attempting to modify the faraday block' do
           entry_point.connection.must_be_kind_of Faraday::Connection
-          lambda { entry_point.connection {} }.must_raise ConnectionAlreadyInitializedError
+          -> { entry_point.connection {} }.must_raise ConnectionAlreadyInitializedError
         end
       end
 
@@ -166,12 +169,15 @@ module Hyperclient
 
         it 'creates a Faraday connection with the default block plus any additional handlers' do
           handlers = entry_point.connection.builder.handlers
+
           handlers.must_include Faraday::Request::OAuth
           handlers.must_include Faraday::Response::RaiseError
           handlers.must_include FaradayMiddleware::FollowRedirects
           handlers.must_include FaradayMiddleware::EncodeHalJson
           handlers.must_include FaradayMiddleware::ParseHalJson
           handlers.must_include Faraday::Adapter::NetHttp
+
+          entry_point.connection.options.params_encoder.must_equal Faraday::FlatParamsEncoder
         end
       end
     end

@@ -1,5 +1,5 @@
 require_relative '../test_helper'
-require 'hyperclient/resource'
+require 'hyperclient'
 
 module Hyperclient
   describe Resource do
@@ -39,6 +39,12 @@ module Hyperclient
         resource = Resource.new(mock_response.body, entry_point, mock_response)
 
         resource._response.body.must_equal body
+      end
+
+      describe 'with an invalid representation' do
+        it 'raises an InvalidRepresentationError' do
+          proc { Resource.new('invalid representation data', entry_point) }.must_raise InvalidRepresentationError
+        end
       end
     end
 
@@ -94,7 +100,7 @@ module Hyperclient
           resource._attributes.expects('respond_to?').with('foo').returns(false)
           resource._links.expects('respond_to?').with('foo').returns(false)
           resource._embedded.expects('respond_to?').with('foo').returns(false)
-          lambda { resource.foo }.must_raise NoMethodError
+          -> { resource.foo }.must_raise NoMethodError
         end
 
         it 'delegates []' do

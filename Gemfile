@@ -1,3 +1,6 @@
+# NOTE: this is temporary until Bundler 2.0 changes how github: references work.
+git_source(:github) { |repo| "https://github.com/#{repo['/'] ? repo : "#{repo}/#{repo}"}.git" }
+
 source 'https://rubygems.org'
 
 gemspec
@@ -8,23 +11,22 @@ group :development do
   gem 'guard-minitest'
   gem 'guard-spinach'
   gem 'pry'
+  gem 'pry-byebug', platforms: :ruby
 end
 
 group :development, :test do
-  gem 'yard', '~> 0.8'
-  gem 'yard-tomdoc'
   gem 'rake'
+  gem 'rubocop', '~> 0.50.0', require: false
   gem 'simplecov', require: false
-  gem 'rubocop', '~> 0.42.0', require: false
 end
 
 group :test do
-  gem 'futuroscope', github: 'codegram/futuroscope'
-  gem 'danger', '~> 2.1', require: false
+  gem 'danger-changelog', '~> 0.1'
+  gem 'danger-toc', '~> 0.1'
   gem 'minitest'
-  gem 'turn'
-  gem 'webmock'
   gem 'mocha'
   gem 'rack-test'
   gem 'spinach'
+  gem 'turn'
+  gem 'webmock'
 end

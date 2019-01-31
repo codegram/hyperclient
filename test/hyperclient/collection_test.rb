@@ -1,5 +1,5 @@
 require_relative '../test_helper'
-require 'hyperclient/resource'
+require 'hyperclient'
 
 module Hyperclient
   describe Collection do
@@ -32,7 +32,7 @@ module Hyperclient
         name
       end
 
-      names.must_equal %w(_links title description permitted _hidden_attribute _embedded)
+      names.must_equal %w[_links title description permitted _hidden_attribute _embedded]
     end
 
     describe '#to_hash' do

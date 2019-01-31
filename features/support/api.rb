@@ -5,7 +5,9 @@ module API
   include Spinach::Fixtures
 
   before do
-    stub_request(:any, %r{api.example.org*}).to_return(body: root_response, headers: { 'Content-Type' => 'application/hal+json' })
+    WebMock::Config.instance.query_values_notation = :flat_array
+
+    stub_request(:any, /api.example.org*/).to_return(body: root_response, headers: { 'Content-Type' => 'application/hal+json' })
     stub_request(:get, 'api.example.org/posts').to_return(body: posts_response, headers: { 'Content-Type' => 'application/hal+json' })
     stub_request(:get, 'api.example.org/posts/1').to_return(body: post_response, headers: { 'Content-Type' => 'application/hal+json' })
     stub_request(:get, 'api.example.org/page2').to_return(body: page2_response, headers: { 'Content-Type' => 'application/hal+json' })

@@ -1,6 +1,4 @@
-require 'hyperclient/resource'
 require 'uri_template'
-require 'futuroscope'
 
 module Hyperclient
   # Internal: The Link is used to let a Resource interact with the API.
@@ -18,6 +16,7 @@ module Hyperclient
       @link          = link
       @entry_point   = entry_point
       @uri_variables = uri_variables
+      @resource      = nil
     end
 
     # Public: Indicates if the link is an URITemplate or a regular URI.
@@ -126,7 +125,8 @@ module Hyperclient
     # Internal: Delegate the method further down the API if the resource cannot serve it.
     def method_missing(method, *args, &block)
       if _resource.respond_to?(method.to_s)
-        _resource.send(method, *args, &block) || delegate_method(method, *args, &block)
+        result = _resource.send(method, *args, &block)
+        result.nil? ? delegate_method(method, *args, &block) : result
       else
         super
       end
@@ -167,9 +167,7 @@ module Hyperclient
 
     def http_method(method, body = nil)
       @resource = begin
-        response = Futuroscope::Future.new do
-          @entry_point.connection.run_request(method, _url, body, nil)
-        end
+        response = @entry_point.connection.run_request(method, _url, body, nil)
         Resource.new(response.body, @entry_point, response)
       end
     end

@@ -1,6 +1,5 @@
 require_relative '../test_helper'
-require 'hyperclient/curie'
-require 'hyperclient/entry_point'
+require 'hyperclient'
 
 module Hyperclient
   describe Curie do

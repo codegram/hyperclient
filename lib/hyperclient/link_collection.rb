@@ -1,7 +1,3 @@
-require 'hyperclient/collection'
-require 'hyperclient/link'
-require 'hyperclient/curie'
-
 module Hyperclient
   # Public: A wrapper class to easily acces the links in a  Resource.
   #

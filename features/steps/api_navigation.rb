@@ -17,6 +17,14 @@ class Spinach::Features::ApiNavigation < Spinach::FeatureSteps
     assert_requested :get, 'http://api.example.org/search?q=something'
   end
 
+  step 'I search for posts by tag with a templated link' do
+    api._links.tagged._expand(tags: %w[foo bar])._resource
+  end
+
+  step 'the API should receive the request for posts by tag with all the params' do
+    assert_requested :get, 'http://api.example.org/search?tags=foo&tags=bar'
+  end
+
   step 'I load a single post' do
     @post = api._links.posts._links.last_post
   end

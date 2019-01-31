@@ -1,9 +1,43 @@
-### 0.8.2 (Next)
+### 0.9.1 (Next)
 
 This version is no longer tested with Ruby < 2.2.
 
 * [#105](https://github.com/codegram/hyperclient/pull/105): Added Danger, PR linter - [@dblock](https://github.com/dblock).
 * [#104](https://github.com/codegram/hyperclient/pull/104): fix #to_h and #to_hash on Hyperclient::Resource - [@jufemaiz](https://github.com/jufemaiz)
+* Your contribution here.
+
+### 0.9.0 (January 10, 2018)
+
+* [#133](https://github.com/codegram/hyperclient/pull/133): Removed futuroscope - [@dblock](https://github.com/dblock).
+* [#131](https://github.com/codegram/hyperclient/pull/131): Upgrade to Rubocop 0.50.0, fix Bundler's insecure git source warning - [@nebolsin](https://github.com/nebolsin).
+* [#132](https://github.com/codegram/hyperclient/pull/132): Swapped yard dependency for danger-toc - [@dblock](https://github.com/dblock).
+
+### 0.8.6 (August 27, 2017)
+
+* [#122](https://github.com/codegram/hyperclient/pull/122): Improve error message when server returns invalid data - [@ivoanjo](https://github.com/ivoanjo).
+* [#125](https://github.com/codegram/hyperclient/pull/125): Add table of contents to readme and add note asking users to add their projects to the wiki - [@ivoanjo](https://github.com/ivoanjo).
+* [#127](https://github.com/codegram/hyperclient/pull/127): Minor fixes: Fix warnings, and pry-byebug to dev Gemfile and tweak rubocop execution - [@ivoanjo](https://github.com/ivoanjo).
+* [#128](https://github.com/codegram/hyperclient/pull/128): Fix link delegation returning nil for field with value false - [@ivoanjo](https://github.com/ivoanjo).
+
+### 0.8.5 (July 5, 2017)
+
+* [#120](https://github.com/codegram/hyperclient/pull/120): Replace non-working homepage link in gemspec - [@ivoanjo](https://github.com/ivoanjo).
+
+### 0.8.4 (May 16, 2017)
+
+* [#117](https://github.com/codegram/hyperclient/issues/117): Require Faraday >= 0.9.0 in gemspec - [@ivoanjo](https://github.com/ivoanjo).
+
+### 0.8.3 (March 30, 2017)
+
+* [#115](https://github.com/codegram/hyperclient/pull/115): Fix dropped values from queries by using FlatParamsEncoder - [@ivoanjo](https://github.com/ivoanjo).
+
+### 0.8.2 (December 31, 2016)
+
+#### This version is no longer tested with Ruby < 2.2.
+
+* [#105](https://github.com/codegram/hyperclient/pull/105), [#108](https://github.com/codegram/hyperclient/pull/108): Added Danger, PR linter - [@dblock](https://github.com/dblock).
+* [#109](https://github.com/codegram/hyperclient/pull/109): Allow disabling asynchronous behavior per-instance - [@Talkdesk](https://github.com/Talkdesk).
+* [#110](https://github.com/codegram/hyperclient/pull/110): Fixed ruby warnings - [@ivoanjo](https://github.com/ivoanjo).
 
 ### 0.8.1 (March 15, 2016)
 
@@ -21,14 +55,14 @@ This version is no longer tested with Ruby < 2.2.
 
 ### 0.7.0 (February 23, 2015)
 
-This version introduces several backwards incompatible changes. See [UPGRADING](UPGRADING.md) for details.
+#### This version introduces several backwards incompatible changes. See [UPGRADING](UPGRADING.md) for details.
 
 * [#80](https://github.com/codegram/hyperclient/pull/80): Faraday options can be passed to the connection on initialization - [@koenpunt](https://github.com/koenpunt).
 * [#81](https://github.com/codegram/hyperclient/pull/81): The default Content-Type is now `application/hal+json` - [@koenpunt](https://github.com/koenpunt).
 
 ### 0.6.1 (October 17, 2014)
 
-This version introduces several backwards incompatible changes. See [UPGRADING](UPGRADING.md) for details.
+#### This version introduces several backwards incompatible changes. See [UPGRADING](UPGRADING.md) for details.
 
 * [#51](https://github.com/codegram/hyperclient/issues/51), [#75](https://github.com/codegram/hyperclient/pull/75): Added support for setting headers and overriding or extending the default Faraday connection block before a connection is constructed - [@dblock](https://github.com/dblock).
 * [#41](https://github.com/codegram/hyperclient/issues/41), [#73](https://github.com/codegram/hyperclient/pull/73): All Link HTTP methods now return a Resource, including `_get`, which has been aliased to `_resource`, `_post`, `_put`, `_patch`, `_head` and `_options` - [@dblock](https://github.com/dblock).
@@ -37,7 +71,7 @@ This version introduces several backwards incompatible changes. See [UPGRADING](
 
 ### 0.5.0 (October 1, 2014)
 
-This version introduces several backwards incompatible changes. See [UPGRADING](UPGRADING.md) for details.
+#### This version introduces several backwards incompatible changes. See [UPGRADING](UPGRADING.md) for details.
 
 * [#63](https://github.com/codegram/hyperclient/pull/63): Navigational methods, including `links`, `get` or `post`, have been renamed to `_links`, `_get`, or `_post` respectively - [@dblock](https://github.com/dblock).
 * [#64](https://github.com/codegram/hyperclient/issues/64): Added support for curies - [@dblock](https://github.com/dblock).

@@ -1,4 +1,11 @@
+require 'hyperclient/collection'
+require 'hyperclient/link'
+require 'hyperclient/attributes'
+require 'hyperclient/curie'
 require 'hyperclient/entry_point'
+require 'hyperclient/link_collection'
+require 'hyperclient/resource'
+require 'hyperclient/resource_collection'
 require 'hyperclient/version'
 
 # Public: Hyperclient namespace.

@@ -1,5 +1,5 @@
 require_relative '../test_helper'
-require 'hyperclient/resource_collection'
+require 'hyperclient'
 
 module Hyperclient
   describe ResourceCollection do

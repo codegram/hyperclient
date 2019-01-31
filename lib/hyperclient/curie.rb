@@ -1,5 +1,3 @@
-require 'hyperclient/resource'
-
 module Hyperclient
   # Internal: Curies are named tokens that you can define in the document and use
   # to express curie relation URIs in a friendlier, more compact fashion.

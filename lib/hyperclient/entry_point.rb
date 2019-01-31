@@ -1,4 +1,3 @@
-require 'hyperclient/link'
 require 'faraday_middleware'
 require 'faraday_hal_middleware'
 require_relative '../faraday/connection'
@@ -31,7 +30,7 @@ module Hyperclient
     extend Forwardable
 
     # Public: Delegates common methods to be used with the Faraday connection.
-    def_delegators :connection, :basic_auth, :digest_auth, :token_auth, :headers, :headers=, :params, :params=
+    def_delegators :connection, :basic_auth, :digest_auth, :token_auth, :params, :params=
 
     # Public: Initializes an EntryPoint.
     #
@@ -39,6 +38,11 @@ module Hyperclient
     def initialize(url, &_block)
       @link = { 'href' => url }
       @entry_point = self
+      @options = {}
+      @connection = nil
+      @resource = nil
+      @key = nil
+      @uri_variables = nil
       yield self if block_given?
     end
 
@@ -112,6 +116,11 @@ module Hyperclient
       @faraday_block = value
     end
 
+    # Public: Read/Set options.
+    #
+    # value    - A Hash containing the client options.
+    attr_accessor :options
+
     private
 
     # Internal: Returns a block to initialize the Faraday connection. The
@@ -130,6 +139,7 @@ module Hyperclient
         connection.request :hal_json
         connection.response :hal_json, content_type: /\bjson$/
         connection.adapter :net_http
+        connection.options.params_encoder = Faraday::FlatParamsEncoder
       end
     end
 

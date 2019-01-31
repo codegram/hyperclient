@@ -1,6 +1,5 @@
 require_relative '../test_helper'
-require 'hyperclient/link'
-require 'hyperclient/entry_point'
+require 'hyperclient'
 
 module Hyperclient
   describe Link do
@@ -8,7 +7,7 @@ module Hyperclient
       EntryPoint.new('http://api.example.org/')
     end
 
-    %w(type deprecation name profile title hreflang).each do |prop|
+    %w[type deprecation name profile title hreflang].each do |prop|
       describe prop do
         it 'returns the property value' do
           link = Link.new('key', { prop => 'value' }, entry_point)
@@ -40,7 +39,7 @@ module Hyperclient
       it 'returns a list of required variables' do
         link = Link.new('key', { 'href' => '/orders{?id,owner}', 'templated' => true }, entry_point)
 
-        link._variables.must_equal %w(id owner)
+        link._variables.must_equal %w[id owner]
       end
 
       it 'returns an empty array for untemplated links' do
@@ -162,7 +161,7 @@ module Hyperclient
           stub.get('http://api.example.org/productions/1') { [400, {}, nil] }
         end
 
-        lambda { link._get }.must_raise Faraday::ClientError
+        -> { link._get }.must_raise Faraday::ClientError
       end
     end
 
@@ -284,6 +283,16 @@ module Hyperclient
           resource.orders.first.id.must_equal 1
         end
 
+        it 'can handle false values in the response' do
+          resource = Resource.new({ '_links' => { 'orders' => { 'href' => '/orders' } } }, entry_point)
+
+          stub_request(entry_point.connection) do |stub|
+            stub.get('http://api.example.org/orders') { [200, {}, { 'any' => false }] }
+          end
+
+          resource.orders.any.must_equal false
+        end
+
         it "doesn't delegate when link key doesn't match" do
           resource = Resource.new({ '_links' => { 'foos' => { 'href' => '/orders' } } }, entry_point)
 
@@ -326,7 +335,7 @@ module Hyperclient
         end
 
         it 'raises an error when the method does not exist in the resource' do
-          lambda { link.this_method_does_not_exist }.must_raise NoMethodError
+          -> { link.this_method_does_not_exist }.must_raise NoMethodError
         end
 
         it 'responds to missing methods' do
