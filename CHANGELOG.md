@@ -1,5 +1,9 @@
 ### 0.9.1 (Next)
 
+This version is no longer tested with Ruby < 2.2.
+
+* [#105](https://github.com/codegram/hyperclient/pull/105): Added Danger, PR linter - [@dblock](https://github.com/dblock).
+* [#104](https://github.com/codegram/hyperclient/pull/104): fix #to_h and #to_hash on Hyperclient::Resource - [@jufemaiz](https://github.com/jufemaiz)
 * Your contribution here.
 
 ### 0.9.0 (January 10, 2018)

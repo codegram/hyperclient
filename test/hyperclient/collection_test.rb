@@ -41,6 +41,12 @@ module Hyperclient
       end
     end
 
+    describe '#to_h' do
+      it 'returns the wrapped collection as a hash' do
+        collection.to_h.must_be_kind_of Hash
+      end
+    end
+
     describe 'include?' do
       it 'returns true for keys that exist' do
         collection.include?('_links').must_equal true
