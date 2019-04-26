@@ -6,6 +6,7 @@
 
 * Your contribution here.
 * [#136](https://github.com/codegram/hyperclient/pull/136): Fix danger warnings for changelog - [@ivoanjo](https://github.com/ivoanjo).
+* [#135](https://github.com/codegram/hyperclient/pull/135): Fix validation for empty body responses - [@paulocdf](https://github.com/paulocdf).
 
 ### 0.9.0 (2018/01/10)
 

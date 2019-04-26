@@ -82,7 +82,7 @@ module Hyperclient
 
     # Internal: Ensures the received representation is a valid Hash-lookalike.
     def validate(representation)
-      return {} unless representation
+      return {} if representation.nil? || representation.empty?
 
       if representation.respond_to?(:to_hash)
         representation.to_hash.dup
