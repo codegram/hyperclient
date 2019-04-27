@@ -2,6 +2,8 @@
 
 ### 0.9.1 (Next)
 
+* NOTE: **⚠ This version is no longer tested with Ruby < 2.3 ⚠** - [@ivoanjo](https://github.com/ivoanjo).
+
 * Your contribution here.
 * [#136](https://github.com/codegram/hyperclient/pull/136): Fix danger warnings for changelog - [@ivoanjo](https://github.com/ivoanjo).
 
