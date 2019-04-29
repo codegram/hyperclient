@@ -41,6 +41,16 @@ module Hyperclient
         resource._response.body.must_equal body
       end
 
+      describe 'with an empty body in response' do
+        it 'initializes the response' do
+          mock_response = mock(body: '')
+
+          resource = Resource.new(mock_response.body, entry_point, mock_response)
+
+          resource._response.must_equal mock_response
+        end
+      end
+
       describe 'with an invalid representation' do
         it 'raises an InvalidRepresentationError' do
           proc { Resource.new('invalid representation data', entry_point) }.must_raise InvalidRepresentationError
