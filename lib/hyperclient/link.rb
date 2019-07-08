@@ -1,4 +1,4 @@
-require 'uri_template'
+require 'addressable'
 
 module Hyperclient
   # Internal: The Link is used to let a Resource interact with the API.
@@ -39,7 +39,7 @@ module Hyperclient
     # Public: Returns the url of the Link.
     def _url
       return @link['href'] unless _templated?
-      @url ||= _uri_template.expand(@uri_variables || {})
+      @url ||= _uri_template.expand(@uri_variables || {}).to_s
     end
 
     # Public: Returns an array of variables from the URITemplate.
@@ -162,7 +162,7 @@ module Hyperclient
 
     # Internal: Memoization for a URITemplate instance
     def _uri_template
-      @uri_template ||= URITemplate.new(@link['href'])
+      @uri_template ||= Addressable::Template.new(@link['href'])
     end
 
     def http_method(method, body = nil)
