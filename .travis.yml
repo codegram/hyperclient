@@ -13,12 +13,10 @@ matrix:
     - rvm: jruby-9.1.12.0
     - rvm: jruby-head
     - rvm: 2.3.8
-    - rvm: rbx-2
     - rvm: ruby-head
   allow_failures:
     - rvm: ruby-head
     - rvm: jruby-head
-    - rvm: rbx-2
 
 before_install:
   - gem update --system
