@@ -18,12 +18,12 @@ module Hyperclient
     end
 
     it 'initializes the collection with links' do
-      links.must_respond_to :filter
+      links.must_respond_to :search
       links.must_respond_to :gizmos
     end
 
     it 'returns link objects for each link' do
-      links.filter.must_be_kind_of Link
+      links.search.must_be_kind_of Link
       links['self'].must_be_kind_of Link
 
       links.gizmos.must_be_kind_of Array
@@ -38,9 +38,9 @@ module Hyperclient
     end
 
     describe 'templated link' do
-      let(:templated_link) { links.filter }
+      let(:templated_link) { links.search }
       it 'must expand' do
-        templated_link._expand(filter: 'gizmos')._url.must_equal '/productions/1?categories=gizmos'
+        templated_link._expand(search: 'gizmos')._url.must_equal '/productions/1?categories=gizmos'
       end
     end
 

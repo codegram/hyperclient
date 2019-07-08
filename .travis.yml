@@ -4,19 +4,19 @@ sudo: false
 
 matrix:
   include:
-    - rvm: 2.4.1
-    - rvm: 2.4.1
+    - rvm: 2.6.3
+    - rvm: 2.5.5
+    - rvm: 2.4.6
+    - rvm: 2.4.6
       script:
         - bundle exec danger
-    - rvm: jruby-9.1.12.0
+    - rvm: jruby-9.2.7.0
     - rvm: jruby-head
-    - rvm: 2.3.4
-    - rvm: rbx-2
+    - rvm: 2.3.8
     - rvm: ruby-head
   allow_failures:
     - rvm: ruby-head
     - rvm: jruby-head
-    - rvm: rbx-2
 
 before_install:
   - gem update --system
