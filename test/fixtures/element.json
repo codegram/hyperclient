@@ -3,8 +3,8 @@
         "self": {
             "href": "/productions/1"
         },
-        "filter": {
-            "href": "/productions/1?categories={filter}",
+        "search": {
+            "href": "/productions/1?categories={search}",
             "templated": true
         },
         "gizmos": [
@@ -15,17 +15,17 @@
                 "href": "/gizmos/2"
             }
         ],
-        "curies" : [
+        "curies": [
             {
-              "name": "image",
-              "href": "/docs/images/{rel}",
-              "templated": true
+                "name": "image",
+                "href": "/docs/images/{rel}",
+                "templated": true
             }
         ],
         "null_link": null,
         "image:thumbnail": {
-          "href": "/images/thumbnails/{version}.jpg",
-          "templated": true
+            "href": "/images/thumbnails/{version}.jpg",
+            "templated": true
         }
     },
     "title": "Real World ASP.NET MVC3",
@@ -48,9 +48,9 @@
                         "href": "/episodes/1"
                     },
                     "media": {
-                            "type": "video/webm; codecs='vp8.0, vorbis'",
-                            "href": "/media/1"
-                        }
+                        "type": "video/webm; codecs='vp8.0, vorbis'",
+                        "href": "/media/1"
+                    }
                 },
                 "title": "Foundations",
                 "description": "In this episode we talk about what it is we're doing: building our startup and getting ourselves off the ground. We take..",
@@ -62,9 +62,9 @@
                         "href": "/episodes/2"
                     },
                     "media": {
-                            "type": "video/ogg; codecs='theora, vorbis'",
-                            "href": "/media/4"
-                        }
+                        "type": "video/ogg; codecs='theora, vorbis'",
+                        "href": "/media/4"
+                    }
                 },
                 "title": "Membership",
                 "description": "In this episode Rob hooks up testing in an effort to deal with ASP.NET Membership. The team has decided..",
