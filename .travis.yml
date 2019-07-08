@@ -10,7 +10,7 @@ matrix:
     - rvm: 2.4.6
       script:
         - bundle exec danger
-    - rvm: jruby-9.2.7.0
+    - rvm: jruby-9.1.9.0
     - rvm: jruby-head
     - rvm: 2.3.8
     - rvm: ruby-head
