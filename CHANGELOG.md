@@ -7,6 +7,7 @@
 * Your contribution here.
 * [#136](https://github.com/codegram/hyperclient/pull/136): Fix danger warnings for changelog - [@ivoanjo](https://github.com/ivoanjo).
 * [#135](https://github.com/codegram/hyperclient/pull/135): Fix validation for empty body responses - [@paulocdf](https://github.com/paulocdf).
+* [#139](https://github.com/codegram/hyperclient/pull/139): Test `hyperclient` against newer versions of MRI Ruby, up unitl 2.6.x - [@mrcasals](https://github.com/mrcasals).
 
 ### 0.9.0 (2018/01/10)
 
