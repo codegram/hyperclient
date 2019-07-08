@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # NOTE: this is temporary until Bundler 2.0 changes how github: references work.
 git_source(:github) { |repo| "https://github.com/#{repo['/'] ? repo : "#{repo}/#{repo}"}.git" }
 

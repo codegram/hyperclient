@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'hyperclient'
 
 puts "Using Hyperclient #{Hyperclient::VERSION} ..."

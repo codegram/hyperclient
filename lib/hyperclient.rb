@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'hyperclient/collection'
 require 'hyperclient/link'
 require 'hyperclient/attributes'

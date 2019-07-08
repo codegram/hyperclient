@@ -1,5 +1,6 @@
+# frozen_string_literal: true
 
-require File.expand_path('../lib/hyperclient/version', __FILE__)
+require File.expand_path('lib/hyperclient/version', __dir__)
 
 Gem::Specification.new do |gem|
   gem.authors       = ['Oriol Gual']
@@ -14,10 +15,10 @@ Gem::Specification.new do |gem|
   gem.require_paths = ['lib']
   gem.version       = Hyperclient::VERSION
 
-  gem.add_dependency 'faraday', '>= 0.9.0'
-  gem.add_dependency 'faraday_middleware'
-  gem.add_dependency 'faraday_hal_middleware'
   gem.add_dependency 'addressable'
-  gem.add_dependency 'net-http-digest_auth'
+  gem.add_dependency 'faraday', '>= 0.9.0'
   gem.add_dependency 'faraday-digestauth'
+  gem.add_dependency 'faraday_hal_middleware'
+  gem.add_dependency 'faraday_middleware'
+  gem.add_dependency 'net-http-digest_auth'
 end

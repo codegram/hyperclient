@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyperclient
   # Internal: Curies are named tokens that you can define in the document and use
   # to express curie relation URIs in a friendlier, more compact fashion.
@@ -41,7 +43,8 @@ module Hyperclient
     # Returns a new expanded url.
     def expand(rel)
       return rel unless rel && templated?
-      href.gsub('{rel}', rel) if href
+
+      href&.gsub('{rel}', rel)
     end
   end
 end

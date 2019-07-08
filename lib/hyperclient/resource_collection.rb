@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyperclient
   # Public: A wrapper class to easily acces the embedded resources in a
   # Resource.
