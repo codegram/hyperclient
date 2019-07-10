@@ -1,4 +1,5 @@
 #!/usr/bin/env rake
+
 require 'rubygems'
 require 'bundler'
 Bundler.setup :default, :test, :development

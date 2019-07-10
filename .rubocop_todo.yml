@@ -52,6 +52,6 @@ Style/DoubleNegation:
     - 'lib/hyperclient/link.rb'
 
 # Offense count: 1
-Style/MethodMissing:
+Style/MethodMissingSuper:
   Exclude:
     - 'lib/hyperclient/collection.rb'

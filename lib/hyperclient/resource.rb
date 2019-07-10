@@ -55,11 +55,11 @@ module Hyperclient
     end
 
     def _success?
-      _response && _response.success?
+      _response&.success?
     end
 
     def _status
-      _response && _response.status
+      _response&.status
     end
 
     def [](name)

@@ -39,6 +39,7 @@ module Hyperclient
     # Public: Returns the url of the Link.
     def _url
       return @link['href'] unless _templated?
+
       @url ||= _uri_template.expand(@uri_variables || {}).to_s
     end
 
@@ -137,8 +138,10 @@ module Hyperclient
     # This allows `api.posts` instead of `api._links.posts.embedded.posts`
     def delegate_method(method, *args, &block)
       return unless @key && _resource.respond_to?(@key)
+
       @delegate ||= _resource.send(@key)
-      return unless @delegate && @delegate.respond_to?(method.to_s)
+      return unless @delegate&.respond_to?(method.to_s)
+
       @delegate.send(method, *args, &block)
     end
 

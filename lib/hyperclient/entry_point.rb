@@ -57,6 +57,7 @@ module Hyperclient
       @faraday_options ||= options.dup
       if block_given?
         raise ConnectionAlreadyInitializedError if @connection
+
         @faraday_block = if @faraday_options.delete(:default) == false
                            block
                          else
@@ -75,6 +76,7 @@ module Hyperclient
     # Returns a Hash.
     def headers
       return @connection.headers if @connection
+
       @headers ||= default_headers
     end
 
@@ -83,6 +85,7 @@ module Hyperclient
     # value    - A Hash containing headers to include with every API request.
     def headers=(value)
       raise ConnectionAlreadyInitializedError if @connection
+
       @headers = value
     end
 
@@ -98,6 +101,7 @@ module Hyperclient
     # value    - A Hash containing options to pass to Faraday
     def faraday_options=(value)
       raise ConnectionAlreadyInitializedError if @connection
+
       @faraday_options = value
     end
 
@@ -113,6 +117,7 @@ module Hyperclient
     # value    - A Proc accepting a Faraday::Connection.
     def faraday_block=(value)
       raise ConnectionAlreadyInitializedError if @connection
+
       @faraday_block = value
     end
 
