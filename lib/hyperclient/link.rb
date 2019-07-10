@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 require 'addressable'
 
 module Hyperclient
@@ -127,8 +127,8 @@ module Hyperclient
     # Internal: Delegate the method further down the API if the resource cannot serve it.
     def method_missing(method, *args, &block)
       if _resource.respond_to?(method.to_s)
-        result = _resource.send(method, *args, &block)
-        result.nil? ? delegate_method(method, *args, &block) : result
+        result = T.unsafe(_resource).send(method, *args, &block)
+        result.nil? ? T.unsafe(self).delegate_method(method, *args, &block) : result
       else
         super
       end
