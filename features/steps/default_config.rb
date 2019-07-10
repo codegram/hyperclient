@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Spinach::Features::DefaultConfig < Spinach::FeatureSteps
   include API
 

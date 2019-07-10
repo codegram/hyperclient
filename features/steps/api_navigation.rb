@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Spinach::Features::ApiNavigation < Spinach::FeatureSteps
   include API
 
