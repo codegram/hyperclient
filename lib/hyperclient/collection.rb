@@ -1,3 +1,4 @@
+# typed: true
 module Hyperclient
   # Public: A helper class to wrap a collection of elements and provide
   # Hash-like access or via a method call.

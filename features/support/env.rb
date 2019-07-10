@@ -1,3 +1,4 @@
+# typed: strict
 require 'minitest/spec'
 require 'webmock'
 WebMock.enable!

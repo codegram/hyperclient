@@ -1,3 +1,4 @@
+# typed: false
 class Spinach::Features::DefaultConfig < Spinach::FeatureSteps
   include API
 

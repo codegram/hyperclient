@@ -1,3 +1,4 @@
+# typed: true
 $LOAD_PATH << 'lib'
 
 require 'minitest/spec'

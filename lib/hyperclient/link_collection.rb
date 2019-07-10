@@ -1,3 +1,4 @@
+# typed: true
 module Hyperclient
   # Public: A wrapper class to easily acces the links in a  Resource.
   #

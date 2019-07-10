@@ -1,3 +1,4 @@
+# typed: strict
 require 'hyperclient'
 
 puts "Using Hyperclient #{Hyperclient::VERSION} ..."

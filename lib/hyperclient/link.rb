@@ -1,3 +1,4 @@
+# typed: false
 require 'addressable'
 
 module Hyperclient

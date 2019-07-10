@@ -1,3 +1,4 @@
+# typed: false
 class Spinach::Features::ApiNavigation < Spinach::FeatureSteps
   include API
 
