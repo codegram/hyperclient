@@ -12,6 +12,7 @@ group :development do
   gem 'guard-spinach'
   gem 'pry'
   gem 'pry-byebug', platforms: :ruby
+  gem 'sorbet'
 end
 
 group :development, :test do

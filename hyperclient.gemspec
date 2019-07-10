@@ -13,6 +13,8 @@ Gem::Specification.new do |gem|
   gem.require_paths = ['lib']
   gem.version       = Hyperclient::VERSION
 
+  gem.add_runtime_dependency "sorbet-runtime"
+
   gem.add_dependency 'addressable'
   gem.add_dependency 'faraday', '>= 0.9.0'
   gem.add_dependency 'faraday-digestauth'
