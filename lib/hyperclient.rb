@@ -1,4 +1,6 @@
 # typed: true
+require 'sorbet-runtime'
+
 require 'hyperclient/collection'
 require 'hyperclient/link'
 require 'hyperclient/attributes'
