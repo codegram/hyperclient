@@ -9,6 +9,7 @@ module Hyperclient
   #  collection.value
   #
   class Collection
+    extend T::Sig
     extend T::Generic
     Elem = type_member
 
@@ -99,7 +100,7 @@ module Hyperclient
 
     # Internal: Accessory method to allow the collection respond to the
     # methods that will hit method_missing.
-    sig {params(method_name: T.untyped, _include_private: T.untyped).returns(T::Boolean)}
+    sig {params(method_name: T.untyped, _include_private: T::Boolean).returns(T::Boolean)}
     def respond_to_missing?(method_name, _include_private = false)
       @collection.include?(method_name.to_s)
     end
