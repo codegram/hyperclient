@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 require 'sorbet-runtime'
 
 require 'hyperclient/collection'
@@ -19,6 +19,7 @@ module Hyperclient
   # url - A String with the url of the API.
   #
   # Returns a Hyperclient::EntryPoint
+  sig {params(url: String).returns(Hyperclient::EntryPoint)}
   def self.new(url, &block)
     Hyperclient::EntryPoint.new(url, &block)
   end
