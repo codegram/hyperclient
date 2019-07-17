@@ -14,12 +14,13 @@ require 'hyperclient/version'
 # Public: Hyperclient namespace.
 #
 module Hyperclient
+  extend T::Sig
   # Public: Convenience method to create new EntryPoints.
   #
   # url - A String with the url of the API.
   #
   # Returns a Hyperclient::EntryPoint
-  sig {params(url: String).returns(Hyperclient::EntryPoint)}
+  sig { params(url: String).returns(Hyperclient::EntryPoint) }
   def self.new(url, &block)
     Hyperclient::EntryPoint.new(url, &block)
   end

@@ -18,7 +18,7 @@ module Hyperclient
     # Public: Initializes the Collection.
     #
     # collection - The Hash to be wrapped.
-    sig {params(collection: Hash).void}
+    sig { params(collection: Hash).void }
     def initialize(collection)
       @collection = T.let(collection, Hash)
     end
@@ -27,7 +27,7 @@ module Hyperclient
     # benefits.
     #
     # Returns an Enumerator.
-    sig {implementation.returns(T::Hash[T.untyped, T.untyped])}
+    sig { implementation.returns(T::Hash[T.untyped, T.untyped]) }
     def each(&block)
       @collection.each(&block)
     end
@@ -37,7 +37,7 @@ module Hyperclient
     # key - A String or Symbol to check for existance.
     #
     # Returns True/False.
-    sig {params(key: T.any(String,Symbol)).returns(T::Boolean)}
+    sig { params(key: T.any(String, Symbol)).returns(T::Boolean) }
     def include?(key)
       @collection.include?(key)
     end
@@ -51,7 +51,7 @@ module Hyperclient
     # default - An optional value to be returned if the key is not found.
     #
     # Returns an Object.
-    sig { params(args: T.untyped).returns(T.untyped)}
+    sig { params(args: T.untyped).returns(T.untyped) }
     def fetch(*args)
       T.unsafe(@collection).fetch(*args)
     end
@@ -61,7 +61,7 @@ module Hyperclient
     # name - A String or Symbol of the value to get from the collection.
     #
     # Returns an Object.
-    sig {params(name: T.any(String,Symbol)).returns(T.untyped)}
+    sig { params(name: T.any(String, Symbol)).returns(T.untyped) }
     def [](name)
       @collection[name.to_s]
     end
@@ -69,13 +69,13 @@ module Hyperclient
     # Public: Returns the wrapped collection as a Hash.
     #
     # Returns a Hash.
-    sig {returns(T::Hash[T.untyped, T.untyped])}
+    sig { returns(T::Hash[T.untyped, T.untyped]) }
     def to_h
       @collection.to_hash
     end
     alias to_hash to_h
 
-    sig {returns(Hash)}
+    sig { returns(Hash) }
     def to_s
       to_hash
     end
@@ -100,7 +100,7 @@ module Hyperclient
 
     # Internal: Accessory method to allow the collection respond to the
     # methods that will hit method_missing.
-    sig {params(method_name: T.untyped, _include_private: T::Boolean).returns(T::Boolean)}
+    sig { params(method_name: T.untyped, _include_private: T::Boolean).returns(T::Boolean) }
     def respond_to_missing?(method_name, _include_private = false)
       @collection.include?(method_name.to_s)
     end

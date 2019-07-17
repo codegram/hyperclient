@@ -40,7 +40,7 @@ module Hyperclient
     #
     # Returns true if it is templated.
     # Returns false if it not templated.
-    sig {returns(T::Boolean)}
+    sig { returns(T::Boolean) }
     def _templated?
       !!@link['templated']
     end
@@ -50,13 +50,13 @@ module Hyperclient
     # uri_variables - The Hash with the variables to expand the URITemplate.
     #
     # Returns a new Link with the expanded variables.
-    sig {params(uri_variables: T::Hash[Symbol, T.untyped]).returns(Hyperclient::Link)}
+    sig { params(uri_variables: T::Hash[Symbol, T.untyped]).returns(Hyperclient::Link) }
     def _expand(uri_variables = {})
       self.class.new(T.must(@key), @link, @entry_point, uri_variables)
     end
 
     # Public: Returns the url of the Link.
-    sig {returns(T.nilable(String))}
+    sig { returns(T.nilable(String)) }
     def _url
       return @link['href'] unless _templated?
 
@@ -66,94 +66,94 @@ module Hyperclient
     # Public: Returns an array of variables from the URITemplate.
     #
     # Returns an empty array for regular URIs.
-    sig {returns(T::Array[String])}
+    sig { returns(T::Array[String]) }
     def _variables
       _uri_template.variables
     end
 
     # Public: Returns the type property of the Link
-    sig {returns(T.nilable(String))}
+    sig { returns(T.nilable(String)) }
     def _type
       @link['type']
     end
 
     # Public: Returns the name property of the Link
-    sig {returns(T.nilable(String))}
+    sig { returns(T.nilable(String)) }
     def _name
       @link['name']
     end
 
     # Public: Returns the deprecation property of the Link
-    sig {returns(T.nilable(String))}
+    sig { returns(T.nilable(String)) }
     def _deprecation
       @link['deprecation']
     end
 
     # Public: Returns the profile property of the Link
-    sig {returns(T.nilable(String))}
+    sig { returns(T.nilable(String)) }
     def _profile
       @link['profile']
     end
 
     # Public: Returns the title property of the Link
-    sig {returns(T.nilable(String))}
+    sig { returns(T.nilable(String)) }
     def _title
       @link['title']
     end
 
     # Public: Returns the hreflang property of the Link
-    sig {returns(T.nilable(String))}
+    sig { returns(T.nilable(String)) }
     def _hreflang
       @link['hreflang']
     end
 
-    sig {returns(Hyperclient::Resource)}
+    sig { returns(Hyperclient::Resource) }
     def _resource
       @resource || _get
     end
 
     # Public: Returns the Resource which the Link is pointing to.
-    sig {returns(Hyperclient::Resource)}
+    sig { returns(Hyperclient::Resource) }
     def _get
       http_method(:get)
     end
 
-    sig {returns(Hyperclient::Resource)}
+    sig { returns(Hyperclient::Resource) }
     def _options
       http_method(:options)
     end
 
-    sig {returns(Hyperclient::Resource)}
+    sig { returns(Hyperclient::Resource) }
     def _head
       http_method(:head)
     end
 
-    sig {returns(Hyperclient::Resource)}
+    sig { returns(Hyperclient::Resource) }
     def _delete
       http_method(:delete)
     end
 
-    sig {params(params: Hash).returns(Hyperclient::Resource)}
+    sig { params(params: Hash).returns(Hyperclient::Resource) }
     def _post(params = {})
       http_method(:post, params)
     end
 
-    sig {params(params: Hash).returns(Hyperclient::Resource)}
+    sig { params(params: Hash).returns(Hyperclient::Resource) }
     def _put(params = {})
       http_method(:put, params)
     end
 
-    sig {params(params: Hash).returns(Hyperclient::Resource)}
+    sig { params(params: Hash).returns(Hyperclient::Resource) }
     def _patch(params = {})
       http_method(:patch, params)
     end
 
-    sig {returns(String)}
+    sig { returns(String) }
     def inspect
       "#<#{self.class.name}(#{@key}) #{@link}>"
     end
 
-    sig {returns(T.nilable(String))}
+    sig { returns(T.nilable(String)) }
     def to_s
       _url
     end
@@ -196,7 +196,7 @@ module Hyperclient
 
     # Internal: Accessory method to allow the link respond to the
     # methods that will hit method_missing.
-    sig {params(method: T.untyped, _include_private: T::Boolean).returns(T::Boolean)}
+    sig { params(method: T.untyped, _include_private: T::Boolean).returns(T::Boolean) }
     def respond_to_missing?(method, _include_private = false)
       if @key && _resource.respond_to?(@key) && (delegate = _resource.send(@key)) && delegate.respond_to?(method.to_s)
         true
@@ -209,18 +209,18 @@ module Hyperclient
     #
     # #to_ary is called for implicit array coercion (such as parallel assignment
     # or Array#flatten). Returning nil tells Ruby that this record is not Array-like.
-    sig {returns(NilClass)}
+    sig { returns(NilClass) }
     def to_ary
       nil
     end
 
     # Internal: Memoization for a URITemplate instance
-    sig {returns(Addressable::Template)}
+    sig { returns(Addressable::Template) }
     def _uri_template
       @uri_template ||= Addressable::Template.new(@link['href'])
     end
 
-    sig {params(method: Symbol, body: T.nilable(Hash)).returns(Hyperclient::Resource)}
+    sig { params(method: Symbol, body: T.nilable(Hash)).returns(Hyperclient::Resource) }
     def http_method(method, body = nil)
       @resource = begin
         response = @entry_point.connection.run_request(method, _url, body, nil)
