@@ -7,6 +7,8 @@ module Hyperclient
   # Public: Exception that is raised when trying to modify an
   # already initialized connection.
   class ConnectionAlreadyInitializedError < StandardError
+    extend T::Sig
+
     # Public: Returns a String with the exception message.
     sig { returns(String) }
     def message
