@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 require 'faraday_middleware'
 require 'faraday_hal_middleware'
 require_relative '../faraday/connection'
@@ -8,6 +8,7 @@ module Hyperclient
   # already initialized connection.
   class ConnectionAlreadyInitializedError < StandardError
     # Public: Returns a String with the exception message.
+    sig { returns(String) }
     def message
       'The connection has already been initialized.'
     end
@@ -29,6 +30,9 @@ module Hyperclient
   #
   class EntryPoint < Link
     extend Forwardable
+    extend T::Sig
+
+    FaradayBlock = T.type_alias(T.proc.params(arg0: Faraday::Connection).returns(T.untyped))
 
     # Public: Delegates common methods to be used with the Faraday connection.
     def_delegators :connection, :basic_auth, :digest_auth, :token_auth, :params, :params=
@@ -36,14 +40,18 @@ module Hyperclient
     # Public: Initializes an EntryPoint.
     #
     # url    - A String with the entry point of your API.
+    sig { params(url: String).void }
     def initialize(url, &_block)
-      @link = { 'href' => url }
-      @entry_point = self
-      @options = {}
-      @connection = nil
+      @link = T.let({ 'href' => url }, T::Hash[String, String])
+      @entry_point = T.let(self, EntryPoint)
+      @options = T.let({}, Hash)
+      @connection = T.let(nil, T.nilable(Faraday::Connection))
       @resource = nil
       @key = nil
       @uri_variables = nil
+      @faraday_block = T.let(nil, T.nilable(FaradayBlock))
+      @faraday_options = T.let(nil, T.nilable(T::Hash[Symbol, T.untyped]))
+      @headers = T.let(nil, T.nilable(T::Hash[String, String]))
       yield self if block_given?
     end
 
@@ -54,6 +62,7 @@ module Hyperclient
     # Hyperclient.
     #
     # Returns a Faraday::Connection.
+    sig { params(options: Hash).returns(Faraday::Connection) }
     def connection(options = {}, &block)
       @faraday_options ||= options.dup
       if block_given?
@@ -75,6 +84,7 @@ module Hyperclient
     # Public: Headers included with every API request.
     #
     # Returns a Hash.
+    sig { returns(T::Hash[String, String]) }
     def headers
       return @connection.headers if @connection
 
@@ -84,6 +94,7 @@ module Hyperclient
     # Public: Set headers.
     #
     # value    - A Hash containing headers to include with every API request.
+    sig { params(value: T::Hash[String, String]).void }
     def headers=(value)
       raise ConnectionAlreadyInitializedError if @connection
 
@@ -93,6 +104,7 @@ module Hyperclient
     # Public: Options passed to Faraday
     #
     # Returns a Hash.
+    sig { returns(T::Hash[Symbol, T.untyped]) }
     def faraday_options
       (@faraday_options ||= {}).merge(headers: headers)
     end
@@ -100,6 +112,7 @@ module Hyperclient
     # Public: Set Faraday connection options.
     #
     # value    - A Hash containing options to pass to Faraday
+    sig { params(value: T::Hash[Symbol, T.untyped]).void }
     def faraday_options=(value)
       raise ConnectionAlreadyInitializedError if @connection
 
@@ -109,6 +122,7 @@ module Hyperclient
     # Public: Faraday block used with every API request.
     #
     # Returns a Proc.
+    sig { returns(FaradayBlock) }
     def faraday_block
       @faraday_block ||= default_faraday_block
     end
@@ -116,6 +130,7 @@ module Hyperclient
     # Public: Set a Faraday block to use with every API request.
     #
     # value    - A Proc accepting a Faraday::Connection.
+    sig { params(value: FaradayBlock).returns(FaradayBlock) }
     def faraday_block=(value)
       raise ConnectionAlreadyInitializedError if @connection
 
@@ -125,6 +140,7 @@ module Hyperclient
     # Public: Read/Set options.
     #
     # value    - A Hash containing the client options.
+    sig { returns(Hash) }
     attr_accessor :options
 
     private
@@ -138,6 +154,7 @@ module Hyperclient
     # connection.
     #
     # Returns a block.
+    sig { returns(FaradayBlock) }
     def default_faraday_block
       lambda do |connection|
         connection.use Faraday::Response::RaiseError
@@ -153,6 +170,7 @@ module Hyperclient
     # The default headers et the Content-Type and Accept to application/json.
     #
     # Returns a Hash.
+    sig { returns(T::Hash[String, String]) }
     def default_headers
       { 'Content-Type' => 'application/hal+json', 'Accept' => 'application/hal+json,application/json' }
     end
