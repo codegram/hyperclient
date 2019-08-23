@@ -2,6 +2,7 @@
 
 ### 0.9.2 (Next)
 
+* [#150](https://github.com/codegram/hyperclient/pull/150): Add better support for globalid and active job - [@yuki24](https://github.com/yuki24).
 * Your contribution here.
 
 ### 0.9.1 (2019/08/25)
