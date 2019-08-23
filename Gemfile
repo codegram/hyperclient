@@ -27,6 +27,5 @@ group :test do
   gem 'mocha'
   gem 'rack-test'
   gem 'spinach'
-  gem 'turn'
   gem 'webmock'
 end
