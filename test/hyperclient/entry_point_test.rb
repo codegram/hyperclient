@@ -26,7 +26,14 @@ module Hyperclient
 
         it 'can insert additional middleware after a connection has been constructed' do
           entry_point.connection.must_be_kind_of Faraday::Connection
-          entry_point.connection.use :instrumentation
+
+          warning = 'WARNING: Unexpected middleware set after the adapter. ' \
+                    "This won't be supported from Faraday 1.0.\n"
+
+          assert_output nil, warning do
+            entry_point.connection.use :instrumentation
+          end
+
           handlers = entry_point.connection.builder.handlers
           handlers.must_include FaradayMiddleware::Instrumentation
         end
