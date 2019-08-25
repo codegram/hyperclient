@@ -19,4 +19,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'faraday_hal_middleware'
   gem.add_dependency 'faraday_middleware'
   gem.add_dependency 'net-http-digest_auth'
+
+  gem.add_development_dependency 'globalid'
 end

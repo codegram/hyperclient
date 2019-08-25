@@ -1,5 +1,6 @@
 require_relative '../test_helper'
 require 'hyperclient'
+require 'hyperclient/global_id'
 
 module Hyperclient
   describe Link do
@@ -347,6 +348,34 @@ module Hyperclient
         it 'does not delegate to_ary to resource' do
           resource.expects(:to_ary).never
           [[link, link]].flatten.must_equal [link, link]
+        end
+      end
+    end
+
+    describe 'GlobalId Support' do
+      describe '#to_global_id' do
+        before do
+          Hyperclient::GlobalId.setup!
+          Hyperclient::URL_TO_ENDPOINT_MAPPING[entry_point._url] = entry_point
+        end
+
+        it "serializes the object with entry point, key and uri_variables if present" do
+          link = Link.new('key', { 'href' => "http://api.example.org/key" }, entry_point)
+
+          stub_request(entry_point.connection) do |stub|
+            stub.get('http://api.example.org/') { [200, {}, { '_links' => { 'key' => { 'href' => 'http://api.example.org/key' } } }] }
+          end
+
+          actual = GlobalID.find(link.to_global_id)
+
+          actual._url.must_equal(link._url)
+        end
+
+        it "raises an exception when the hypermedia URL is missing" do
+          link_without_href = Link.new('key', { }, entry_point)
+          message = "Unable to create a Global ID for Hyperclient::GlobalId::Serializable without a model id."
+
+          -> { link_without_href.to_global_id }.must_raise(URI::GID::MissingModelIdError, message)
         end
       end
     end
