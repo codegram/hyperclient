@@ -1,5 +1,9 @@
 ## Changelog
 
+### 0.9.2 (Next)
+
+* Your contribution here.
+
 ### 0.9.1 (2019/08/25)
 
 * NOTE: **⚠ This version is no longer tested with Ruby < 2.3 ⚠** - [@ivoanjo](https://github.com/ivoanjo).
