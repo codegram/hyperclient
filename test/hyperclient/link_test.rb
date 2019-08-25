@@ -16,7 +16,7 @@ module Hyperclient
 
         it 'returns nil if the property is not present' do
           link = Link.new('key', {}, entry_point)
-          link.send("_#{prop}").must_equal nil
+          link.send("_#{prop}").must_be_nil
         end
       end
     end
@@ -301,7 +301,7 @@ module Hyperclient
           end
 
           resource.foos._embedded.orders.first.id.must_equal 1
-          resource.foos.first.must_equal nil
+          resource.foos.first.must_be_nil
         end
 
         it 'backtracks when navigating links' do
