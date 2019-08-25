@@ -1,2 +1,2 @@
-changelog.check
-toc.check
+changelog.check!
+toc.check!
