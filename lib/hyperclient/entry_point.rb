@@ -62,8 +62,7 @@ module Hyperclient
                            block
                          else
                            lambda do |conn|
-                             default_faraday_block.call conn
-                             yield conn
+                             default_faraday_block.call(conn, &block)
                            end
                          end
       else
@@ -138,11 +137,14 @@ module Hyperclient
     #
     # Returns a block.
     def default_faraday_block
-      lambda do |connection|
+      lambda do |connection, &block|
         connection.use Faraday::Response::RaiseError
         connection.use FaradayMiddleware::FollowRedirects
         connection.request :hal_json
         connection.response :hal_json, content_type: /\bjson$/
+
+        block&.call(connection)
+
         connection.adapter :net_http
         connection.options.params_encoder = Faraday::FlatParamsEncoder
       end
