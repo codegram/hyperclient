@@ -16,7 +16,7 @@ end
 
 group :development, :test do
   gem 'rake'
-  gem 'rubocop', '0.81.0', require: false
+  gem 'rubocop', '0.82.0', require: false
   gem 'simplecov', require: false
 end
 
