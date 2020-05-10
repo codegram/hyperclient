@@ -15,7 +15,9 @@ module Hyperclient
     # curies      - The Hash with link curies.
     # entry_point - The EntryPoint object to inject the configuration.
     def initialize(collection, curies, entry_point)
-      raise "Invalid response for LinkCollection. The response was: #{collection.inspect}" if collection && !collection.respond_to?(:collect)
+      if collection && !collection.respond_to?(:collect)
+        raise "Invalid response for LinkCollection. The response was: #{collection.inspect}"
+      end
 
       @_curies = (curies || {}).reduce({}) do |hash, curie_hash|
         curie = build_curie(curie_hash, entry_point)

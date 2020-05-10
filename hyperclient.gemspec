@@ -15,7 +15,7 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency 'addressable'
   gem.add_dependency 'faraday', '>= 0.9.0'
-  gem.add_dependency 'faraday-digestauth'
+  gem.add_dependency 'faraday-digestauth', '>= 0.3.0'
   gem.add_dependency 'faraday_hal_middleware'
   gem.add_dependency 'faraday_middleware'
   gem.add_dependency 'net-http-digest_auth'
