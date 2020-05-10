@@ -4,7 +4,7 @@ sudo: false
 
 matrix:
   include:
-    - rvm: 2.6.3
+    - rvm: 2.6.6
     - rvm: 2.5.5
     - rvm: 2.4.6
     - rvm: 2.4.6

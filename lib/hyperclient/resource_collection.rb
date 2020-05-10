@@ -23,7 +23,9 @@ module Hyperclient
     private
 
     def build_resource(representation)
-      return representation.map(&method(:build_resource)) if representation.is_a?(Array)
+      if representation.is_a?(Array)
+        return representation.map(&method(:build_resource))
+      end
 
       Resource.new(representation, @entry_point)
     end

@@ -2,7 +2,6 @@
 
 [![Gem Version](http://img.shields.io/gem/v/hyperclient.svg)](http://badge.fury.io/rb/hyperclient)
 [![Build Status](http://img.shields.io/travis/codegram/hyperclient.svg)](https://travis-ci.org/codegram/hyperclient)
-[![Dependency Status](https://gemnasium.com/codegram/hyperclient.svg)](https://gemnasium.com/codegram/hyperclient)
 [![Code Climate](https://codeclimate.com/github/codegram/hyperclient.svg)](https://codeclimate.com/github/codegram/hyperclient)
 [![Coverage Status](https://img.shields.io/coveralls/codegram/hyperclient.svg)](https://coveralls.io/r/codegram/hyperclient?branch=master)
 
