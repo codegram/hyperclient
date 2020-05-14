@@ -1,5 +1,9 @@
 ## Changelog
 
+### 0.9.4 (Next)
+
+* Your contribution here.
+
 ### 0.9.3 (2020/05/14)
 
 * [#149](https://github.com/codegram/hyperclient/pull/149): Address Faraday warnings - [@yuki24](https://github.com/yuki24).
