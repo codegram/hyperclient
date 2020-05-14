@@ -14,7 +14,7 @@ module Faraday
       it 'inserts the DigestAuth middleware at the top' do
         connection.digest_auth('user', 'password')
 
-        connection.builder.handlers.first.klass.must_equal Faraday::Request::DigestAuth
+        _(connection.builder.handlers.first.klass).must_equal Faraday::Request::DigestAuth
       end
 
       it 'passes the user and password to the middleware' do

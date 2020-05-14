@@ -20,23 +20,22 @@ describe Hyperclient do
       end
 
       it 'creates a Faraday connection with the default and additional headers' do
-        client.headers['Content-Type'].must_equal 'application/hal+json'
-        client.headers['Accept'].must_equal 'application/hal+json,application/json'
-        client.headers['Access-Token'].must_equal 'token'
+        _(client.headers['Content-Type']).must_equal 'application/hal+json'
+        _(client.headers['Accept']).must_equal 'application/hal+json,application/json'
+        _(client.headers['Access-Token']).must_equal 'token'
       end
 
       it 'creates a Faraday connection with the entry point url' do
-        client.connection.url_prefix.to_s.must_equal 'http://api.example.org/'
+        _(client.connection.url_prefix.to_s).must_equal 'http://api.example.org/'
       end
 
       it 'creates a Faraday connection with the default block plus any additional handlers' do
         handlers = client.connection.builder.handlers
-        handlers.must_include Faraday::Request::OAuth
-        handlers.must_include Faraday::Response::RaiseError
-        handlers.must_include FaradayMiddleware::FollowRedirects
-        handlers.must_include FaradayMiddleware::EncodeHalJson
-        handlers.must_include FaradayMiddleware::ParseHalJson
-        handlers.must_include Faraday::Adapter::NetHttp
+        _(handlers).must_include Faraday::Request::OAuth
+        _(handlers).must_include Faraday::Response::RaiseError
+        _(handlers).must_include FaradayMiddleware::FollowRedirects
+        _(handlers).must_include FaradayMiddleware::EncodeHalJson
+        _(handlers).must_include FaradayMiddleware::ParseHalJson
       end
     end
   end
