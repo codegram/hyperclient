@@ -29,7 +29,7 @@ module Hyperclient
 
         resource = Resource.new(mock_response.body, entry_point, mock_response)
 
-        resource._response.must_equal mock_response
+        _(resource._response).must_equal mock_response
       end
 
       it 'does not mutate the response.body' do
@@ -38,7 +38,7 @@ module Hyperclient
 
         resource = Resource.new(mock_response.body, entry_point, mock_response)
 
-        resource._response.body.must_equal body
+        _(resource._response.body).must_equal body
       end
 
       describe 'with an empty body in response' do
@@ -47,13 +47,13 @@ module Hyperclient
 
           resource = Resource.new(mock_response.body, entry_point, mock_response)
 
-          resource._response.must_equal mock_response
+          _(resource._response).must_equal mock_response
         end
       end
 
       describe 'with an invalid representation' do
         it 'raises an InvalidRepresentationError' do
-          proc { Resource.new('invalid representation data', entry_point) }.must_raise InvalidRepresentationError
+          _(proc { Resource.new('invalid representation data', entry_point) }).must_raise InvalidRepresentationError
         end
       end
     end
@@ -61,9 +61,9 @@ module Hyperclient
     describe '_links' do
       it '_expand' do
         resource = Resource.new({ '_links' => { 'orders' => { 'href' => '/orders/{id}', 'templated' => true } } }, entry_point)
-        resource._links.orders._expand(id: 1)._url.must_equal '/orders/1'
-        resource.orders._expand(id: 1)._url.must_equal '/orders/1'
-        resource.orders(id: 1)._url.must_equal '/orders/1'
+        _(resource._links.orders._expand(id: 1)._url).must_equal '/orders/1'
+        _(resource.orders._expand(id: 1)._url).must_equal '/orders/1'
+        _(resource.orders(id: 1)._url).must_equal '/orders/1'
       end
     end
 
@@ -74,84 +74,84 @@ module Hyperclient
 
       describe 'links' do
         it 'returns a LinkCollection' do
-          resource._links.must_be_kind_of LinkCollection
+          _(resource._links).must_be_kind_of LinkCollection
         end
       end
 
       describe 'attributes' do
         it 'returns a Attributes' do
-          resource._attributes.must_be_kind_of Attributes
+          _(resource._attributes).must_be_kind_of Attributes
         end
       end
 
       describe 'embedded' do
         it 'returns a ResourceCollection' do
-          resource._embedded.must_be_kind_of ResourceCollection
+          _(resource._embedded).must_be_kind_of ResourceCollection
         end
       end
 
       describe 'method_missing' do
         it 'delegates to attributes' do
           resource._attributes.expects(:foo).returns('bar')
-          resource.foo.must_equal 'bar'
+          _(resource.foo).must_equal 'bar'
         end
 
         it 'delegates to links' do
           resource._links.expects(:foo).returns('bar')
-          resource.foo.must_equal 'bar'
+          _(resource.foo).must_equal 'bar'
         end
 
         it 'delegates to embedded' do
           resource._embedded.expects(:foo).returns('bar')
-          resource.foo.must_equal 'bar'
+          _(resource.foo).must_equal 'bar'
         end
 
         it 'delegates to attributes, links, embedded' do
           resource._attributes.expects('respond_to?').with('foo').returns(false)
           resource._links.expects('respond_to?').with('foo').returns(false)
           resource._embedded.expects('respond_to?').with('foo').returns(false)
-          -> { resource.foo }.must_raise NoMethodError
+          _(-> { resource.foo }).must_raise NoMethodError
         end
 
         it 'delegates []' do
           resource._attributes.expects(:foo).returns('bar')
-          resource['foo'].must_equal 'bar'
+          _(resource['foo']).must_equal 'bar'
         end
 
         describe '#fetch' do
           it 'returns the value for keys that exist' do
             resource._attributes.expects(:foo).returns('bar')
 
-            resource.fetch('foo').must_equal 'bar'
+            _(resource.fetch('foo')).must_equal 'bar'
           end
 
           it 'raises an error for missing keys' do
-            proc { resource.fetch('missing key') }.must_raise KeyError
+            _(proc { resource.fetch('missing key') }).must_raise KeyError
           end
 
           describe 'with a default value' do
             it 'returns the value for keys that exist' do
               resource._attributes.expects(:foo).returns('bar')
-              resource.fetch('foo', 'default value').must_equal 'bar'
+              _(resource.fetch('foo', 'default value')).must_equal 'bar'
             end
 
             it 'returns the default value for missing keys' do
-              resource.fetch('missing key', 'default value').must_equal 'default value'
+              _(resource.fetch('missing key', 'default value')).must_equal 'default value'
             end
           end
 
           describe 'with a block' do
             it 'returns the value for keys that exist' do
               resource._attributes.expects(:foo).returns('bar')
-              resource.fetch('foo') { 'default value' }.must_equal 'bar'
+              _(resource.fetch('foo') { 'default value' }).must_equal 'bar'
             end
 
             it 'returns the value from the block' do
-              resource.fetch('z') { 'go fish!' }.must_equal 'go fish!'
+              _(resource.fetch('z') { 'go fish!' }).must_equal 'go fish!'
             end
 
             it 'returns the value with args from the block' do
-              resource.fetch('z') { |el| "go fish, #{el}" }.must_equal 'go fish, z'
+              _(resource.fetch('z') { |el| "go fish, #{el}" }).must_equal 'go fish, z'
             end
           end
         end
@@ -179,7 +179,7 @@ module Hyperclient
         end
 
         it 'proxies to the response object' do
-          resource._success?.must_equal true
+          _(resource._success?).must_equal true
         end
       end
 
@@ -189,7 +189,7 @@ module Hyperclient
         end
 
         it 'returns nil' do
-          resource._success?.must_be_nil
+          _(resource._success?).must_be_nil
         end
       end
     end
@@ -205,7 +205,7 @@ module Hyperclient
         end
 
         it 'proxies to the response object' do
-          resource._status.must_equal 200
+          _(resource._status).must_equal 200
         end
       end
 
@@ -215,7 +215,7 @@ module Hyperclient
         end
 
         it 'returns nil' do
-          resource._status.must_be_nil
+          _(resource._status).must_be_nil
         end
       end
     end

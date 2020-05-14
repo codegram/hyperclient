@@ -3,6 +3,8 @@ git_source(:github) { |repo| "https://github.com/#{repo['/'] ? repo : "#{repo}/#
 
 source 'https://rubygems.org'
 
+gem 'faraday', ENV['FARADAY_VERSION'] if ENV.key?('FARADAY_VERSION')
+
 gemspec
 
 group :development do

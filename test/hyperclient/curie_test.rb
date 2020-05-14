@@ -11,13 +11,13 @@ module Hyperclient
       it 'returns true if the curie is templated' do
         curie = Curie.new({ 'name' => 'image', 'templated' => true }, entry_point)
 
-        curie.templated?.must_equal true
+        _(curie.templated?).must_equal true
       end
 
       it 'returns false if the curie is not templated' do
         curie = Curie.new({ 'name' => 'image' }, entry_point)
 
-        curie.templated?.must_equal false
+        _(curie.templated?).must_equal false
       end
     end
 
@@ -26,12 +26,12 @@ module Hyperclient
     end
     describe '_name' do
       it 'returns curie name' do
-        curie.name.must_equal 'image'
+        _(curie.name).must_equal 'image'
       end
     end
     describe 'expand' do
       it 'expands link' do
-        curie.expand('thumbnail').must_equal '/images/thumbnail'
+        _(curie.expand('thumbnail')).must_equal '/images/thumbnail'
       end
     end
   end

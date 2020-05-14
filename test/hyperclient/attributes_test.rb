@@ -12,29 +12,29 @@ module Hyperclient
     end
 
     it 'does not set _links as an attribute' do
-      attributes.wont_respond_to :_links
+      _(attributes).wont_respond_to :_links
     end
 
     it 'does not set _embedded as an attribute' do
-      attributes.wont_respond_to :_embedded
+      _(attributes).wont_respond_to :_embedded
     end
 
     it 'sets normal attributes' do
-      attributes.must_respond_to :permitted
-      attributes.permitted.must_equal true
+      _(attributes).must_respond_to :permitted
+      _(attributes.permitted).must_equal true
 
-      attributes.must_respond_to :title
-      attributes.title.must_equal 'Real World ASP.NET MVC3'
+      _(attributes).must_respond_to :title
+      _(attributes.title).must_equal 'Real World ASP.NET MVC3'
     end
 
     # Underscores should be allowed per http://tools.ietf.org/html/draft-kelly-json-hal#appendix-B.4
     it 'sets _hidden_attribute as an attribute' do
-      attributes.must_respond_to :_hidden_attribute
-      attributes._hidden_attribute.must_equal 'useful value'
+      _(attributes).must_respond_to :_hidden_attribute
+      _(attributes._hidden_attribute).must_equal 'useful value'
     end
 
     it 'is a collection' do
-      Attributes.ancestors.must_include Collection
+      _(Attributes.ancestors).must_include Collection
     end
   end
 end

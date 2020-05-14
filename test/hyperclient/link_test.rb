@@ -11,12 +11,12 @@ module Hyperclient
       describe prop do
         it 'returns the property value' do
           link = Link.new('key', { prop => 'value' }, entry_point)
-          link.send("_#{prop}").must_equal 'value'
+          _(link.send("_#{prop}")).must_equal 'value'
         end
 
         it 'returns nil if the property is not present' do
           link = Link.new('key', {}, entry_point)
-          link.send("_#{prop}").must_be_nil
+          _(link.send("_#{prop}")).must_be_nil
         end
       end
     end
@@ -25,13 +25,13 @@ module Hyperclient
       it 'returns true if the link is templated' do
         link = Link.new('key', { 'templated' => true }, entry_point)
 
-        link._templated?.must_equal true
+        _(link._templated?).must_equal true
       end
 
       it 'returns false if the link is not templated' do
         link = Link.new('key', {}, entry_point)
 
-        link._templated?.must_equal false
+        _(link._templated?).must_equal false
       end
     end
 
@@ -39,13 +39,13 @@ module Hyperclient
       it 'returns a list of required variables' do
         link = Link.new('key', { 'href' => '/orders{?id,owner}', 'templated' => true }, entry_point)
 
-        link._variables.must_equal %w[id owner]
+        _(link._variables).must_equal %w[id owner]
       end
 
       it 'returns an empty array for untemplated links' do
         link = Link.new('key', { 'href' => '/orders' }, entry_point)
 
-        link._variables.must_equal []
+        _(link._variables).must_equal []
       end
     end
 
@@ -53,41 +53,41 @@ module Hyperclient
       describe 'required argument' do
         it 'builds a Link with the templated URI representation' do
           link = Link.new('key', { 'href' => '/orders/{id}', 'templated' => true }, entry_point)
-          link._expand(id: '1')._url.must_equal '/orders/1'
+          _(link._expand(id: '1')._url).must_equal '/orders/1'
         end
 
         it 'expands an uri template without variables' do
           link = Link.new('key', { 'href' => '/orders/{id}', 'templated' => true }, entry_point)
-          link._expand._url.must_equal '/orders/'
-          link._url.must_equal '/orders/'
+          _(link._expand._url).must_equal '/orders/'
+          _(link._url).must_equal '/orders/'
         end
       end
 
       describe 'query string argument' do
         it 'builds a Link with the templated URI representation' do
           link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => true }, entry_point)
-          link._expand(id: '1')._url.must_equal '/orders?id=1'
+          _(link._expand(id: '1')._url).must_equal '/orders?id=1'
         end
 
         it 'expands an uri template without variables' do
           link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => true }, entry_point)
-          link._expand._url.must_equal '/orders'
-          link._url.must_equal '/orders'
+          _(link._expand._url).must_equal '/orders'
+          _(link._url).must_equal '/orders'
         end
 
         it 'does not expand unknown variables' do
           link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => true }, entry_point)
-          link._expand(unknown: '1')._url.must_equal '/orders'
+          _(link._expand(unknown: '1')._url).must_equal '/orders'
         end
 
         it 'only expands known variables' do
           link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => true }, entry_point)
-          link._expand(unknown: '1', id: '2')._url.must_equal '/orders?id=2'
+          _(link._expand(unknown: '1', id: '2')._url).must_equal '/orders?id=2'
         end
 
         it 'only expands templated links' do
           link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => false }, entry_point)
-          link._expand(id: '1')._url.must_equal '/orders{?id}'
+          _(link._expand(id: '1')._url).must_equal '/orders{?id}'
         end
       end
     end
@@ -96,36 +96,36 @@ module Hyperclient
       it 'expands an uri template without variables' do
         link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => true }, entry_point)
 
-        link._url.must_equal '/orders'
+        _(link._url).must_equal '/orders'
       end
 
       it 'expands an uri template with variables' do
         link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => true }, entry_point, id: 1)
 
-        link._url.must_equal '/orders?id=1'
+        _(link._url).must_equal '/orders?id=1'
       end
 
       it 'does not expand an uri template with unknown variables' do
         link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => true }, entry_point, unknown: 1)
 
-        link._url.must_equal '/orders'
+        _(link._url).must_equal '/orders'
       end
 
       it 'only expands known variables in a uri template' do
         link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => true }, entry_point, unknown: 1, id: 2)
 
-        link._url.must_equal '/orders?id=2'
+        _(link._url).must_equal '/orders?id=2'
       end
 
       it 'returns the link when no uri template' do
         link = Link.new('key', { 'href' => '/orders' }, entry_point)
-        link._url.must_equal '/orders'
+        _(link._url).must_equal '/orders'
       end
 
       it 'aliases to_s to _url' do
         link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => true }, entry_point, id: 1)
 
-        link.to_s.must_equal '/orders?id=1'
+        _(link.to_s).must_equal '/orders?id=1'
       end
     end
 
@@ -151,7 +151,7 @@ module Hyperclient
           stub.get('http://api.example.org/productions/1') { [200, {}, nil] }
         end
 
-        link._get.must_be_kind_of Resource
+        _(link._get).must_be_kind_of Resource
       end
 
       it 'raises exceptions by default' do
@@ -161,7 +161,7 @@ module Hyperclient
           stub.get('http://api.example.org/productions/1') { [400, {}, nil] }
         end
 
-        -> { link._get }.must_raise Faraday::ClientError
+        _(-> { link._get }).must_raise Faraday::ClientError
       end
     end
 
@@ -173,7 +173,7 @@ module Hyperclient
           stub.options('http://api.example.org/productions/1') { [200, {}, nil] }
         end
 
-        link._options.must_be_kind_of Resource
+        _(link._options).must_be_kind_of Resource
       end
     end
 
@@ -185,7 +185,7 @@ module Hyperclient
           stub.head('http://api.example.org/productions/1') { [200, {}, nil] }
         end
 
-        link._head.must_be_kind_of Resource
+        _(link._head).must_be_kind_of Resource
       end
     end
 
@@ -197,7 +197,7 @@ module Hyperclient
           stub.delete('http://api.example.org/productions/1') { [200, {}, nil] }
         end
 
-        link._delete.must_be_kind_of Resource
+        _(link._delete).must_be_kind_of Resource
       end
     end
 
@@ -209,7 +209,7 @@ module Hyperclient
           stub.post('http://api.example.org/productions/1') { [200, {}, nil] }
         end
 
-        link._post('foo' => 'bar').must_be_kind_of Resource
+        _(link._post('foo' => 'bar')).must_be_kind_of Resource
       end
 
       it 'defaults params to an empty hash' do
@@ -217,7 +217,7 @@ module Hyperclient
           stub.post('http://api.example.org/productions/1') { [200, {}, nil] }
         end
 
-        link._post.must_be_kind_of Resource
+        _(link._post).must_be_kind_of Resource
       end
     end
 
@@ -229,7 +229,7 @@ module Hyperclient
           stub.put('http://api.example.org/productions/1', '{"foo":"bar"}') { [200, {}, nil] }
         end
 
-        link._put('foo' => 'bar').must_be_kind_of Resource
+        _(link._put('foo' => 'bar')).must_be_kind_of Resource
       end
 
       it 'defaults params to an empty hash' do
@@ -237,7 +237,7 @@ module Hyperclient
           stub.put('http://api.example.org/productions/1') { [200, {}, nil] }
         end
 
-        link._put.must_be_kind_of Resource
+        _(link._put).must_be_kind_of Resource
       end
     end
 
@@ -249,7 +249,7 @@ module Hyperclient
           stub.patch('http://api.example.org/productions/1', '{"foo":"bar"}') { [200, {}, nil] }
         end
 
-        link._patch('foo' => 'bar').must_be_kind_of Resource
+        _(link._patch('foo' => 'bar')).must_be_kind_of Resource
       end
 
       it 'defaults params to an empty hash' do
@@ -257,7 +257,7 @@ module Hyperclient
           stub.patch('http://api.example.org/productions/1') { [200, {}, nil] }
         end
 
-        link._patch.must_be_kind_of Resource
+        _(link._patch).must_be_kind_of Resource
       end
     end
 
@@ -265,8 +265,8 @@ module Hyperclient
       it 'outputs a custom-friendly output' do
         link = Link.new('key', { 'href' => '/productions/1' }, 'foo')
 
-        link.inspect.must_include 'Link'
-        link.inspect.must_include '"href"=>"/productions/1"'
+        _(link.inspect).must_include 'Link'
+        _(link.inspect).must_include '"href"=>"/productions/1"'
       end
     end
 
@@ -279,8 +279,8 @@ module Hyperclient
             stub.get('http://api.example.org/orders') { [200, {}, { '_embedded' => { 'orders' => [{ 'id' => 1 }] } }] }
           end
 
-          resource.orders._embedded.orders.first.id.must_equal 1
-          resource.orders.first.id.must_equal 1
+          _(resource.orders._embedded.orders.first.id).must_equal 1
+          _(resource.orders.first.id).must_equal 1
         end
 
         it 'can handle false values in the response' do
@@ -290,7 +290,7 @@ module Hyperclient
             stub.get('http://api.example.org/orders') { [200, {}, { 'any' => false }] }
           end
 
-          resource.orders.any.must_equal false
+          _(resource.orders.any).must_equal false
         end
 
         it "doesn't delegate when link key doesn't match" do
@@ -300,8 +300,8 @@ module Hyperclient
             stub.get('http://api.example.org/orders') { [200, {}, { '_embedded' => { 'orders' => [{ 'id' => 1 }] } }] }
           end
 
-          resource.foos._embedded.orders.first.id.must_equal 1
-          resource.foos.first.must_be_nil
+          _(resource.foos._embedded.orders.first.id).must_equal 1
+          _(resource.foos.first).must_be_nil
         end
 
         it 'backtracks when navigating links' do
@@ -311,7 +311,7 @@ module Hyperclient
             stub.get('http://api.example.org/page2') { [200, {}, { '_links' => { 'next' => { 'href' => 'http://api.example.org/page3' } } }] }
           end
 
-          resource.next._links.next._url.must_equal 'http://api.example.org/page3'
+          _(resource.next._links.next._url).must_equal 'http://api.example.org/page3'
         end
       end
 
@@ -335,18 +335,18 @@ module Hyperclient
         end
 
         it 'raises an error when the method does not exist in the resource' do
-          -> { link.this_method_does_not_exist }.must_raise NoMethodError
+          _(-> { link.this_method_does_not_exist }).must_raise NoMethodError
         end
 
         it 'responds to missing methods' do
           resource.expects(:respond_to?).with('orders').returns(false)
           resource.expects(:respond_to?).with('embedded').returns(true)
-          link.respond_to?(:embedded).must_equal true
+          _(link.respond_to?(:embedded)).must_equal true
         end
 
         it 'does not delegate to_ary to resource' do
           resource.expects(:to_ary).never
-          [[link, link]].flatten.must_equal [link, link]
+          _([[link, link]].flatten).must_equal [link, link]
         end
       end
     end

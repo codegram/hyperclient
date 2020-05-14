@@ -10,60 +10,52 @@ module Hyperclient
 
       describe 'connection' do
         it 'creates a Faraday connection with the entry point url' do
-          entry_point.connection.url_prefix.to_s.must_equal 'http://my.api.org/'
+          _(entry_point.connection.url_prefix.to_s).must_equal 'http://my.api.org/'
         end
 
         it 'creates a Faraday connection with the default headers' do
-          entry_point.headers['Content-Type'].must_equal 'application/hal+json'
-          entry_point.headers['Accept'].must_equal 'application/hal+json,application/json'
+          _(entry_point.headers['Content-Type']).must_equal 'application/hal+json'
+          _(entry_point.headers['Accept']).must_equal 'application/hal+json,application/json'
         end
 
         it 'can update headers after a connection has been constructed' do
-          entry_point.connection.must_be_kind_of Faraday::Connection
+          _(entry_point.connection).must_be_kind_of Faraday::Connection
           entry_point.headers.update('Content-Type' => 'application/foobar')
-          entry_point.headers['Content-Type'].must_equal 'application/foobar'
+          _(entry_point.headers['Content-Type']).must_equal 'application/foobar'
         end
 
         it 'can insert additional middleware after a connection has been constructed' do
-          entry_point.connection.must_be_kind_of Faraday::Connection
-
-          warning = 'WARNING: Unexpected middleware set after the adapter. ' \
-                    "This won't be supported from Faraday 1.0.\n"
-
-          assert_output nil, warning do
-            entry_point.connection.use :instrumentation
-          end
-
+          _(entry_point.connection).must_be_kind_of Faraday::Connection
+          entry_point.connection.use :instrumentation
           handlers = entry_point.connection.builder.handlers
-          handlers.must_include FaradayMiddleware::Instrumentation
+          _(handlers).must_include FaradayMiddleware::Instrumentation
         end
 
         it 'creates a Faraday connection with the default block' do
           handlers = entry_point.connection.builder.handlers
 
-          handlers.must_include Faraday::Response::RaiseError
-          handlers.must_include FaradayMiddleware::FollowRedirects
-          handlers.must_include FaradayMiddleware::EncodeHalJson
-          handlers.must_include FaradayMiddleware::ParseHalJson
-          handlers.must_include Faraday::Adapter::NetHttp
+          _(handlers).must_include Faraday::Response::RaiseError
+          _(handlers).must_include FaradayMiddleware::FollowRedirects
+          _(handlers).must_include FaradayMiddleware::EncodeHalJson
+          _(handlers).must_include FaradayMiddleware::ParseHalJson
 
-          entry_point.connection.options.params_encoder.must_equal Faraday::FlatParamsEncoder
+          _(entry_point.connection.options.params_encoder).must_equal Faraday::FlatParamsEncoder
         end
 
         it 'raises a  ConnectionAlreadyInitializedError if attempting to modify headers' do
-          entry_point.connection.must_be_kind_of Faraday::Connection
-          -> { entry_point.headers = {} }.must_raise ConnectionAlreadyInitializedError
+          _(entry_point.connection).must_be_kind_of Faraday::Connection
+          _(-> { entry_point.headers = {} }).must_raise ConnectionAlreadyInitializedError
         end
 
         it 'raises a  ConnectionAlreadyInitializedError if attempting to modify the faraday block' do
-          entry_point.connection.must_be_kind_of Faraday::Connection
-          -> { entry_point.connection {} }.must_raise ConnectionAlreadyInitializedError
+          _(entry_point.connection).must_be_kind_of Faraday::Connection
+          _(-> { entry_point.connection {} }).must_raise ConnectionAlreadyInitializedError
         end
       end
 
       describe 'initialize' do
         it 'sets a Link with the entry point url' do
-          entry_point._url.must_equal 'http://my.api.org'
+          _(entry_point._url).must_equal 'http://my.api.org'
         end
       end
     end
@@ -77,17 +69,17 @@ module Hyperclient
 
       describe 'connection' do
         it 'creates a Faraday connection with the entry point url' do
-          entry_point.connection.url_prefix.to_s.must_equal 'http://my.api.org/'
+          _(entry_point.connection.url_prefix.to_s).must_equal 'http://my.api.org/'
         end
 
         it 'creates a Faraday connection with the default headers' do
-          entry_point.headers['Content-Type'].must_equal 'application/hal+json'
-          entry_point.headers['Accept'].must_equal 'application/hal+json,application/json'
+          _(entry_point.headers['Content-Type']).must_equal 'application/hal+json'
+          _(entry_point.headers['Accept']).must_equal 'application/hal+json,application/json'
         end
 
         it 'creates a Faraday connection with options' do
-          entry_point.connection.proxy.must_be_kind_of Faraday::ProxyOptions
-          entry_point.connection.proxy.uri.to_s.must_equal 'http://my.proxy:8080'
+          _(entry_point.connection.proxy).must_be_kind_of Faraday::ProxyOptions
+          _(entry_point.connection.proxy.uri.to_s).must_equal 'http://my.proxy:8080'
         end
       end
     end
@@ -101,17 +93,17 @@ module Hyperclient
 
       describe 'connection' do
         it 'creates a Faraday connection with the entry point url' do
-          entry_point.connection.url_prefix.to_s.must_equal 'http://my.api.org/'
+          _(entry_point.connection.url_prefix.to_s).must_equal 'http://my.api.org/'
         end
 
         it 'creates a Faraday connection with the default headers' do
-          entry_point.headers['Content-Type'].must_equal 'application/hal+json'
-          entry_point.headers['Accept'].must_equal 'application/hal+json,application/json'
+          _(entry_point.headers['Content-Type']).must_equal 'application/hal+json'
+          _(entry_point.headers['Accept']).must_equal 'application/hal+json,application/json'
         end
 
         it 'creates a Faraday connection with options' do
-          entry_point.connection.proxy.must_be_kind_of Faraday::ProxyOptions
-          entry_point.connection.proxy.uri.to_s.must_equal 'http://my.proxy:8080'
+          _(entry_point.connection.proxy).must_be_kind_of Faraday::ProxyOptions
+          _(entry_point.connection.proxy.uri.to_s).must_equal 'http://my.proxy:8080'
         end
       end
     end
@@ -134,21 +126,20 @@ module Hyperclient
 
       describe 'connection' do
         it 'creates a Faraday connection with the entry point url' do
-          entry_point.connection.url_prefix.to_s.must_equal 'http://my.api.org/'
+          _(entry_point.connection.url_prefix.to_s).must_equal 'http://my.api.org/'
         end
 
         it 'creates a Faraday connection with non-default headers' do
-          entry_point.headers['Content-Type'].must_equal 'application/foobar'
-          entry_point.headers['Accept'].must_equal 'application/foobar'
+          _(entry_point.headers['Content-Type']).must_equal 'application/foobar'
+          _(entry_point.headers['Accept']).must_equal 'application/foobar'
         end
 
         it 'creates a Faraday connection with the default block' do
           handlers = entry_point.connection.builder.handlers
-          handlers.wont_include Faraday::Response::RaiseError
-          handlers.wont_include FaradayMiddleware::FollowRedirects
-          handlers.must_include FaradayMiddleware::EncodeJson
-          handlers.must_include FaradayMiddleware::ParseJson
-          handlers.must_include Faraday::Adapter::NetHttp
+          _(handlers).wont_include Faraday::Response::RaiseError
+          _(handlers).wont_include FaradayMiddleware::FollowRedirects
+          _(handlers).must_include FaradayMiddleware::EncodeJson
+          _(handlers).must_include FaradayMiddleware::ParseJson
         end
       end
     end
@@ -165,26 +156,25 @@ module Hyperclient
 
       describe 'connection' do
         it 'creates a Faraday connection with the default and additional headers' do
-          entry_point.headers['Content-Type'].must_equal 'application/hal+json'
-          entry_point.headers['Accept'].must_equal 'application/hal+json,application/json'
-          entry_point.headers['Access-Token'].must_equal 'token'
+          _(entry_point.headers['Content-Type']).must_equal 'application/hal+json'
+          _(entry_point.headers['Accept']).must_equal 'application/hal+json,application/json'
+          _(entry_point.headers['Access-Token']).must_equal 'token'
         end
 
         it 'creates a Faraday connection with the entry point url' do
-          entry_point.connection.url_prefix.to_s.must_equal 'http://my.api.org/'
+          _(entry_point.connection.url_prefix.to_s).must_equal 'http://my.api.org/'
         end
 
         it 'creates a Faraday connection with the default block plus any additional handlers' do
           handlers = entry_point.connection.builder.handlers
 
-          handlers.must_include Faraday::Request::OAuth
-          handlers.must_include Faraday::Response::RaiseError
-          handlers.must_include FaradayMiddleware::FollowRedirects
-          handlers.must_include FaradayMiddleware::EncodeHalJson
-          handlers.must_include FaradayMiddleware::ParseHalJson
-          handlers.must_include Faraday::Adapter::NetHttp
+          _(handlers).must_include Faraday::Request::OAuth
+          _(handlers).must_include Faraday::Response::RaiseError
+          _(handlers).must_include FaradayMiddleware::FollowRedirects
+          _(handlers).must_include FaradayMiddleware::EncodeHalJson
+          _(handlers).must_include FaradayMiddleware::ParseHalJson
 
-          entry_point.connection.options.params_encoder.must_equal Faraday::FlatParamsEncoder
+          _(entry_point.connection.options.params_encoder).must_equal Faraday::FlatParamsEncoder
         end
       end
     end
