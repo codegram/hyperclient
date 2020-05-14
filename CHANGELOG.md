@@ -1,13 +1,13 @@
 ## Changelog
 
-### 0.9.3 (Next)
-
-* Your contribution here.
-
-### 0.9.2 (2020/05/12)
+### 0.9.3 (2020/05/14)
 
 * [#149](https://github.com/codegram/hyperclient/pull/149): Address Faraday warnings - [@yuki24](https://github.com/yuki24).
 * [#160](https://github.com/codegram/hyperclient/pull/160): Require newer 'faraday-digestauth' - [@dblock](https://github.com/dblock).
+
+### 0.9.2 (2020/05/12)
+
+* NOTE: **⚠ This version has been yanked ⚠** - [@dblock](https://github.com/dblock).
 
 ### 0.9.1 (2019/08/25)
 
