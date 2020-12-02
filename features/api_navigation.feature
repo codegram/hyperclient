@@ -7,6 +7,11 @@ Feature: API navigation
     When I connect to the API
     Then I should be able to navigate to posts and authors
 
+  Scenario: Links
+    When I connect to the API
+    Then I should be able to paginate posts
+    Then I should be able to paginate authors
+
   Scenario: Templated links
     Given I connect to the API
     When I search for a post with a templated link

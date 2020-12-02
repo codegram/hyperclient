@@ -15,13 +15,32 @@ module Spinach
       }'
     end
 
+    def authors_response
+      '{
+          "_links": {
+            "self": { "href": "/authors" }
+          },
+          "_embedded": {
+            "api:authors": [
+              {
+                "name": "Lorem Ipsum",
+                "_links": {
+                  "self": { "href": "/authors/1" }
+                }
+              }
+            ]
+          }
+      }'
+    end
+
     def posts_response
       '{
           "_links": {
             "self": { "href": "/posts" },
+            "next": {"href": "/posts?page=2"},
             "last_post": {"href": "/posts/1"}
           },
-          "total_posts": "2",
+          "total_posts": "4",
           "_embedded": {
             "posts": [
               {
@@ -43,10 +62,85 @@ module Spinach
       }'
     end
 
-    def post_response
+    def posts_page2_response
+      '{
+          "_links": {
+            "self": { "href": "/posts?page=2" },
+            "next": { "href": "/posts?page=3" }
+          },
+          "total_posts": "4",
+          "_embedded": {
+            "posts": [
+              {
+                "title": "My third blog post",
+                "body":  "Lorem ipsum dolor sit amet",
+                "_links": {
+                  "self": { "href": "/posts/3" }
+                }
+              }
+            ]
+          }
+      }'
+    end
+
+    def posts_page3_response
+      '{
+          "_links": {
+            "self": { "href": "/posts?page=3" }
+          },
+          "total_posts": "4",
+          "_embedded": {
+            "posts": [
+              {
+                "title": "My third blog post",
+                "body":  "Lorem ipsum dolor sit amet",
+                "_links": {
+                  "self": { "href": "/posts/4" }
+                }
+              }
+            ]
+          }
+      }'
+    end
+
+    def post1_response
       '{
           "_links": {
             "self": { "href": "/posts/1" }
+          },
+          "title": "My first blog post",
+          "body":  "Lorem ipsum dolor sit amet",
+          "_embedded": {
+            "comments": [
+              {
+                "title": "Some comment"
+              }
+            ]
+          }
+      }'
+    end
+
+    def post2_response
+      '{
+          "_links": {
+            "self": { "href": "/posts/2" }
+          },
+          "title": "My first blog post",
+          "body":  "Lorem ipsum dolor sit amet",
+          "_embedded": {
+            "comments": [
+              {
+                "title": "Some comment"
+              }
+            ]
+          }
+      }'
+    end
+
+    def post3_response
+      '{
+          "_links": {
+            "self": { "href": "/posts/3" }
           },
           "title": "My first blog post",
           "body":  "Lorem ipsum dolor sit amet",
