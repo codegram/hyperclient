@@ -3,8 +3,8 @@ inherit_from: .rubocop_todo.yml
 AllCops:
   TargetRubyVersion: 2.3
 
-Metrics/BlockLength:
-  ExcludedMethods: [it, describe]
+Metrics:
+  Enabled: false
 
 Style/FrozenStringLiteralComment:
   Enabled: false

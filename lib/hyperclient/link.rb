@@ -4,6 +4,8 @@ module Hyperclient
   # Internal: The Link is used to let a Resource interact with the API.
   #
   class Link
+    include Enumerable
+
     # Public: Initializes a new Link.
     #
     # key           - The key or name of the link.
@@ -17,6 +19,25 @@ module Hyperclient
       @entry_point   = entry_point
       @uri_variables = uri_variables
       @resource      = nil
+    end
+
+    # Public: Each implementation to allow the class to use the Enumerable
+    # benefits for paginated, embedded items.
+    #
+    # Returns an Enumerator.
+    def each(&block)
+      if block_given?
+        current = self
+        while current
+          coll = current.respond_to?(@key) ? current.send(@key) : _resource
+          coll.each(&block)
+          break unless current._links[:next]
+
+          current = current._links.next
+        end
+      else
+        to_enum(:each)
+      end
     end
 
     # Public: Indicates if the link is an URITemplate or a regular URI.

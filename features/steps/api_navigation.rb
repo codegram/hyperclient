@@ -9,6 +9,19 @@ class Spinach::Features::ApiNavigation < Spinach::FeatureSteps
     assert_requested :get, 'http://api.example.org/authors'
   end
 
+  step 'I should be able to paginate posts' do
+    assert_kind_of Enumerator, api.posts.each
+    assert_equal 4, api.posts.to_a.count
+    assert_requested :get, 'http://api.example.org/posts'
+    assert_requested :get, 'http://api.example.org/posts?page=2'
+    assert_requested :get, 'http://api.example.org/posts?page=3'
+  end
+
+  step 'I should be able to paginate authors' do
+    assert_equal 1, api._links['api:authors'].to_a.count
+    assert_requested :get, 'http://api.example.org/authors'
+  end
+
   step 'I search for a post with a templated link' do
     api._links.search._expand(q: 'something')._resource
   end
@@ -50,8 +63,8 @@ class Spinach::Features::ApiNavigation < Spinach::FeatureSteps
   step 'I should be able to count embedded items' do
     assert_equal 2, api._links.posts._resource._embedded.posts.count
     assert_equal 2, api.posts._embedded.posts.count
-    assert_equal 2, api.posts.count
-    assert_equal 2, api.posts.map.count
+    assert_equal 4, api.posts.count
+    assert_equal 4, api.posts.map.count
   end
 
   step 'I should be able to iterate over embedded items' do
@@ -59,6 +72,6 @@ class Spinach::Features::ApiNavigation < Spinach::FeatureSteps
     api.posts.each do |_post|
       count += 1
     end
-    assert_equal 2, count
+    assert_equal 4, count
   end
 end

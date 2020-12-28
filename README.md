@@ -102,7 +102,7 @@ api.connection.use :http_cache
 
 ## Resources and Attributes
 
-Hyperclient will fetch and discover the resources from your API.
+Hyperclient will fetch and discover the resources from your API and automatically paginate when possible.
 
 ```ruby
 api.splines.each do |spline|
