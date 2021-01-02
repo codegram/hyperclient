@@ -1,10 +1,9 @@
 ## Changelog
 
-### 1.0.0 (Next)
+### 1.0.0 (2021/01/02)
 
 * [#193](https://github.com/codegram/hyperclient/pull/193): Auto-paginate collections - [@dblock](https://github.com/dblock).
 * [#163](https://github.com/codegram/hyperclient/pull/163): Test against Faraday 0.9, 0.17 and 1.0+ - [@dblock](https://github.com/dblock).
-* Your contribution here.
 
 ### 0.9.3 (2020/05/14)
 
