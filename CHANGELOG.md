@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.0.1 (Next)
+
+* Your contribution here.
+
 ### 1.0.0 (2021/01/02)
 
 * [#193](https://github.com/codegram/hyperclient/pull/193): Auto-paginate collections - [@dblock](https://github.com/dblock).
