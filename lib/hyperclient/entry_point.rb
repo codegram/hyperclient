@@ -1,6 +1,5 @@
 require 'faraday_middleware'
 require 'faraday_hal_middleware'
-require_relative '../faraday/connection'
 
 module Hyperclient
   # Public: Exception that is raised when trying to modify an
@@ -30,7 +29,7 @@ module Hyperclient
     extend Forwardable
 
     # Public: Delegates common methods to be used with the Faraday connection.
-    def_delegators :connection, :basic_auth, :digest_auth, :token_auth, :params, :params=
+    def_delegators :connection, :params, :params=
 
     # Public: Initializes an EntryPoint.
     #

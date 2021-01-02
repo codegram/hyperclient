@@ -85,12 +85,19 @@ api = Hyperclient.new('https://grape-with-roar.herokuapp.com/api') do |client|
 end
 ```
 
-You can modify headers or specify authentication after a connection has been created. Hyperclient supports Basic, Token or Digest auth as well as many other Faraday extensions.
+You can modify headers or specify authentication after a connection has been created. Hyperclient supports Basic, Token or [Digest auth](https://github.com/bhaberer/faraday-digestauth) as well as many other Faraday extensions.
 
 ```ruby
-api = Hyperclient.new('https://grape-with-roar.herokuapp.com/api')
-api.digest_auth('username', 'password')
-api.headers.update('Accept-Encoding' => 'deflate, gzip')
+require 'faraday/digestauth'
+
+api = Hyperclient.new('https://grape-with-roar.herokuapp.com/api') do |client|
+  client.connection(default: false) do |conn|
+    conn.request :digest, 'username', 'password'
+    conn.request :json
+    conn.response :json, content_type: /\bjson$/
+    conn.adapter :net_http
+  end
+end
 ```
 
 You can access the Faraday connection directly after it has been created and add middleware to it. As an example, you could use the [faraday-http-cache-middleware](https://github.com/plataformatec/faraday-http-cache).
