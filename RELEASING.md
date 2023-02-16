@@ -12,7 +12,7 @@ bundle install
 rake
 ```
 
-Check that the last build succeeded in [Travis CI](https://travis-ci.org/codegram/hyperclient) for all supported platforms.
+Check that the last build succeeded in CI for all supported platforms.
 
 Increment the version, modify [lib/hyperclient/version.rb](lib/hyperclient/version.rb).
 
