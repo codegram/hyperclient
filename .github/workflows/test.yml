@@ -8,6 +8,7 @@ jobs:
       fail-fast: false
       matrix:
         entry:
+          - { ruby: '3.2' }
           - { ruby: '2.7', faraday: '0.9.0' }
           - { ruby: '2.7', faraday: '0.17.0' }
           - { ruby: '2.7', faraday: '~> 1.0' }
@@ -15,6 +16,8 @@ jobs:
           - { ruby: 'ruby-head', allowed-failure: true }
           - { ruby: 'jruby-head', allowed-failure: true }
     name: test (${{ matrix.entry.ruby }}, ${{ matrix.entry.faraday || 'default' }})
+    env:
+      FARADAY_VERSION: ${{ matrix.entry.faraday }} 
     steps:
       - uses: actions/checkout@v3
       - uses: ruby/setup-ruby@v1

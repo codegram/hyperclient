@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'faraday', ENV['FARADAY_VERSION'] if ENV.key?('FARADAY_VERSION')
+gem 'faraday', ENV['FARADAY_VERSION'] if ENV['FARADAY_VERSION'] && !ENV['FARADAY_VERSION'].empty?
 
 gemspec
 
