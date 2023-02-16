@@ -1,6 +1,3 @@
-# NOTE: this is temporary until Bundler 2.0 changes how github: references work.
-git_source(:github) { |repo| "https://github.com/#{repo['/'] ? repo : "#{repo}/#{repo}"}.git" }
-
 source 'https://rubygems.org'
 
 gem 'faraday', ENV['FARADAY_VERSION'] if ENV.key?('FARADAY_VERSION')
