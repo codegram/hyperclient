@@ -6,14 +6,6 @@ Bundler.setup :default, :test, :development
 
 Bundler::GemHelper.install_tasks
 
-if ENV['COVERAGE']
-  require 'simplecov'
-  SimpleCov.start do
-    add_filter '/test/'
-    add_filter '/features/'
-  end
-end
-
 require 'rake/testtask'
 
 Rake::TestTask.new(:test) do |t|

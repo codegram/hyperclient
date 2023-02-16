@@ -1,0 +1,24 @@
+---
+name: coverage
+on: [push, pull_request]
+
+env:
+  COVERAGE: 1
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Ruby (2.7)
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.7
+        bundler-cache: true
+    - name: Build and test with RSpec
+      run: |
+        bundle exec rake test
+    - name: Coveralls
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}

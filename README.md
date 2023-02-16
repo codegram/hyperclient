@@ -9,8 +9,6 @@ Hyperclient is a Hypermedia API client written in Ruby. It fully supports [JSON 
 
 # Table of Contents
 
-- [Hyperclient](#hyperclient)
-- [Table of Contents](#table-of-contents)
 - [Usage](#usage)
   - [API Client](#api-client)
   - [Resources and Attributes](#resources-and-attributes)
