@@ -1,5 +1,20 @@
 $LOAD_PATH << 'lib'
 
+if ENV['COVERAGE']
+  require 'simplecov'
+  require 'simplecov-lcov'
+  SimpleCov.formatter = SimpleCov::Formatter::LcovFormatter
+  SimpleCov::Formatter::LcovFormatter.config do |c|
+    c.report_with_single_file = true
+    c.lcov_file_name = 'lcov.info'
+    c.single_report_path = 'coverage/lcov.info'
+  end
+  SimpleCov.start do
+    add_filter '/test/'
+    add_filter '/features/'
+  end
+end
+
 require 'minitest/autorun'
 require 'minitest/pride'
 require 'mocha/minitest'
