@@ -1,6 +1,11 @@
 inherit_from: .rubocop_todo.yml
 
+require:
+  - rubocop-rake
+  - rubocop-minitest
+
 AllCops:
+  NewCops: enable
   TargetRubyVersion: 2.3
 
 Metrics:

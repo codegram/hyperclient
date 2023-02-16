@@ -60,7 +60,8 @@ module Hyperclient
 
     describe '_links' do
       it '_expand' do
-        resource = Resource.new({ '_links' => { 'orders' => { 'href' => '/orders/{id}', 'templated' => true } } }, entry_point)
+        resource = Resource.new({ '_links' => { 'orders' => { 'href' => '/orders/{id}', 'templated' => true } } },
+                                entry_point)
         _(resource._links.orders._expand(id: 1)._url).must_equal '/orders/1'
         _(resource.orders._expand(id: 1)._url).must_equal '/orders/1'
         _(resource.orders(id: 1)._url).must_equal '/orders/1'

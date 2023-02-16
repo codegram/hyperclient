@@ -111,9 +111,7 @@ module Hyperclient
       elsif !Array.method_defined?(method)
         %i[_attributes _embedded _links].each do |target|
           target = send(target)
-          if target.respond_to?(method.to_s)
-            return target.send(method, *args, &block)
-          end
+          return target.send(method, *args, &block) if target.respond_to?(method.to_s)
         end
         super
       end
