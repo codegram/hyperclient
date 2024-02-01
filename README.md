@@ -50,7 +50,7 @@ Hyperclient constructs a connection using typical [Faraday](http://github.com/lo
 ```ruby
 api = Hyperclient.new('https://grape-with-roar.herokuapp.com/api') do |client|
   client.connection do |conn|
-    conn.use Faraday::Request::OAuth
+    conn.use Faraday::Request::Instrumentation
   end
 end
 ```
@@ -60,7 +60,7 @@ You can pass options to the Faraday connection block in the `connection` block:
 ```ruby
 api = Hyperclient.new('https://grape-with-roar.herokuapp.com/api') do |client|
   client.connection(ssl: { verify: false }) do |conn|
-    conn.use Faraday::Request::OAuth
+    conn.use Faraday::Request::Instrumentation
   end
 end
 ```

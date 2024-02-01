@@ -26,18 +26,18 @@ module Hyperclient
 
         it 'can insert additional middleware after a connection has been constructed' do
           _(entry_point.connection).must_be_kind_of Faraday::Connection
-          entry_point.connection.use :instrumentation
+          entry_point.connection.use Faraday::Request::Instrumentation
           handlers = entry_point.connection.builder.handlers
-          _(handlers).must_include FaradayMiddleware::Instrumentation
+          _(handlers).must_include Faraday::Request::Instrumentation
         end
 
         it 'creates a Faraday connection with the default block' do
           handlers = entry_point.connection.builder.handlers
 
           _(handlers).must_include Faraday::Response::RaiseError
-          _(handlers).must_include FaradayMiddleware::FollowRedirects
-          _(handlers).must_include FaradayMiddleware::EncodeHalJson
-          _(handlers).must_include FaradayMiddleware::ParseHalJson
+          _(handlers).must_include Faraday::FollowRedirects::Middleware
+          _(handlers).must_include Faraday::HalJson::Request
+          _(handlers).must_include Faraday::HalJson::Response
 
           _(entry_point.connection.options.params_encoder).must_equal Faraday::FlatParamsEncoder
         end
@@ -137,9 +137,9 @@ module Hyperclient
         it 'creates a Faraday connection with the default block' do
           handlers = entry_point.connection.builder.handlers
           _(handlers).wont_include Faraday::Response::RaiseError
-          _(handlers).wont_include FaradayMiddleware::FollowRedirects
-          _(handlers).must_include FaradayMiddleware::EncodeJson
-          _(handlers).must_include FaradayMiddleware::ParseJson
+          _(handlers).wont_include Faraday::FollowRedirects
+          _(handlers).must_include Faraday::Request::Json
+          _(handlers).must_include Faraday::Response::Json
         end
       end
     end
@@ -148,7 +148,7 @@ module Hyperclient
       let(:entry_point) do
         EntryPoint.new 'http://my.api.org' do |entry_point|
           entry_point.connection do |conn|
-            conn.use Faraday::Request::OAuth
+            conn.use Faraday::Request::Instrumentation
           end
           entry_point.headers['Access-Token'] = 'token'
         end
@@ -168,11 +168,11 @@ module Hyperclient
         it 'creates a Faraday connection with the default block plus any additional handlers' do
           handlers = entry_point.connection.builder.handlers
 
-          _(handlers).must_include Faraday::Request::OAuth
+          _(handlers).must_include Faraday::Request::Instrumentation
           _(handlers).must_include Faraday::Response::RaiseError
-          _(handlers).must_include FaradayMiddleware::FollowRedirects
-          _(handlers).must_include FaradayMiddleware::EncodeHalJson
-          _(handlers).must_include FaradayMiddleware::ParseHalJson
+          _(handlers).must_include Faraday::FollowRedirects::Middleware
+          _(handlers).must_include Faraday::HalJson::Request
+          _(handlers).must_include Faraday::HalJson::Response
 
           _(entry_point.connection.options.params_encoder).must_equal Faraday::FlatParamsEncoder
         end

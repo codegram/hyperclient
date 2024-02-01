@@ -13,7 +13,7 @@ describe Hyperclient do
       let(:client) do
         Hyperclient.new('http://api.example.org') do |client|
           client.connection(default: true) do |conn|
-            conn.use Faraday::Request::OAuth
+            conn.use Faraday::Request::Instrumentation
           end
           client.headers['Access-Token'] = 'token'
         end
@@ -31,11 +31,11 @@ describe Hyperclient do
 
       it 'creates a Faraday connection with the default block plus any additional handlers' do
         handlers = client.connection.builder.handlers
-        _(handlers).must_include Faraday::Request::OAuth
+        _(handlers).must_include Faraday::Request::Instrumentation
         _(handlers).must_include Faraday::Response::RaiseError
-        _(handlers).must_include FaradayMiddleware::FollowRedirects
-        _(handlers).must_include FaradayMiddleware::EncodeHalJson
-        _(handlers).must_include FaradayMiddleware::ParseHalJson
+        _(handlers).must_include Faraday::FollowRedirects::Middleware
+        _(handlers).must_include Faraday::HalJson::Request
+        _(handlers).must_include Faraday::HalJson::Response
       end
     end
   end

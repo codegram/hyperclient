@@ -1,11 +1,12 @@
 ## Changelog
 
-### 1.1.0 (Next)
+### 2.0.0 (Next)
 
 * [#268](https://github.com/codegram/hyperclient/pull/268): Replace Travis-CI with GHA - [@dblock](https://github.com/dblock).
 * [#269](https://github.com/codegram/hyperclient/pull/269): Re-add code coverage - [@dblock](https://github.com/dblock).
 * [#270](https://github.com/codegram/hyperclient/pull/270): Upgrade Rubocop to 1.45 - [@dblock](https://github.com/dblock).
 * [#271](https://github.com/codegram/hyperclient/pull/271): Test against Ruby 3.2 - [@dblock](https://github.com/dblock).
+* [#285](https://github.com/codegram/hyperclient/pull/285): Support Faraday 2.x - [@dblock](https://github.com/dblock).
 * Your contribution here.
 
 ### 1.0.1 (2021/01/02)
