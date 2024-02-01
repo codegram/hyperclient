@@ -23,7 +23,6 @@ end
 group :test do
   gem 'danger-changelog', '~> 0.6.0'
   gem 'danger-toc', '~> 0.2.0'
-  gem 'faraday-follow_redirects'
   gem 'minitest'
   gem 'mocha'
   gem 'rack-test'
