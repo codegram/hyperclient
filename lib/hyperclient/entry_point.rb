@@ -1,4 +1,4 @@
-require 'faraday_middleware'
+require 'faraday/follow_redirects'
 require 'faraday_hal_middleware'
 
 module Hyperclient
@@ -20,7 +20,7 @@ module Hyperclient
   #
   #  client = Hyperclient::EntryPoint.new('http://my.api.org') do |entry_point|
   #    entry_point.connection do |conn|
-  #      conn.use Faraday::Request::OAuth
+  #      conn.use Faraday::Request::Instrumentation
   #    end
   #    entry_point.headers['Access-Token'] = 'token'
   #  end
@@ -138,7 +138,7 @@ module Hyperclient
     def default_faraday_block
       lambda do |connection, &block|
         connection.use Faraday::Response::RaiseError
-        connection.use FaradayMiddleware::FollowRedirects
+        connection.use Faraday::FollowRedirects::Middleware
         connection.request :hal_json
         connection.response :hal_json, content_type: /\bjson$/
 

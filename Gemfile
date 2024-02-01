@@ -1,7 +1,5 @@
 source 'https://rubygems.org'
 
-gem 'faraday', ENV['FARADAY_VERSION'] if ENV['FARADAY_VERSION'] && !ENV['FARADAY_VERSION'].empty?
-
 gemspec
 
 group :development do
@@ -25,6 +23,7 @@ end
 group :test do
   gem 'danger-changelog', '~> 0.6.0'
   gem 'danger-toc', '~> 0.2.0'
+  gem 'faraday-follow_redirects'
   gem 'minitest'
   gem 'mocha'
   gem 'rack-test'

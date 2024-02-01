@@ -13,8 +13,7 @@ Gem::Specification.new do |gem|
   gem.version       = Hyperclient::VERSION
 
   gem.add_dependency 'addressable'
-  gem.add_dependency 'faraday', '>= 0.9.0'
-  gem.add_dependency 'faraday_hal_middleware'
-  gem.add_dependency 'faraday_middleware'
+  gem.add_dependency 'faraday', '>= 2'
+  gem.add_dependency 'faraday_hal_middleware', '>= 0.2'
   gem.metadata['rubygems_mfa_required'] = 'true'
 end

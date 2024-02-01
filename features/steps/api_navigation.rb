@@ -43,13 +43,13 @@ class Spinach::Features::ApiNavigation < Spinach::FeatureSteps
   end
 
   step 'I should be able to access it\'s title and body' do
-    @post._attributes.title.wont_equal nil
-    @post._attributes.body.wont_equal nil
+    assert_kind_of String, @post._attributes.title
+    assert_kind_of String, @post._attributes.body
   end
 
   step 'I should also be able to access it\'s embedded comments' do
     comment = @post._embedded.comments.first
-    comment._attributes.title.wont_equal nil
+    assert_kind_of String, comment._attributes.title
   end
 
   step 'I should be able to navigate to next page' do

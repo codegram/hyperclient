@@ -25,7 +25,7 @@ class Spinach::Features::DefaultConfig < Spinach::FeatureSteps
   end
 
   step 'it should have been parsed as JSON' do
-    @posts._attributes.total_posts.to_i.must_equal 4
-    @posts._attributes['total_posts'].to_i.must_equal 4
+    assert_equal 4, @posts._attributes.total_posts.to_i
+    assert_equal 4, @posts._attributes['total_posts'].to_i
   end
 end

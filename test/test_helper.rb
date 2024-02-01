@@ -17,10 +17,14 @@ end
 
 require 'minitest/autorun'
 require 'minitest/pride'
+require 'minitest/unit'
 require 'mocha/minitest'
 require 'json'
 
-MiniTest::Test.class_eval do
+require 'faraday'
+require 'faraday/request/instrumentation'
+
+MiniTest::Assertions.class_eval do
   def stub_request(conn, adapter_class = Faraday::Adapter::Test, &stubs_block)
     adapter_handler = conn.builder.handlers.find { |h| h.klass < Faraday::Adapter }
     if adapter_handler
