@@ -1,5 +1,9 @@
 ## Changelog
 
+### 2.0.1 (Next)
+
+* Your contribution here.
+
 ### 2.0.0 (2024/02/01)
 
 * [#268](https://github.com/codegram/hyperclient/pull/268): Replace Travis-CI with GHA - [@dblock](https://github.com/dblock).
