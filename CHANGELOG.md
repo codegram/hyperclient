@@ -2,6 +2,7 @@
 
 ### 2.0.1 (Next)
 
+* [#298](https://github.com/codegram/hyperclient/pull/298): Upgraded rubocop to 1.63.5 - [@dblock](https://github.com/dblock).
 * Your contribution here.
 
 ### 2.0.0 (2024/02/01)
