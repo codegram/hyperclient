@@ -2,14 +2,15 @@
 
 ### 2.0.1 (Next)
 
-* [#298](https://github.com/codegram/hyperclient/pull/298): Upgraded rubocop to 1.63.5 - [@dblock](https://github.com/dblock).
+* [#298](https://github.com/codegram/hyperclient/pull/300): Upgraded RuboCop to 1.80.2 - [@dblock](https://github.com/dblock).
+* [#298](https://github.com/codegram/hyperclient/pull/298): Upgraded RuboCop to 1.63.5 - [@dblock](https://github.com/dblock).
 * Your contribution here.
 
 ### 2.0.0 (2024/02/01)
 
 * [#268](https://github.com/codegram/hyperclient/pull/268): Replace Travis-CI with GHA - [@dblock](https://github.com/dblock).
 * [#269](https://github.com/codegram/hyperclient/pull/269): Re-add code coverage - [@dblock](https://github.com/dblock).
-* [#270](https://github.com/codegram/hyperclient/pull/270): Upgrade Rubocop to 1.45 - [@dblock](https://github.com/dblock).
+* [#270](https://github.com/codegram/hyperclient/pull/270): Upgrade RuboCop to 1.45 - [@dblock](https://github.com/dblock).
 * [#271](https://github.com/codegram/hyperclient/pull/271): Test against Ruby 3.2 - [@dblock](https://github.com/dblock).
 * [#285](https://github.com/codegram/hyperclient/pull/285): Support Faraday 2.x - [@dblock](https://github.com/dblock).
 
@@ -44,14 +45,14 @@
 ### 0.9.0 (2018/01/10)
 
 * [#133](https://github.com/codegram/hyperclient/pull/133): Removed futuroscope - [@dblock](https://github.com/dblock).
-* [#131](https://github.com/codegram/hyperclient/pull/131): Upgrade to Rubocop 0.50.0, fix Bundler's insecure git source warning - [@nebolsin](https://github.com/nebolsin).
+* [#131](https://github.com/codegram/hyperclient/pull/131): Upgrade to RuboCop 0.50.0, fix Bundler's insecure git source warning - [@nebolsin](https://github.com/nebolsin).
 * [#132](https://github.com/codegram/hyperclient/pull/132): Swapped yard dependency for danger-toc - [@dblock](https://github.com/dblock).
 
 ### 0.8.6 (2017/08/27)
 
 * [#122](https://github.com/codegram/hyperclient/pull/122): Improve error message when server returns invalid data - [@ivoanjo](https://github.com/ivoanjo).
 * [#125](https://github.com/codegram/hyperclient/pull/125): Add table of contents to readme and add note asking users to add their projects to the wiki - [@ivoanjo](https://github.com/ivoanjo).
-* [#127](https://github.com/codegram/hyperclient/pull/127): Minor fixes: Fix warnings, and pry-byebug to dev Gemfile and tweak rubocop execution - [@ivoanjo](https://github.com/ivoanjo).
+* [#127](https://github.com/codegram/hyperclient/pull/127): Minor fixes: Fix warnings, and pry-byebug to dev Gemfile and tweak RuboCop execution - [@ivoanjo](https://github.com/ivoanjo).
 * [#128](https://github.com/codegram/hyperclient/pull/128): Fix link delegation returning nil for field with value false - [@ivoanjo](https://github.com/ivoanjo).
 
 ### 0.8.5 (2017/07/05)
@@ -112,7 +113,7 @@
 * [#64](https://github.com/codegram/hyperclient/issues/64): Added support for curies - [@dblock](https://github.com/dblock).
 * [#58](https://github.com/codegram/hyperclient/issues/58): Automatically follow redirects - [@dblock](https://github.com/dblock).
 * [#63](https://github.com/codegram/hyperclient/pull/63): You can omit the navigational elements, `api.links.products` is now equivalent to `api.products` - [@dblock](https://github.com/dblock).
-* [#61](https://github.com/codegram/hyperclient/pull/61): Implemented Rubocop, Ruby-style linter - [@dblock](https://github.com/dblock).
+* [#61](https://github.com/codegram/hyperclient/pull/61): Implemented RuboCop, Ruby-style linter - [@dblock](https://github.com/dblock).
 
 ### 0.4.0 (2014/05/05)
 

@@ -5,7 +5,7 @@ on:
     types: [opened, reopened, edited, synchronize]
 jobs:
   danger:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
       with:
@@ -13,7 +13,7 @@ jobs:
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 2.7
+        ruby-version: 3.4
         bundler-cache: true
     - name: Run Danger
       run: |

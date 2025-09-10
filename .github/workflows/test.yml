@@ -8,6 +8,7 @@ jobs:
       fail-fast: false
       matrix:
         entry:
+          - { ruby: '3.4' }
           - { ruby: '3.2' }
           - { ruby: '2.7' }
           - { ruby: 'ruby-head', allowed-failure: true }
