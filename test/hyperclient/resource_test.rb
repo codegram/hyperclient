@@ -13,7 +13,7 @@ module Hyperclient
       end
 
       it 'initializes its attributes' do
-        Attributes.expects(:new).with(foo: :bar)
+        Attributes.expects(:new).with({ foo: :bar })
 
         Resource.new({ foo: :bar }, entry_point)
       end
