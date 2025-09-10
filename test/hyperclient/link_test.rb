@@ -11,11 +11,13 @@ module Hyperclient
       describe prop do
         it 'returns the property value' do
           link = Link.new('key', { prop => 'value' }, entry_point)
+
           _(link.send("_#{prop}")).must_equal 'value'
         end
 
         it 'returns nil if the property is not present' do
           link = Link.new('key', {}, entry_point)
+
           _(link.send("_#{prop}")).must_be_nil
         end
       end
@@ -53,11 +55,13 @@ module Hyperclient
       describe 'required argument' do
         it 'builds a Link with the templated URI representation' do
           link = Link.new('key', { 'href' => '/orders/{id}', 'templated' => true }, entry_point)
+
           _(link._expand(id: '1')._url).must_equal '/orders/1'
         end
 
         it 'expands an uri template without variables' do
           link = Link.new('key', { 'href' => '/orders/{id}', 'templated' => true }, entry_point)
+
           _(link._expand._url).must_equal '/orders/'
           _(link._url).must_equal '/orders/'
         end
@@ -66,27 +70,32 @@ module Hyperclient
       describe 'query string argument' do
         it 'builds a Link with the templated URI representation' do
           link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => true }, entry_point)
+
           _(link._expand(id: '1')._url).must_equal '/orders?id=1'
         end
 
         it 'expands an uri template without variables' do
           link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => true }, entry_point)
+
           _(link._expand._url).must_equal '/orders'
           _(link._url).must_equal '/orders'
         end
 
         it 'does not expand unknown variables' do
           link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => true }, entry_point)
+
           _(link._expand(unknown: '1')._url).must_equal '/orders'
         end
 
         it 'only expands known variables' do
           link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => true }, entry_point)
+
           _(link._expand(unknown: '1', id: '2')._url).must_equal '/orders?id=2'
         end
 
         it 'only expands templated links' do
           link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => false }, entry_point)
+
           _(link._expand(id: '1')._url).must_equal '/orders{?id}'
         end
       end
@@ -119,6 +128,7 @@ module Hyperclient
 
       it 'returns the link when no uri template' do
         link = Link.new('key', { 'href' => '/orders' }, entry_point)
+
         _(link._url).must_equal '/orders'
       end
 
@@ -341,11 +351,13 @@ module Hyperclient
         it 'responds to missing methods' do
           resource.expects(:respond_to?).with('orders').returns(false)
           resource.expects(:respond_to?).with('embedded').returns(true)
+
           _(link.respond_to?(:embedded)).must_equal true
         end
 
         it 'does not delegate to_ary to resource' do
           resource.expects(:to_ary).never
+
           _([[link, link]].flatten).must_equal [link, link]
         end
       end

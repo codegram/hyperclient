@@ -32,6 +32,7 @@ module Hyperclient
 
     describe 'plain link' do
       let(:plain_link) { links.self }
+
       it 'must be correct' do
         _(plain_link._url).must_equal '/productions/1'
       end
@@ -39,6 +40,7 @@ module Hyperclient
 
     describe 'templated link' do
       let(:templated_link) { links.search }
+
       it 'must expand' do
         _(templated_link._expand(search: 'gizmos')._url).must_equal '/productions/1?categories=gizmos'
       end
@@ -47,6 +49,7 @@ module Hyperclient
     describe 'curied link collection' do
       let(:curied_link) { links['image:thumbnail'] }
       let(:curie) { links._curies['image'] }
+
       it 'must expand' do
         _(curied_link._expand(version: 'small')._url).must_equal '/images/thumbnails/small.jpg'
       end
@@ -71,6 +74,7 @@ module Hyperclient
 
     describe 'null link value' do
       let(:null_link) { links.null_link }
+
       it 'must be nil' do
         _(null_link).must_be_nil
       end

@@ -8,10 +8,11 @@ Spinach.config[:failure_exceptions] << Minitest::Assertion
 
 class Spinach::FeatureSteps
   include Minitest::Assertions
+
   attr_accessor :assertions
 
   def initialize(*args)
-    super(*args)
+    super
     self.assertions = 0
   end
 end

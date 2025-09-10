@@ -62,6 +62,7 @@ module Hyperclient
       it '_expand' do
         resource = Resource.new({ '_links' => { 'orders' => { 'href' => '/orders/{id}', 'templated' => true } } },
                                 entry_point)
+
         _(resource._links.orders._expand(id: 1)._url).must_equal '/orders/1'
         _(resource.orders._expand(id: 1)._url).must_equal '/orders/1'
         _(resource.orders(id: 1)._url).must_equal '/orders/1'
@@ -94,16 +95,19 @@ module Hyperclient
       describe 'method_missing' do
         it 'delegates to attributes' do
           resource._attributes.expects(:foo).returns('bar')
+
           _(resource.foo).must_equal 'bar'
         end
 
         it 'delegates to links' do
           resource._links.expects(:foo).returns('bar')
+
           _(resource.foo).must_equal 'bar'
         end
 
         it 'delegates to embedded' do
           resource._embedded.expects(:foo).returns('bar')
+
           _(resource.foo).must_equal 'bar'
         end
 
@@ -111,11 +115,13 @@ module Hyperclient
           resource._attributes.expects('respond_to?').with('foo').returns(false)
           resource._links.expects('respond_to?').with('foo').returns(false)
           resource._embedded.expects('respond_to?').with('foo').returns(false)
+
           _(-> { resource.foo }).must_raise NoMethodError
         end
 
         it 'delegates []' do
           resource._attributes.expects(:foo).returns('bar')
+
           _(resource['foo']).must_equal 'bar'
         end
 
@@ -133,6 +139,7 @@ module Hyperclient
           describe 'with a default value' do
             it 'returns the value for keys that exist' do
               resource._attributes.expects(:foo).returns('bar')
+
               _(resource.fetch('foo', 'default value')).must_equal 'bar'
             end
 
@@ -144,6 +151,7 @@ module Hyperclient
           describe 'with a block' do
             it 'returns the value for keys that exist' do
               resource._attributes.expects(:foo).returns('bar')
+
               _(resource.fetch('foo') { 'default value' }).must_equal 'bar'
             end
 

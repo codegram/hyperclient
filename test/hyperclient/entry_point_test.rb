@@ -21,6 +21,7 @@ module Hyperclient
         it 'can update headers after a connection has been constructed' do
           _(entry_point.connection).must_be_kind_of Faraday::Connection
           entry_point.headers.update('Content-Type' => 'application/foobar')
+
           _(entry_point.headers['Content-Type']).must_equal 'application/foobar'
         end
 
@@ -28,6 +29,7 @@ module Hyperclient
           _(entry_point.connection).must_be_kind_of Faraday::Connection
           entry_point.connection.use Faraday::Request::Instrumentation
           handlers = entry_point.connection.builder.handlers
+
           _(handlers).must_include Faraday::Request::Instrumentation
         end
 
@@ -136,6 +138,7 @@ module Hyperclient
 
         it 'creates a Faraday connection with the default block' do
           handlers = entry_point.connection.builder.handlers
+
           _(handlers).wont_include Faraday::Response::RaiseError
           _(handlers).wont_include Faraday::FollowRedirects
           _(handlers).must_include Faraday::Request::Json

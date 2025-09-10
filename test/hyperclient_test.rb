@@ -31,6 +31,7 @@ describe Hyperclient do
 
       it 'creates a Faraday connection with the default block plus any additional handlers' do
         handlers = client.connection.builder.handlers
+
         _(handlers).must_include Faraday::Request::Instrumentation
         _(handlers).must_include Faraday::Response::RaiseError
         _(handlers).must_include Faraday::FollowRedirects::Middleware
