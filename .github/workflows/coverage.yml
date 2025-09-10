@@ -10,15 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Install Ruby (2.7)
-      uses: ruby/setup-ruby@v1
+    - uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 2.7
+        ruby-version: 3.4
         bundler-cache: true
-    - name: Build and test with RSpec
-      run: |
-        bundle exec rake test
-    - name: Coveralls
-      uses: coverallsapp/github-action@master
+    - run: |
+        bundle exec rake test spinach
+    - uses: coverallsapp/github-action@v2
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
