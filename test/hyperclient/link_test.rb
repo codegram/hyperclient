@@ -276,7 +276,7 @@ module Hyperclient
         link = Link.new('key', { 'href' => '/productions/1' }, 'foo')
 
         _(link.inspect).must_include 'Link'
-        _(link.inspect).must_include '"href"=>"/productions/1"'
+        _(link.inspect).must_include({ 'href' => '/productions/1' }.inspect)
       end
     end
 
