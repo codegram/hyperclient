@@ -21,7 +21,7 @@ group :development, :test do
 end
 
 group :test do
-  gem 'danger-changelog', '~> 0.7.0'
+  gem 'danger-changelog', '~> 0.8.0'
   gem 'danger-toc', '~> 0.2.0'
   gem 'minitest'
   gem 'mocha'
