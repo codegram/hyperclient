@@ -16,7 +16,9 @@ group :development, :test do
   gem 'rubocop', '~> 1.89.0', require: false
   gem 'rubocop-minitest', require: false
   gem 'rubocop-rake', require: false
-  gem 'simplecov', require: false
+  # TODO: remove version constraint once coverallsapp/coverage-reporter supports float timestamps
+  # https://github.com/coverallsapp/github-action/issues/269
+  gem 'simplecov', '< 1.1.0', require: false
   gem 'simplecov-lcov', require: false
 end
 
