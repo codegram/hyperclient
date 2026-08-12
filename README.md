@@ -2,7 +2,7 @@
 
 [![Gem Version](http://img.shields.io/gem/v/hyperclient.svg)](http://badge.fury.io/rb/hyperclient)
 [![Build Status](https://github.com/codegram/hyperclient/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/codegram/hyperclient/actions/workflows/test.yml)
-[![Coverage Status](https://img.shields.io/coveralls/codegram/hyperclient.svg)](https://coveralls.io/r/codegram/hyperclient?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/codegram/hyperclient/badge.svg?branch=master)](https://coveralls.io/github/codegram/hyperclient?branch=master)
 
 Hyperclient is a Hypermedia API client written in Ruby. It fully supports [JSON HAL](http://stateless.co/hal_specification.html).
 
