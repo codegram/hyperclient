@@ -34,5 +34,12 @@ module Hyperclient
         _(curie.expand('thumbnail')).must_equal '/images/thumbnail'
       end
     end
+
+    describe 'inspect' do
+      it 'outputs a custom-friendly output' do
+        _(curie.inspect).must_include 'Curie'
+        _(curie.inspect).must_include({ 'name' => 'image', 'href' => '/images/{rel}', 'templated' => true }.to_s)
+      end
+    end
   end
 end

@@ -323,6 +323,37 @@ module Hyperclient
 
           _(resource.next._links.next._url).must_equal 'http://api.example.org/page3'
         end
+
+        it 'iterates over paginated, embedded items across pages' do
+          resource = Resource.new({ '_links' => { 'orders' => { 'href' => '/orders' } } }, entry_point)
+
+          stub_request(entry_point.connection) do |stub|
+            stub.get('http://api.example.org/orders') do
+              [200, {}, { '_links' => { 'next' => { 'href' => 'http://api.example.org/orders?page=2' } },
+                          '_embedded' => { 'orders' => [{ 'id' => 1 }] } }]
+            end
+            stub.get('http://api.example.org/orders?page=2') do
+              [200, {}, { '_embedded' => { 'orders' => [{ 'id' => 2 }] } }]
+            end
+          end
+
+          ids = resource._links.orders.map(&:id)
+
+          _(ids).must_equal [1, 2]
+        end
+
+        it 'returns an Enumerator when called without a block' do
+          resource = Resource.new({ '_links' => { 'orders' => { 'href' => '/orders' } } }, entry_point)
+
+          stub_request(entry_point.connection) do |stub|
+            stub.get('http://api.example.org/orders') { [200, {}, { '_embedded' => { 'orders' => [{ 'id' => 1 }] } }] }
+          end
+
+          enum = resource._links.orders.each
+
+          _(enum).must_be_kind_of Enumerator
+          _(enum.to_a.first.id).must_equal 1
+        end
       end
 
       describe 'resource' do
@@ -355,10 +386,50 @@ module Hyperclient
           _(link.respond_to?(:embedded)).must_equal true
         end
 
+        it 'responds to missing methods that delegate to another resource' do
+          delegate = mock('Delegate')
+          resource.expects(:respond_to?).with('orders').returns(true)
+          resource.expects(:send).with('orders').returns(delegate)
+          delegate.expects(:respond_to?).with('foo').returns(true)
+
+          _(link.respond_to?(:foo)).must_equal true
+        end
+
         it 'does not delegate to_ary to resource' do
           resource.expects(:to_ary).never
 
           _([[link, link]].flatten).must_equal [link, link]
+        end
+
+        it 'delegates through delegate_method when the resource responds but returns nil' do
+          delegate = mock('Delegate')
+          resource.expects(:respond_to?).with('foo').returns(true)
+          resource.expects(:send).with(:foo).returns(nil)
+          resource.expects(:respond_to?).with('orders').returns(true)
+          resource.expects(:send).with('orders').returns(delegate)
+          delegate.expects(:respond_to?).with('foo').returns(true)
+          delegate.expects(:send).with(:foo).returns('delegated result')
+
+          _(link.foo).must_equal 'delegated result'
+        end
+
+        it 'returns nil from delegate_method when the resource has no matching key' do
+          keyless_link = Link.new(nil, { 'href' => 'http://myapi.org/orders' }, entry_point)
+          resource.expects(:respond_to?).with('foo').returns(true)
+          resource.expects(:send).with(:foo).returns(nil)
+
+          _(keyless_link.foo).must_be_nil
+        end
+
+        it 'returns nil from delegate_method when the delegate does not respond to the method' do
+          delegate = mock('Delegate')
+          resource.expects(:respond_to?).with('foo').returns(true)
+          resource.expects(:send).with(:foo).returns(nil)
+          resource.expects(:respond_to?).with('orders').returns(true)
+          resource.expects(:send).with('orders').returns(delegate)
+          delegate.expects(:respond_to?).with('foo').returns(false)
+
+          _(link.foo).must_be_nil
         end
       end
     end

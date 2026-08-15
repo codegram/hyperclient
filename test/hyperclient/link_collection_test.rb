@@ -79,5 +79,11 @@ module Hyperclient
         _(null_link).must_be_nil
       end
     end
+
+    describe 'invalid collection' do
+      it 'raises an error when the collection does not respond to collect' do
+        _(proc { LinkCollection.new('invalid', {}, entry_point) }).must_raise RuntimeError
+      end
+    end
   end
 end

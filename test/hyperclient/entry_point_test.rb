@@ -53,6 +53,19 @@ module Hyperclient
           _(entry_point.connection).must_be_kind_of Faraday::Connection
           _(-> { entry_point.connection {} }).must_raise ConnectionAlreadyInitializedError
         end
+
+        it 'can set the faraday block before a connection has been constructed' do
+          block = proc { |conn| conn.use Faraday::Request::Instrumentation }
+          entry_point.faraday_block = block
+
+          _(entry_point.faraday_block).must_equal block
+        end
+
+        it 'raises a ConnectionAlreadyInitializedError if attempting to modify ' \
+           'the faraday block after a connection has been constructed' do
+          _(entry_point.connection).must_be_kind_of Faraday::Connection
+          _(-> { entry_point.faraday_block = proc {} }).must_raise ConnectionAlreadyInitializedError
+        end
       end
 
       describe 'initialize' do
@@ -179,6 +192,12 @@ module Hyperclient
 
           _(entry_point.connection.options.params_encoder).must_equal Faraday::FlatParamsEncoder
         end
+      end
+    end
+
+    describe ConnectionAlreadyInitializedError do
+      it 'has a descriptive message' do
+        _(ConnectionAlreadyInitializedError.new.message).must_equal 'The connection has already been initialized.'
       end
     end
   end
