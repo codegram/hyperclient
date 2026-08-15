@@ -228,5 +228,16 @@ module Hyperclient
         end
       end
     end
+
+    describe 'inspect' do
+      it 'outputs a custom-friendly output' do
+        resource = Resource.new({ '_links' => { 'self' => { 'href' => '/orders/523' } }, 'title' => 'Order' },
+                                entry_point)
+
+        _(resource.inspect).must_include 'Resource'
+        _(resource.inspect).must_include 'self_link:'
+        _(resource.inspect).must_include 'attributes:'
+      end
+    end
   end
 end

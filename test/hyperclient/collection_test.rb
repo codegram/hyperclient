@@ -41,6 +41,18 @@ module Hyperclient
       end
     end
 
+    describe '#to_s' do
+      it 'returns the wrapped collection as a hash' do
+        _(collection.to_s).must_be_kind_of Hash
+      end
+    end
+
+    describe '#method_missing' do
+      it 'raises an error for missing keys' do
+        _(proc { collection.missing_key }).must_raise RuntimeError
+      end
+    end
+
     describe 'include?' do
       it 'returns true for keys that exist' do
         _(collection.include?('_links')).must_equal true

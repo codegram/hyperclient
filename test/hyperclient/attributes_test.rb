@@ -36,5 +36,14 @@ module Hyperclient
     it 'is a collection' do
       _(Attributes.ancestors).must_include Collection
     end
+
+    describe 'when the representation is not a Hash' do
+      it 'wraps the representation as-is instead of filtering reserved keys' do
+        representation = 'not a hash'
+        attributes = Attributes.new(representation)
+
+        _(attributes.instance_variable_get(:@collection)).must_equal representation
+      end
+    end
   end
 end
