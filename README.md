@@ -84,6 +84,8 @@ api = Hyperclient.new('https://grape-with-roar.herokuapp.com/api') do |client|
 end
 ```
 
+By default, Hyperclient requires responses to have a `Content-Type` of `application/hal+json`, and raises `Hyperclient::InvalidRepresentationError` otherwise. If your API sometimes returns responses that aren't `hal+json` (e.g. an empty body with a `201 Created`, or a plain `application/json` response), broaden the response middleware's `content_type` matcher as shown above (`content_type: /\bjson$/`) instead of the default, which only matches `hal+json`.
+
 You can modify headers or specify authentication after a connection has been created. Hyperclient supports Basic, Token or [Digest auth](https://github.com/bhaberer/faraday-digestauth) as well as many other Faraday extensions.
 
 ```ruby
