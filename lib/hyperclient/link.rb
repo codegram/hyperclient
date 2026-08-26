@@ -190,10 +190,19 @@ module Hyperclient
     end
 
     def http_method(method, body = nil)
-      @resource = begin
-        response = @entry_point.connection.run_request(method, _url, body, nil)
-        Resource.new(response.body, @entry_point, response)
-      end
+      response = @entry_point.connection.run_request(method, _url, body, nil)
+      resource = Resource.new(response.body, @entry_point, response)
+
+      # Only cache GET responses. Caching the response of a mutating
+      # request (POST/PUT/PATCH/DELETE) as `@resource` would make
+      # subsequent delegated calls (e.g. `#each`, `method_missing`) see
+      # the stale mutation response instead of fetching a fresh
+      # resource, requiring users to create a new client between a
+      # `_post` and a `_get`. See #107.
+      @resource = resource if method == :get
+      @delegate = nil
+
+      resource
     end
   end
 end

@@ -151,6 +151,19 @@ module Hyperclient
 
         link._resource
       end
+
+      it 'fetches a fresh resource after a mutating request instead of returning the cached response (#107)' do
+        link = Link.new('key', { 'href' => '/productions/1' }, entry_point)
+
+        stub_request(entry_point.connection) do |stub|
+          stub.post('http://api.example.org/productions/1') { [201, {}, { 'status' => 'created' }] }
+          stub.get('http://api.example.org/productions/1') { [200, {}, { 'status' => 'fetched' }] }
+        end
+
+        link._post('foo' => 'bar')
+
+        _(link._resource.status).must_equal 'fetched'
+      end
     end
 
     describe 'get' do
