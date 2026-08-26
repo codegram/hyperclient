@@ -7,6 +7,7 @@
 * [#319](https://github.com/codegram/hyperclient/pull/319): Fixed `Resource#to_h` returning `nil` instead of the same result as `#to_hash` - [@dblock](https://github.com/dblock).
 * [#320](https://github.com/codegram/hyperclient/pull/320): Documented how to handle non-`hal+json` responses via the Faraday response middleware's `content_type` matcher - [@dblock](https://github.com/dblock).
 * [#321](https://github.com/codegram/hyperclient/pull/321): Added Ruby 4.0 to the CI test matrix - [@dblock](https://github.com/dblock).
+* [#322](https://github.com/codegram/hyperclient/pull/322): Fixed `Link` caching a mutating request's (`_post`/`_put`/`_patch`/`_delete`) response as its resource, causing subsequent reads (e.g. `#each`, `method_missing`) to return stale data instead of a fresh `_get` - [@dblock](https://github.com/dblock).
 * Your contribution here.
 
 ### 2.0.0 (2024/02/01)
