@@ -41,6 +41,16 @@ module Hyperclient
       end
     end
 
+    describe '#to_h' do
+      it 'returns the wrapped collection as a hash' do
+        _(collection.to_h).must_be_kind_of Hash
+      end
+
+      it 'returns the same result as #to_hash' do
+        _(collection.to_h).must_equal(collection.to_hash)
+      end
+    end
+
     describe '#to_s' do
       it 'returns the wrapped collection as a hash' do
         _(collection.to_s).must_be_kind_of Hash

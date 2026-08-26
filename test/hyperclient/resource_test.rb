@@ -239,5 +239,19 @@ module Hyperclient
         _(resource.inspect).must_include 'attributes:'
       end
     end
+
+    describe '#to_h and #to_hash' do
+      let(:resource) do
+        Resource.new({ '_links' => {}, 'title' => 'Order', 'total' => 42 }, entry_point)
+      end
+
+      it 'returns the attributes as a Hash from #to_hash' do
+        _(resource.to_hash).must_equal('title' => 'Order', 'total' => 42)
+      end
+
+      it 'returns the same result from #to_h as #to_hash' do
+        _(resource.to_h).must_equal(resource.to_hash)
+      end
+    end
   end
 end

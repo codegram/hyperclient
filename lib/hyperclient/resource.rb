@@ -66,6 +66,18 @@ module Hyperclient
       send(name) if respond_to?(name)
     end
 
+    # Public: Returns the attributes of the Resource as a Hash.
+    #
+    # Delegates explicitly (rather than relying on method_missing) since
+    # Array also defines #to_h (but not #to_hash), which meant the
+    # `Array.method_defined?(method)` guard in method_missing let #to_hash
+    # through but silently swallowed #to_h, returning nil instead of the
+    # attributes hash.
+    def to_h
+      _attributes.to_h
+    end
+    alias to_hash to_h
+
     def fetch(key, *args)
       return self[key] if respond_to?(key)
 
