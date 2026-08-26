@@ -4,6 +4,7 @@
 
 * [#298](https://github.com/codegram/hyperclient/pull/300): Upgraded RuboCop to 1.80.2 - [@dblock](https://github.com/dblock).
 * [#298](https://github.com/codegram/hyperclient/pull/298): Upgraded RuboCop to 1.63.5 - [@dblock](https://github.com/dblock).
+* [#319](https://github.com/codegram/hyperclient/pull/319): Fixed `Resource#to_h` returning `nil` instead of the same result as `#to_hash` - [@dblock](https://github.com/dblock).
 * [#320](https://github.com/codegram/hyperclient/pull/320): Documented how to handle non-`hal+json` responses via the Faraday response middleware's `content_type` matcher - [@dblock](https://github.com/dblock).
 * [#321](https://github.com/codegram/hyperclient/pull/321): Added Ruby 4.0 to the CI test matrix - [@dblock](https://github.com/dblock).
 * Your contribution here.
