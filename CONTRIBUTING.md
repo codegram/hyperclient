@@ -32,6 +32,16 @@ bundle install
 bundle exec rake
 ```
 
+CI runs the test suites with JSON 2.x on Ruby 2.7, both JSON 2.x and 3.x on Ruby 3.2, and JSON 3.x on Ruby 3.4, Ruby 4.0, and the head builds.
+To select a JSON major version locally, resolve the bundle and run the tests with the same `JSON_VERSION`:
+
+```
+JSON_VERSION=2 bundle update json
+JSON_VERSION=2 bundle exec rake test spinach
+JSON_VERSION=3 bundle update json
+JSON_VERSION=3 bundle exec rake test spinach
+```
+
 #### Write Tests
 
 Try to write a test that reproduces the problem you're trying to fix or describes a feature that you want to build. Add to [test/hyperclient](test/hyperclient).

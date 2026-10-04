@@ -2,6 +2,8 @@ source 'https://rubygems.org'
 
 gemspec
 
+gem 'json', "~> #{ENV['JSON_VERSION']}.0" if ENV['JSON_VERSION']
+
 group :development do
   gem 'growl'
   gem 'guard'
@@ -13,7 +15,7 @@ end
 
 group :development, :test do
   gem 'rake'
-  gem 'rubocop', '~> 1.89.0', require: false
+  gem 'rubocop', '~> 1.91.0', require: false
   gem 'rubocop-minitest', require: false
   gem 'rubocop-rake', require: false
   gem 'simplecov', require: false

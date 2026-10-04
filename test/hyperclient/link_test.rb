@@ -167,6 +167,37 @@ module Hyperclient
     end
 
     describe 'get' do
+      %w[application/hal+json application/json].each do |content_type|
+        it "parses a #{content_type} response into a resource" do
+          link = Link.new('key', { 'href' => '/productions/1' }, entry_point)
+
+          stub_request(entry_point.connection) do |stub|
+            stub.get('http://api.example.org/productions/1') do
+              [200, { 'Content-Type' => content_type },
+               '{"title":"Production","_links":{"self":{"href":"/productions/1"}}}']
+            end
+          end
+
+          resource = link._get
+
+          _(resource.title).must_equal 'Production'
+          _(resource._links.self._url).must_equal '/productions/1'
+          _(resource._response.body).must_be_kind_of Hash
+        end
+      end
+
+      it 'raises a parsing error for an invalid JSON response' do
+        link = Link.new('key', { 'href' => '/productions/1' }, entry_point)
+
+        stub_request(entry_point.connection) do |stub|
+          stub.get('http://api.example.org/productions/1') do
+            [200, { 'Content-Type' => 'application/hal+json' }, '{"title":']
+          end
+        end
+
+        _(-> { link._get }).must_raise Faraday::ParsingError
+      end
+
       it 'sends a GET request with the link url' do
         link = Link.new('key', { 'href' => '/productions/1' }, entry_point)
 

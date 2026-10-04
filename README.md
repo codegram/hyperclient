@@ -26,6 +26,8 @@ Hyperclient is a Hypermedia API client written in Ruby. It fully supports [JSON 
 
 The examples in this README use the [Splines Demo API](https://github.com/ruby-grape/grape-with-roar) running [here](https://grape-with-roar.herokuapp.com/api). Use version 1.x with Faraday 1.x, and version 2.x with Faraday 2.x. If you're upgrading from a previous version, please make sure to read [UPGRADING](UPGRADING.md).
 
+Hyperclient is tested with JSON 2.x on Ruby 2.7, both JSON 2.x and 3.x on Ruby 3.2, and JSON 3.x on newer Rubies. JSON 3.x requires a Faraday release with keyword parser options support (2.14.4+).
+
 ## API Client
 
 Create an API client.

@@ -10,11 +10,14 @@ jobs:
         entry:
           - { ruby: '4.0' }
           - { ruby: '3.4' }
+          - { ruby: '3.2', json: '2' }
           - { ruby: '3.2' }
-          - { ruby: '2.7' }
+          - { ruby: '2.7', json: '2' }
           - { ruby: 'ruby-head', allowed-failure: true }
           - { ruby: 'jruby-head', allowed-failure: true }
-    name: test (${{ matrix.entry.ruby }})
+    name: test (Ruby ${{ matrix.entry.ruby }}, JSON ${{ matrix.entry.json || '3' }})
+    env:
+      JSON_VERSION: ${{ matrix.entry.json || '3' }}
     steps:
       - uses: actions/checkout@v3
       - uses: ruby/setup-ruby@v1
