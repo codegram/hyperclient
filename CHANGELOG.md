@@ -2,6 +2,7 @@
 
 ### 2.0.1 (Next)
 
+* [#328](https://github.com/codegram/hyperclient/pull/328): Replaced the retired Splines demo with a local read-only Oxford HAL example using archived place facts - [@dblock](https://github.com/dblock).
 * [#298](https://github.com/codegram/hyperclient/pull/300): Upgraded RuboCop to 1.80.2 - [@dblock](https://github.com/dblock).
 * [#298](https://github.com/codegram/hyperclient/pull/298): Upgraded RuboCop to 1.63.5 - [@dblock](https://github.com/dblock).
 * [#319](https://github.com/codegram/hyperclient/pull/319): Fixed `Resource#to_h` returning `nil` instead of the same result as `#to_hash` - [@dblock](https://github.com/dblock).

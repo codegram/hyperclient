@@ -20,6 +20,7 @@ group :development, :test do
   gem 'rubocop-rake', require: false
   gem 'simplecov', require: false
   gem 'simplecov-lcov', require: false
+  gem 'webrick', '~> 1.8'
 end
 
 group :test do
