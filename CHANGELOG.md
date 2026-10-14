@@ -1,5 +1,9 @@
 ## Changelog
 
+### 2.1.1 (Next)
+
+* Your contribution here.
+
 ### 2.1.0 (2026/10/14)
 
 * [#328](https://github.com/codegram/hyperclient/pull/328): Replaced the retired Splines demo with a local read-only Oxford HAL example using archived place facts - [@dblock](https://github.com/dblock).
