@@ -1,0 +1,21 @@
+[
+  {
+    "_links": {
+      "self": { "href": "/places/oxpoints:23232339" },
+      "primary_place": { "href": "/places/oxpoints:23232339" }
+    },
+    "_embedded": {
+      "files": [
+        {
+          "type": "depiction",
+          "url": "//mox-static-files.oucs.ox.ac.uk/oxpoints/23232339/depiction/original/ball.jpg"
+        }
+      ]
+    },
+    "id": "oxpoints:23232339",
+    "name": "Balliol College",
+    "address": "Broad Street OX1 3BJ",
+    "lat": "51.754425",
+    "lon": "-1.257216"
+  }
+]
