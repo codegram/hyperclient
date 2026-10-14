@@ -1,69 +1,75 @@
-Releasing Hyperclient
-=====================
+# Releasing Hyperclient
 
-There're no particular rules about when to release hyperclient. Release bug fixes frequenty, features not so frequently and breaking API changes rarely.
+Release bug fixes frequently, features less frequently, and breaking API changes rarely.
 
-### Release
+## Prepare the Release
 
-Run tests, check that all tests succeed locally.
+Start with a clean, up-to-date `master` branch. Check that CI has succeeded for all supported platforms.
 
-```
+Set the release version in [lib/hyperclient/version.rb](lib/hyperclient/version.rb). Use a patch version for backward-compatible fixes, a minor version for backward-compatible features, and a major version for breaking changes.
+
+Replace the next-version heading in [CHANGELOG.md](CHANGELOG.md) with the release version and date, for example `### 2.1.0 (2026/10/14)`. Remove the "Your contribution here." placeholder from that release.
+
+Run the full suite, then commit and push the release preparation:
+
+```sh
 bundle install
-rake
-```
-
-Check that the last build succeeded in CI for all supported platforms.
-
-Increment the version, modify [lib/hyperclient/version.rb](lib/hyperclient/version.rb).
-
-*  Increment the third number if the release has bug fixes and/or very minor features, only (eg. change `0.5.1` to `0.5.2`).
-*  Increment the second number if the release contains major features or breaking API changes (eg. change `0.5.1` to `0.4.0`).
-
-Change "Next Release" in [CHANGELOG.md](CHANGELOG.md) to the new version.
-
-```
-0.4.0 (2014-01-27)
-==================
-```
-
-Remove the line with "Your contribution here.", since there will be no more contributions to this release.
-
-Commit your changes.
-
-```
+bundle exec rake
 git add CHANGELOG.md lib/hyperclient/version.rb
-git commit -m "Preparing for release, 0.4.0."
+git commit -m "Preparing for release, 2.1.0."
 git push origin master
 ```
 
-Release.
+Wait for CI on the release preparation commit to succeed before publishing.
 
+## Publish to RubyGems and GitHub
+
+Publish the gem using Bundler's release task. This builds the gem, creates and pushes the version tag, and publishes to RubyGems. Complete RubyGems MFA when prompted.
+
+```sh
+bundle exec rake release
 ```
-$ rake release
 
-hyperclient 0.4.0 built to pkg/hyperclient-0.4.0.gem.
-Tagged v0.4.0.
-Pushed git commits and tags.
-Pushed hyperclient 0.4.0 to rubygems.org.
+Creating a Git tag does **not** create a GitHub release. After confirming that the gem was published successfully, create a GitHub release for the same tag. Put the matching changelog section's entries in a temporary file and use them as the release notes:
+
+```sh
+version=2.1.0
+notes="$(mktemp)"
+awk -v version="$version" '
+  /^### / {
+    if (found) exit
+    if ($2 == version) found = 1
+    next
+  }
+  found { print }
+' CHANGELOG.md > "$notes"
+gh release create "v$version" --repo codegram/hyperclient --verify-tag --title "$version" --notes-file "$notes" --latest
+rm "$notes"
 ```
 
-### Prepare for the Next Version
+Verify both publications before considering the release complete:
 
-Add the next release to [CHANGELOG.md](CHANGELOG.md).
-
+```sh
+curl --fail --silent --show-error "https://rubygems.org/api/v2/rubygems/hyperclient/versions/$version.json"
+gh release view "v$version" --repo codegram/hyperclient
 ```
-Next Release
-============
+
+If publishing is interrupted, inspect the existing tag, RubyGems version, and GitHub release first. Resume only the missing step; do not move or recreate a published tag.
+
+## Prepare the Next Version
+
+Increment the development patch version in [lib/hyperclient/version.rb](lib/hyperclient/version.rb), for example from `2.1.0` to `2.1.1`. Add the matching unreleased section at the top of [CHANGELOG.md](CHANGELOG.md):
+
+```markdown
+### 2.1.1 (Next)
 
 * Your contribution here.
 ```
 
-Increment the minor version, modify [lib/hyperclient/version.rb](lib/hyperclient/version.rb).
+Commit and push:
 
-Comit your changes.
-
-```
+```sh
 git add CHANGELOG.md lib/hyperclient/version.rb
-git commit -m "Preparing for next release, 0.4.1."
+git commit -m "Preparing for next release, 2.1.1."
 git push origin master
 ```
