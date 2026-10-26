@@ -3,7 +3,7 @@ name: test
 on: [push, pull_request]
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.entry.os || 'ubuntu-latest' }}
     strategy:
       fail-fast: false
       matrix:
@@ -12,7 +12,7 @@ jobs:
           - { ruby: '3.4' }
           - { ruby: '3.2', json: '2' }
           - { ruby: '3.2' }
-          - { ruby: '2.7', json: '2' }
+          - { ruby: '2.7', json: '2', os: 'ubuntu-22.04' }
           - { ruby: 'ruby-head', allowed-failure: true }
           - { ruby: 'jruby-head', allowed-failure: true }
     name: test (Ruby ${{ matrix.entry.ruby }}, JSON ${{ matrix.entry.json || '3' }})
