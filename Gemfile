@@ -36,7 +36,7 @@ if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.1')
   group :danger do
     gem 'danger', '~> 9.5'
     gem 'danger-changelog', '~> 0.10.0'
-    gem 'danger-pr-comment', '~> 0.1.0'
+    gem 'danger-pr-comment', '~> 0.2.0'
     gem 'danger-toc', '~> 0.3.0'
   end
 end

@@ -4,6 +4,8 @@
 
 * Your contribution here.
 
+* [#333](https://github.com/codegram/hyperclient/pull/333): Updated danger-pr-comment to 0.2.0 and fixed the hash conversion assertion for Minitest 6.1 - [@dblock](https://github.com/dblock).
+
 ### 2.1.0 (2026/10/14)
 
 * [#328](https://github.com/codegram/hyperclient/pull/328): Replaced the retired Splines demo with a local read-only Oxford HAL example using archived place facts - [@dblock](https://github.com/dblock).

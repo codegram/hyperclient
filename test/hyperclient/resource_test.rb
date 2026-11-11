@@ -246,7 +246,7 @@ module Hyperclient
       end
 
       it 'returns the attributes as a Hash from #to_hash' do
-        _(resource.to_hash).must_equal('title' => 'Order', 'total' => 42)
+        _(resource.to_hash).must_equal({ 'title' => 'Order', 'total' => 42 })
       end
 
       it 'returns the same result from #to_h as #to_hash' do
