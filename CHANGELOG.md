@@ -1,11 +1,10 @@
 ## Changelog
 
-### 2.1.1 (Next)
+### 2.2.0 (Next)
 
-* Your contribution here.
-
-* [#334](https://github.com/codegram/hyperclient/pull/334): Added `Link#_query` to send query parameters that a link doesn't declare - [@dblock](https://github.com/dblock).
 * [#333](https://github.com/codegram/hyperclient/pull/333): Updated danger-pr-comment to 0.2.0 and fixed the hash conversion assertion for Minitest 6.1 - [@dblock](https://github.com/dblock).
+* [#334](https://github.com/codegram/hyperclient/pull/334): Added `Link#_query` to send query parameters that a link doesn't declare - [@dblock](https://github.com/dblock).
+* Your contribution here.
 
 ### 2.1.0 (2026/10/14)
 
