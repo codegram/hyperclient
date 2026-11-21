@@ -101,6 +101,68 @@ module Hyperclient
       end
     end
 
+    describe '_query' do
+      it 'adds query parameters to a link that is not templated' do
+        link = Link.new('key', { 'href' => '/orders' }, entry_point)
+
+        _(link._query(sort: 'name')._url).must_equal '/orders?sort=name'
+      end
+
+      it 'adds query parameters a templated link does not declare' do
+        link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => true }, entry_point)
+
+        _(link._expand(id: '1')._query(sort: 'name')._url).must_equal '/orders?id=1&sort=name'
+      end
+
+      it 'keeps query parameters when expanded afterwards' do
+        link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => true }, entry_point)
+
+        _(link._query(sort: 'name')._expand(id: '1')._url).must_equal '/orders?id=1&sort=name'
+      end
+
+      it 'keeps the existing query string and fragment' do
+        link = Link.new('key', { 'href' => '/orders?status=open&status=paid#top' }, entry_point)
+
+        _(link._query(sort: 'name')._url).must_equal '/orders?status=open&status=paid&sort=name#top'
+      end
+
+      it 'combines chained query parameters' do
+        link = Link.new('key', { 'href' => '/orders' }, entry_point)
+
+        _(link._query(sort: 'name')._query(page: 2, sort: 'date')._url).must_equal '/orders?sort=date&page=2'
+      end
+
+      it 'encodes values and repeats array parameters' do
+        link = Link.new('key', { 'href' => '/orders' }, entry_point)
+
+        _(link._query(q: 'a&b c', ids: [1, 2])._url).must_equal '/orders?q=a%26b+c&ids=1&ids=2'
+      end
+
+      it 'drops nil and empty query parameters' do
+        link = Link.new('key', { 'href' => '/orders' }, entry_point)
+
+        _(link._query(sort: nil)._url).must_equal '/orders'
+        _(link._query({})._url).must_equal '/orders'
+      end
+
+      it 'does not change the original link' do
+        link = Link.new('key', { 'href' => '/orders' }, entry_point)
+        link._query(sort: 'name')
+
+        _(link._url).must_equal '/orders'
+      end
+
+      it 'sends the query parameters with the request' do
+        link = Link.new('key', { 'href' => '/orders' }, entry_point)
+
+        stub_request(entry_point.connection) do |stub|
+          stub.get('http://api.example.org/orders?sort=name') { [200, {}, { 'sorted' => true }] }
+        end
+
+        _(link._query(sort: 'name')._get.sorted).must_equal true
+      end
+    end
+
     describe '_url' do
       it 'expands an uri template without variables' do
         link = Link.new('key', { 'href' => '/orders{?id}', 'templated' => true }, entry_point)

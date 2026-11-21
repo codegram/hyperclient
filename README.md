@@ -13,6 +13,7 @@ Hyperclient is a Hypermedia API client written in Ruby. It fully supports [JSON 
   - [Resources and Attributes](#resources-and-attributes)
   - [Links and Embedded Resources](#links-and-embedded-resources)
   - [Templated Links](#templated-links)
+  - [Query Parameters](#query-parameters)
   - [Curies](#curies)
   - [Attributes](#attributes)
   - [HTTP](#http)
@@ -155,6 +156,17 @@ puts place.name # => Balliol College
 Invoking `api.place(id: 'oxpoints:23232339').name` is equivalent to `api._links.place._expand(id: 'oxpoints:23232339')._resource._attributes.name`.
 
 The client is responsible for supplying all the necessary parameters. Templated links don't do any strict parameter name checking and don't support required vs. optional parameters. Parameters not declared by the API will be dropped and will not have any effect when passed to `_expand`.
+
+## Query Parameters
+
+HAL APIs declare the query parameters they accept in templated links, and `_expand` only fills in those. To send query parameters that a link doesn't declare, or to add them to a link that isn't templated, use `_query`. It returns a new link with the parameters appended to its URL, after any existing query string.
+
+```ruby
+api._links.places._query(sort: 'name')._get # GET /places/?sort=name
+api._links.place._expand(id: 'oxpoints:23232339')._query(fields: 'name')._get # GET /places/oxpoints%3A23232339?fields=name
+```
+
+Array values are sent as repeated parameters, and parameters with `nil` values are dropped.
 
 ## Curies
 

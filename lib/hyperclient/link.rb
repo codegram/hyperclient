@@ -13,11 +13,14 @@ module Hyperclient
     # entry_point   - The EntryPoint object to inject the configuration.
     # uri_variables - The optional Hash with the variables to expand the link
     #                 if it is templated.
-    def initialize(key, link, entry_point, uri_variables = nil)
+    # query_params  - The optional Hash with query parameters to add to the
+    #                 link's URL.
+    def initialize(key, link, entry_point, uri_variables = nil, query_params = nil)
       @key           = key
       @link          = link
       @entry_point   = entry_point
       @uri_variables = uri_variables
+      @query_params  = query_params
       @resource      = nil
     end
 
@@ -54,14 +57,22 @@ module Hyperclient
     #
     # Returns a new Link with the expanded variables.
     def _expand(uri_variables = {})
-      self.class.new(@key, @link, @entry_point, uri_variables)
+      self.class.new(@key, @link, @entry_point, uri_variables, @query_params)
+    end
+
+    # Public: Adds query parameters to the Link's URL, whether or not the link
+    # is templated or declares them. Parameters with nil values are dropped.
+    #
+    # query_params - The Hash with the query parameters to add.
+    #
+    # Returns a new Link with the query parameters.
+    def _query(query_params = {})
+      self.class.new(@key, @link, @entry_point, @uri_variables, (@query_params || {}).merge(query_params))
     end
 
     # Public: Returns the url of the Link.
     def _url
-      return @link['href'] unless _templated?
-
-      @url ||= _uri_template.expand(@uri_variables || {}).to_s
+      @url ||= _add_query_params(_templated? ? _uri_template.expand(@uri_variables || {}).to_s : @link['href'])
     end
 
     # Public: Returns an array of variables from the URITemplate.
@@ -187,6 +198,17 @@ module Hyperclient
     # Internal: Memoization for a URITemplate instance
     def _uri_template
       @uri_template ||= Addressable::Template.new(@link['href'])
+    end
+
+    # Internal: Appends the query parameters to the URL, keeping its existing
+    # query string and fragment.
+    def _add_query_params(url)
+      params = (@query_params || {}).compact
+      return url if params.empty?
+
+      uri = Addressable::URI.parse(url)
+      uri.query = [uri.query, Addressable::URI.form_encode(params)].compact.reject(&:empty?).join('&')
+      uri.to_s
     end
 
     def http_method(method, body = nil)
