@@ -448,6 +448,47 @@ module Hyperclient
           _(ids).must_equal [1, 2]
         end
 
+        it 'raises a clear error when the resource links back to itself under the same name' do
+          resource = Resource.new({ '_links' => { 'sub_nodes' => { 'href' => '/sub_nodes' } } }, entry_point)
+
+          stub_request(entry_point.connection) do |stub|
+            stub.get('http://api.example.org/sub_nodes') do
+              [200, {}, { '_links' => { 'sub_nodes' => { 'href' => 'http://api.example.org/sub_nodes' } },
+                          '_embedded' => { 'nodes' => [{ 'name' => 'a' }] } }]
+            end
+          end
+
+          error = _(-> { resource._links.sub_nodes.map(&:name) }).must_raise Hyperclient::SelfReferencingLinkError
+          _(error.message).must_equal 'The sub_nodes link at http://api.example.org/sub_nodes links back to itself, ' \
+                                      'use _embedded to iterate over embedded items.'
+          _(resource._links.sub_nodes._embedded.nodes.map(&:name)).must_equal ['a']
+        end
+
+        it 'does not follow a link back to itself when checking respond_to? or delegating' do
+          resource = Resource.new({ '_links' => { 'sub_nodes' => { 'href' => '/sub_nodes' } } }, entry_point)
+
+          stub_request(entry_point.connection) do |stub|
+            stub.get('http://api.example.org/sub_nodes') do
+              [200, {}, { 'name' => nil,
+                          '_links' => { 'sub_nodes' => { 'href' => 'http://api.example.org/sub_nodes' } } }]
+            end
+          end
+
+          _(resource._links.sub_nodes.respond_to?(:unknown)).must_equal false
+          _(resource._links.sub_nodes.name).must_be_nil
+        end
+
+        it 'iterates a link that points to a different url with the same name' do
+          resource = Resource.new({ '_links' => { 'orders' => { 'href' => '/orders' } } }, entry_point)
+
+          stub_request(entry_point.connection) do |stub|
+            stub.get('http://api.example.org/orders') { [200, {}, { '_links' => { 'orders' => { 'href' => '/all_orders' } } }] }
+            stub.get('http://api.example.org/all_orders') { [200, {}, { '_embedded' => { 'orders' => [{ 'id' => 1 }] } }] }
+          end
+
+          _(resource._links.orders.map(&:id)).must_equal [1]
+        end
+
         it 'returns an Enumerator when called without a block' do
           resource = Resource.new({ '_links' => { 'orders' => { 'href' => '/orders' } } }, entry_point)
 
