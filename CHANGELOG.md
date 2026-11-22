@@ -1,5 +1,9 @@
 ## Changelog
 
+### 2.2.1 (Next)
+
+* Your contribution here.
+
 ### 2.2.0 (2026/11/22)
 
 * [#333](https://github.com/codegram/hyperclient/pull/333): Updated danger-pr-comment to 0.2.0 and fixed the hash conversion assertion for Minitest 6.1 - [@dblock](https://github.com/dblock).
