@@ -1,0 +1,6 @@
+# Bundle used by the Release workflow, see RELEASING.md.
+# ruby-gem-release requires Ruby 3.3+, so it is kept out of the main Gemfile.
+eval_gemfile '../Gemfile'
+
+gem 'commonmarker', '~> 2.10', require: false
+gem 'ruby-gem-release', '0.9.0', require: false
