@@ -14,6 +14,7 @@ Hyperclient is a Hypermedia API client written in Ruby. It fully supports [JSON 
   - [Links and Embedded Resources](#links-and-embedded-resources)
   - [Templated Links](#templated-links)
   - [Query Parameters](#query-parameters)
+  - [Link Properties](#link-properties)
   - [Curies](#curies)
   - [Attributes](#attributes)
   - [HTTP](#http)
@@ -167,6 +168,23 @@ api._links.place._expand(id: 'oxpoints:23232339')._query(fields: 'name')._get # 
 ```
 
 Array values are sent as repeated parameters, and parameters with `nil` values are dropped.
+
+## Link Properties
+
+HAL links can carry optional [properties](https://datatracker.ietf.org/doc/html/draft-kelly-json-hal-11#section-5) besides `href` and `templated`. Hyperclient exposes them as `_type`, `_deprecation`, `_name`, `_profile`, `_title`, and `_hreflang`, each returning `nil` when the property is absent. The local demo gives its `places` link a `title` and a `profile`.
+
+```ruby
+puts api._links.places._title # => Oxford places
+puts api._links.places._profile # => /docs/places
+```
+
+A [`profile`](https://datatracker.ietf.org/doc/html/rfc6906) is a URI that documents the semantics of the target resource, beyond what the media type describes. Hyperclient returns it as-is and doesn't follow it, since a profile isn't necessarily a HAL resource. Fetch it with the client's Faraday connection if you need it.
+
+```ruby
+puts api.connection.get(api._links.places._profile).body['description'] # => Archived Oxford place facts in a local HAL collection.
+```
+
+A link with a `deprecation` property will be removed in the future, and `_deprecation` returns a URL with more information about the deprecation.
 
 ## Curies
 

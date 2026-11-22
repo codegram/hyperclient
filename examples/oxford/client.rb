@@ -11,3 +11,4 @@ place._embedded.files.each do |file|
   puts "Archived #{file.type} URL (not fetched): #{file.url}"
 end
 puts "CURIE: #{api._links._curies['oxford'].expand('places')}"
+puts "Places profile: #{api._links.places._profile}"

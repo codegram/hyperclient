@@ -24,7 +24,7 @@ module OxfordExample
         [200, {
           '_links' => {
             'self' => { 'href' => '/' },
-            'places' => { 'href' => '/places/' },
+            'places' => { 'href' => '/places/', 'title' => 'Oxford places', 'profile' => '/docs/places' },
             'place' => { 'href' => '/places/{id}', 'templated' => true },
             'curies' => [{ 'name' => 'oxford', 'href' => '/docs/{rel}', 'templated' => true }],
             'oxford:places' => { 'href' => '/places/' }
