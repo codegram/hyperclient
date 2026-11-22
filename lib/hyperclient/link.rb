@@ -1,6 +1,15 @@
 require 'addressable'
 
 module Hyperclient
+  # Public: Exception that is raised when iterating a link whose resource
+  # links back to itself under the same name, which would otherwise recurse
+  # forever.
+  class SelfReferencingLinkError < StandardError
+    def initialize(key, url)
+      super("The #{key} link at #{url} links back to itself, use _embedded to iterate over embedded items.")
+    end
+  end
+
   # Internal: The Link is used to let a Resource interact with the API.
   #
   class Link
@@ -33,6 +42,8 @@ module Hyperclient
         current = self
         while current
           coll = current.respond_to?(@key) ? current.send(@key) : _resource
+          raise SelfReferencingLinkError.new(@key, current._url) if current.self_referencing?(coll)
+
           coll.each(&block)
           break unless current._links[:next]
 
@@ -172,6 +183,7 @@ module Hyperclient
       return unless @key && _resource.respond_to?(@key)
 
       @delegate ||= _resource.send(@key)
+      return if self_referencing?(@delegate)
       return unless @delegate&.respond_to?(method.to_s)
 
       @delegate.send(method, *args, &block)
@@ -180,12 +192,20 @@ module Hyperclient
     # Internal: Accessory method to allow the link respond to the
     # methods that will hit method_missing.
     def respond_to_missing?(method, _include_private = false)
-      if @key && _resource.respond_to?(@key) && (delegate = _resource.send(@key)) && delegate.respond_to?(method.to_s)
+      if @key && _resource.respond_to?(@key) && (delegate = _resource.send(@key)) &&
+         !self_referencing?(delegate) && delegate.respond_to?(method.to_s)
         true
       else
         _resource.respond_to?(method.to_s)
       end
     end
+
+    # Internal: Indicates if the given object is a Link to this same URL,
+    # following which would recurse forever.
+    def self_referencing?(other)
+      other.is_a?(Link) && other._url == _url
+    end
+    protected :self_referencing?
 
     # Internal: avoid delegating to resource
     #
