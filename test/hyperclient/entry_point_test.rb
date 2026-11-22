@@ -123,6 +123,20 @@ module Hyperclient
       end
     end
 
+    describe 'enforce_allowed_methods' do
+      it 'is disabled by default' do
+        _(EntryPoint.new('http://my.api.org').enforce_allowed_methods?).must_equal false
+      end
+
+      it 'can be enabled in the block' do
+        entry_point = EntryPoint.new('http://my.api.org') do |client|
+          client.enforce_allowed_methods = true
+        end
+
+        _(entry_point.enforce_allowed_methods?).must_equal true
+      end
+    end
+
     describe 'custom' do
       let(:entry_point) do
         EntryPoint.new 'http://my.api.org' do |entry_point|

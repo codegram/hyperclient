@@ -10,6 +10,29 @@ module Hyperclient
     end
   end
 
+  # Public: Exception that is raised before sending a request with a method
+  # that the most recent response for the same Link excluded from its Allow
+  # header.
+  class MethodNotAllowedError < StandardError
+    # Public: Returns the upper-case String HTTP method that was refused.
+    attr_reader :http_method
+
+    # Public: Returns the String url of the Link.
+    attr_reader :url
+
+    # Public: Returns the Array of upper-case String methods that the server
+    # allows.
+    attr_reader :allowed
+
+    def initialize(http_method, url, allowed)
+      @http_method = http_method
+      @url = url
+      @allowed = allowed
+      allows = allowed.empty? ? 'no methods' : "only #{allowed.join(', ')}"
+      super("#{http_method} is not allowed on #{url}, the server allows #{allows}.")
+    end
+  end
+
   # Internal: The Link is used to let a Resource interact with the API.
   #
   class Link
@@ -31,6 +54,20 @@ module Hyperclient
       @uri_variables = uri_variables
       @query_params  = query_params
       @resource      = nil
+      @allow         = nil
+    end
+
+    # Internal: Parses the Allow header from response headers.
+    #
+    # headers - The Hash-like response headers, or nil.
+    #
+    # Returns nil when there is no Allow header, otherwise an Array of
+    # upper-case String methods, which is empty when the header is empty.
+    def self.parse_allow(headers)
+      value = headers && (headers['Allow'] || headers['allow'])
+      return if value.nil?
+
+      Array(value).join(',').split(',').map { |m| m.strip.upcase }.reject(&:empty?).uniq
     end
 
     # Public: Each implementation to allow the class to use the Enumerable
@@ -121,6 +158,25 @@ module Hyperclient
     # Public: Returns the hreflang property of the Link
     def _hreflang
       @link['hreflang']
+    end
+
+    # Public: Returns the methods listed in the Allow header of the most
+    # recent response for this Link, as upper-case Strings.
+    #
+    # Returns nil if no response has been received yet or the most recent
+    # response did not carry an Allow header.
+    def _allow
+      @allow&.dup
+    end
+
+    # Public: Indicates if the server allows the given method on this Link,
+    # according to the Allow header of the most recent response.
+    #
+    # method - A Symbol or String HTTP method, case-insensitive.
+    #
+    # Returns true if the method is allowed or no Allow header was received.
+    def _allow?(method)
+      @allow.nil? || @allow.include?(method.to_s.upcase)
     end
 
     def _resource
@@ -231,8 +287,26 @@ module Hyperclient
       uri.to_s
     end
 
+    # Internal: Raises MethodNotAllowedError if the most recent response for
+    # this Link excluded the method from its Allow header. OPTIONS is always
+    # sent, so that callers can rediscover the allowed methods.
+    def ensure_allowed!(method)
+      return if method == :options || _allow?(method) || !@entry_point.enforce_allowed_methods?
+
+      raise MethodNotAllowedError.new(method.to_s.upcase, _url, @allow.dup)
+    end
+
     def http_method(method, body = nil)
-      response = @entry_point.connection.run_request(method, _url, body, nil)
+      ensure_allowed!(method)
+
+      begin
+        response = @entry_point.connection.run_request(method, _url, body, nil)
+      rescue Faraday::Error => e
+        @allow = Link.parse_allow(e.response_headers) if e.response
+        raise
+      end
+
+      @allow = Link.parse_allow(response.headers)
       resource = Resource.new(response.body, @entry_point, response)
 
       # Only cache GET responses. Caching the response of a mutating

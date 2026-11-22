@@ -62,6 +62,21 @@ module Hyperclient
       _response&.status
     end
 
+    # Public: Returns the methods listed in the Allow header of the response
+    # that created this resource, as upper-case Strings, or nil if there is no
+    # response or it did not carry an Allow header.
+    def _allow
+      Link.parse_allow(_response&.headers)
+    end
+
+    # Public: Indicates if the response that created this resource allows the
+    # given Symbol or String HTTP method, case-insensitive. Returns true if
+    # there is no Allow header.
+    def _allow?(method)
+      allow = _allow
+      allow.nil? || allow.include?(method.to_s.upcase)
+    end
+
     def [](name)
       send(name) if respond_to?(name)
     end

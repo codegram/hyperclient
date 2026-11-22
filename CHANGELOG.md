@@ -8,6 +8,7 @@
 * [#337](https://github.com/codegram/hyperclient/pull/337): Updated danger-pr-comment to 0.3.0 and stopped posting empty Danger reports - [@dblock](https://github.com/dblock).
 * [#338](https://github.com/codegram/hyperclient/pull/338): Documented link properties, including HAL `profile` via `Link#_profile` - [@dblock](https://github.com/dblock).
 * [#339](https://github.com/codegram/hyperclient/pull/339): Sped up CI by running JRuby with `--dev`, separating JSON 2 and JSON 3 bundler caches, skipping duplicate branch builds, and updating `actions/checkout` to v7 - [@dblock](https://github.com/dblock).
+* [#340](https://github.com/codegram/hyperclient/pull/340): Added `Link#_allow`, `Link#_allow?`, `Resource#_allow` and `Resource#_allow?` to read the `Allow` header, and an opt-in `enforce_allowed_methods` setting that raises `Hyperclient::MethodNotAllowedError` instead of sending a method the link's most recent response disallowed - [@dblock](https://github.com/dblock).
 * Your contribution here.
 
 ### 2.1.0 (2026/10/14)
