@@ -28,6 +28,7 @@ describe OxfordExample::App do
     _(output).must_include 'Followed primary_place: Balliol College'
     _(output).must_include 'Archived depiction URL (not fetched):'
     _(output).must_include 'CURIE: /docs/places'
+    _(output).must_include 'Places profile: /docs/places'
   end
 
   it 'supports explicit navigation, hash attributes, and embedded resources' do
@@ -38,6 +39,16 @@ describe OxfordExample::App do
     _(place.to_h['id']).must_equal 'oxpoints:23232339'
     _(place._embedded.files.first.type).must_equal 'depiction'
     _(api._links['oxford:places']._embedded.places.first.name).must_equal 'Balliol College'
+  end
+
+  it 'exposes link properties, including a profile that can be fetched' do
+    api = Hyperclient.new('http://127.0.0.1:9292/')
+    places = api._links.places
+
+    _(places._title).must_equal 'Oxford places'
+    _(places._profile).must_equal '/docs/places'
+    _(places._deprecation).must_be_nil
+    _(api.connection.get(places._profile).body['description']).must_include 'Oxford place facts'
   end
 
   it 'serves HAL, rejects writes, and reports missing resources' do

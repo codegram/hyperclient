@@ -6,6 +6,7 @@
 * [#334](https://github.com/codegram/hyperclient/pull/334): Added `Link#_query` to send query parameters that a link doesn't declare - [@dblock](https://github.com/dblock).
 * [#336](https://github.com/codegram/hyperclient/pull/336): Fixed `SystemStackError` when iterating a link whose resource links back to itself under the same name, raising `Hyperclient::SelfReferencingLinkError` instead - [@dblock](https://github.com/dblock).
 * [#337](https://github.com/codegram/hyperclient/pull/337): Updated danger-pr-comment to 0.3.0 and stopped posting empty Danger reports - [@dblock](https://github.com/dblock).
+* [#338](https://github.com/codegram/hyperclient/pull/338): Documented link properties, including HAL `profile` via `Link#_profile` - [@dblock](https://github.com/dblock).
 * Your contribution here.
 
 ### 2.1.0 (2026/10/14)
