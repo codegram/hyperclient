@@ -42,6 +42,7 @@ module Hyperclient
       @resource = nil
       @key = nil
       @uri_variables = nil
+      @enforce_allowed_methods = false
       yield self if block_given?
     end
 
@@ -123,6 +124,19 @@ module Hyperclient
     #
     # value    - A Hash containing the client options.
     attr_accessor :options
+
+    # Public: Set whether links refuse to send a method that the Allow header
+    # of their most recent response doesn't list, raising
+    # MethodNotAllowedError instead. Defaults to false.
+    attr_writer :enforce_allowed_methods
+
+    # Public: Indicates if links enforce the methods allowed by the Allow
+    # header.
+    #
+    # Returns true if enabled, false otherwise.
+    def enforce_allowed_methods?
+      @enforce_allowed_methods == true
+    end
 
     private
 

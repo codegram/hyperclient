@@ -377,6 +377,209 @@ module Hyperclient
       end
     end
 
+    describe 'Allow header' do
+      let(:link) { Link.new('key', { 'href' => '/productions/1' }, entry_point) }
+      let(:url) { 'http://api.example.org/productions/1' }
+
+      it 'does not know the allowed methods before a request' do
+        _(link._allow).must_be_nil
+        _(link._allow?(:delete)).must_equal true
+      end
+
+      it 'sends any method when the response has no Allow header' do
+        stub_request(entry_point.connection) do |stub|
+          stub.get(url) { [200, {}, nil] }
+          stub.delete(url) { [204, {}, nil] }
+        end
+
+        link._get
+
+        _(link._allow).must_be_nil
+        _(link._delete).must_be_kind_of Resource
+      end
+
+      it 'parses methods case-insensitively, ignoring whitespace and empty entries' do
+        stub_request(entry_point.connection) do |stub|
+          stub.get(url) { [200, { 'allow' => ' get,head ,, Post,get ' }, nil] }
+        end
+
+        link._get
+
+        _(link._allow).must_equal %w[GET HEAD POST]
+        _(link._allow?(:post)).must_equal true
+        _(link._allow?('Head')).must_equal true
+        _(link._allow?(:delete)).must_equal false
+      end
+
+      it 'sends a method that the Allow header does not list by default' do
+        stub_request(entry_point.connection) do |stub|
+          stub.get(url) { [200, { 'Allow' => 'GET, HEAD' }, nil] }
+          stub.delete(url) { [204, {}, nil] }
+        end
+
+        link._get
+
+        _(entry_point.enforce_allowed_methods?).must_equal false
+        _(link._allow?(:delete)).must_equal false
+        _(link._delete).must_be_kind_of Resource
+      end
+
+      it 'repeats a request that returned 405 by default' do
+        requests = 0
+        stub_request(entry_point.connection) do |stub|
+          stub.delete(url) do
+            requests += 1
+            [405, { 'Allow' => 'GET' }, nil]
+          end
+        end
+
+        _(-> { link._delete }).must_raise Faraday::ClientError
+        _(link._allow).must_equal %w[GET]
+        _(-> { link._delete }).must_raise Faraday::ClientError
+        _(requests).must_equal 2
+      end
+
+      it 'returns a copy of the allowed methods' do
+        stub_request(entry_point.connection) do |stub|
+          stub.get(url) { [200, { 'Allow' => 'GET' }, nil] }
+        end
+
+        link._get
+        link._allow << 'DELETE'
+
+        _(link._allow?(:delete)).must_equal false
+      end
+
+      describe 'with enforce_allowed_methods' do
+        before do
+          entry_point.enforce_allowed_methods = true
+        end
+
+        it 'sends an allowed method' do
+          stub_request(entry_point.connection) do |stub|
+            stub.get(url) { [200, { 'Allow' => 'GET, POST' }, nil] }
+            stub.post(url) { [201, {}, nil] }
+          end
+
+          link._get
+
+          _(link._post('foo' => 'bar')).must_be_kind_of Resource
+        end
+
+        it 'raises MethodNotAllowedError without sending a disallowed method' do
+          stub_request(entry_point.connection) do |stub|
+            stub.get(url) { [200, { 'Allow' => 'GET, HEAD' }, nil] }
+          end
+
+          link._get
+          error = _(-> { link._delete }).must_raise MethodNotAllowedError
+
+          _(error.http_method).must_equal 'DELETE'
+          _(error.url).must_equal '/productions/1'
+          _(error.allowed).must_equal %w[GET HEAD]
+          _(error.message).must_equal 'DELETE is not allowed on /productions/1, the server allows only GET, HEAD.'
+        end
+
+        it 'raises for every method when the Allow header is empty, except OPTIONS' do
+          stub_request(entry_point.connection) do |stub|
+            stub.head(url) { [200, { 'Allow' => '' }, nil] }
+            stub.options(url) { [200, { 'Allow' => 'GET' }, nil] }
+            stub.get(url) { [200, {}, nil] }
+          end
+
+          link._head
+
+          _(link._allow).must_equal []
+          error = _(-> { link._get }).must_raise MethodNotAllowedError
+          _(error.message).must_equal 'GET is not allowed on /productions/1, the server allows no methods.'
+          _(-> { link._head }).must_raise MethodNotAllowedError
+
+          link._options
+
+          _(link._allow).must_equal %w[GET]
+          _(link._get).must_be_kind_of Resource
+        end
+
+        it 'does not imply HEAD from GET' do
+          stub_request(entry_point.connection) do |stub|
+            stub.get(url) { [200, { 'Allow' => 'GET' }, nil] }
+          end
+
+          link._get
+
+          _(-> { link._head }).must_raise MethodNotAllowedError
+        end
+
+        it 'records the Allow header of a 405 response and refuses to repeat the request' do
+          requests = 0
+          stub_request(entry_point.connection) do |stub|
+            stub.delete(url) do
+              requests += 1
+              [405, { 'Allow' => 'GET, PUT' }, nil]
+            end
+            stub.put(url) { [200, {}, nil] }
+          end
+
+          _(-> { link._delete }).must_raise Faraday::ClientError
+          _(link._allow).must_equal %w[GET PUT]
+          _(-> { link._delete }).must_raise MethodNotAllowedError
+          _(requests).must_equal 1
+          _(link._put('foo' => 'bar')).must_be_kind_of Resource
+        end
+
+        it 'records the Allow header of a 405 response when errors are not raised' do
+          entry_point.connection(default: false) do |conn|
+            conn.adapter :test do |stub|
+              stub.post(url) { [405, { 'Allow' => 'GET' }, nil] }
+            end
+          end
+
+          _(link._post._status).must_equal 405
+          _(-> { link._post }).must_raise MethodNotAllowedError
+        end
+
+        it 'uses the most recent response' do
+          stub_request(entry_point.connection) do |stub|
+            stub.get(url) { [200, { 'Allow' => 'GET, PATCH' }, nil] }
+            stub.patch(url) { [200, {}, nil] }
+            stub.delete(url) { [204, {}, nil] }
+          end
+
+          link._get
+
+          _(-> { link._delete }).must_raise MethodNotAllowedError
+          link._patch('foo' => 'bar')
+
+          _(link._allow).must_be_nil
+          _(link._delete).must_be_kind_of Resource
+        end
+
+        it 'keeps the allowed methods per link' do
+          stub_request(entry_point.connection) do |stub|
+            stub.get(url) { [200, { 'Allow' => 'GET' }, nil] }
+            stub.delete(url) { [204, {}, nil] }
+          end
+
+          link._get
+
+          _(Link.new('key', { 'href' => '/productions/1' }, entry_point)._delete).must_be_kind_of Resource
+        end
+
+        it 'starts an expanded link without restrictions' do
+          stub_request(entry_point.connection) do |stub|
+            stub.get(url) { [200, { 'Allow' => 'GET' }, nil] }
+            stub.delete(url) { [204, {}, nil] }
+          end
+
+          link._get
+
+          _(-> { link._delete }).must_raise MethodNotAllowedError
+          _(link._expand._allow).must_be_nil
+          _(link._expand._delete).must_be_kind_of Resource
+        end
+      end
+    end
+
     describe 'inspect' do
       it 'outputs a custom-friendly output' do
         link = Link.new('key', { 'href' => '/productions/1' }, 'foo')

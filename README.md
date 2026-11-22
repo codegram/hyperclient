@@ -18,6 +18,7 @@ Hyperclient is a Hypermedia API client written in Ruby. It fully supports [JSON 
   - [Curies](#curies)
   - [Attributes](#attributes)
   - [HTTP](#http)
+  - [Allowed Methods](#allowed-methods)
 - [Testing Using Hyperclient](#testing-using-hyperclient)
 - [Reference](#reference)
 - [Hyperclient Users](#hyperclient-users)
@@ -243,6 +244,39 @@ place._delete
 ```
 
 HTTP methods always return a new instance of Resource.
+
+## Allowed Methods
+
+Hyperclient remembers the `Allow` header of the most recent response on the link that made the request, including a `405 Method Not Allowed` response, whose `Allow` header lists the methods the server supports. Each response replaces what the link knows. Use `_allow` and `_allow?` to check before sending a request.
+
+```ruby
+order = api.order(id: 1) # a server responding with "Allow: GET, HEAD, OPTIONS"
+order._get
+order._allow # => ["GET", "HEAD", "OPTIONS"], or nil without an Allow header
+order._allow?(:delete) # => false
+```
+
+By default, Hyperclient still sends any method and leaves it to the server to refuse it. Set `enforce_allowed_methods` to have links refuse to send a method that their most recent `Allow` header doesn't list, raising `Hyperclient::MethodNotAllowedError` without contacting the server. A response without an `Allow` header lifts the restriction, and `_options` is always sent so you can rediscover the allowed methods.
+
+```ruby
+api = Hyperclient.new('http://127.0.0.1:9292/') do |client|
+  client.enforce_allowed_methods = true
+end
+
+order = api.order(id: 1) # a server responding with "Allow: GET, HEAD, OPTIONS"
+order._get
+
+begin
+  order._delete
+rescue Hyperclient::MethodNotAllowedError => e
+  e.message # => "DELETE is not allowed on /orders/1, the server allows only GET, HEAD, OPTIONS."
+  e.allowed # => ["GET", "HEAD", "OPTIONS"]
+end
+```
+
+Methods are compared case-insensitively, an empty `Allow` header means no methods are allowed, and `HEAD` is only allowed when listed. A resource also exposes the `Allow` header of the response that created it with `_allow` and `_allow?`. Hyperclient never sends extra `OPTIONS` requests.
+
+There is no method to clear or override what a link remembers. With `enforce_allowed_methods` on, the remembered `Allow` header is replaced by the link's next response, so call `_options` to ask the server again. Alternatively, use a new link object, which starts without restrictions, such as `link._expand` or a link from a freshly fetched resource.
 
 # Testing Using Hyperclient
 

@@ -229,6 +229,37 @@ module Hyperclient
       end
     end
 
+    describe '._allow' do
+      it 'returns nil without a response object' do
+        resource = Resource.new({}, entry_point)
+
+        _(resource._allow).must_be_nil
+        _(resource._allow?(:delete)).must_equal true
+      end
+
+      it 'returns nil without an Allow header' do
+        resource = Resource.new({}, entry_point, stub(headers: {}))
+
+        _(resource._allow).must_be_nil
+        _(resource._allow?(:delete)).must_equal true
+      end
+
+      it 'returns the allowed methods' do
+        resource = Resource.new({}, entry_point, stub(headers: Faraday::Utils::Headers.new('allow' => 'get, Head')))
+
+        _(resource._allow).must_equal %w[GET HEAD]
+        _(resource._allow?(:head)).must_equal true
+        _(resource._allow?('DELETE')).must_equal false
+      end
+
+      it 'returns an empty list for an empty Allow header' do
+        resource = Resource.new({}, entry_point, stub(headers: { 'Allow' => ' ' }))
+
+        _(resource._allow).must_equal []
+        _(resource._allow?(:get)).must_equal false
+      end
+    end
+
     describe 'inspect' do
       it 'outputs a custom-friendly output' do
         resource = Resource.new({ '_links' => { 'self' => { 'href' => '/orders/523' } }, 'title' => 'Order' },
