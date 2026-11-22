@@ -1,6 +1,13 @@
 ---
 name: test
-on: [push, pull_request]
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 jobs:
   test:
     runs-on: ${{ matrix.entry.os || 'ubuntu-latest' }}
@@ -18,11 +25,15 @@ jobs:
     name: test (Ruby ${{ matrix.entry.ruby }}, JSON ${{ matrix.entry.json || '3' }})
     env:
       JSON_VERSION: ${{ matrix.entry.json || '3' }}
+      # Speeds up JRuby startup, which dominates its bundle and test steps. CRuby ignores it.
+      JRUBY_OPTS: --dev
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.entry.ruby }}
           bundler-cache: true
+          # Gemfile.lock isn't committed, so keep JSON 2 and JSON 3 bundles from restoring each other's cache.
+          cache-version: json-${{ matrix.entry.json || '3' }}
       - run: bundle exec rake test spinach
         continue-on-error: ${{ matrix.entry.allowed-failure || false }}
