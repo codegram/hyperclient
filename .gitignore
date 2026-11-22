@@ -17,3 +17,5 @@ test/version_tmp
 tmp
 examples/william.rb
 Gemfile.lock
+gemfiles/*.lock
+vendor/bundle
